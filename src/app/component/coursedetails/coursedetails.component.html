@@ -1,0 +1,462 @@
+<!-- course-detail.component.html -->
+<div class="course-detail-container" @fadeIn>
+    <!-- Loading state -->
+    <div class="text-center py-5" *ngIf="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-3">Cargando información del curso...</p>
+    </div>
+    
+    <div *ngIf="!loading && course" class="container py-4">
+      <!-- Course Header -->
+      <div class="course-header" @slideInRight>
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <div class="course-category-badge">
+              {{ course.category }}
+            </div>
+            <h1 class="course-title">{{ course.title }}</h1>
+            <p class="course-subtitle">{{ course.subtitle }}</p>
+            
+            <div class="course-meta">
+              <div class="meta-item">
+                <i class="bi bi-clock"></i>
+                <span>{{ course.duration }}</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-award"></i>
+                <span>Certificación {{ course.isoStandards.join(', ') }}</span>
+              </div>
+              <div class="meta-item">
+                <i class="bi bi-people"></i>
+                <span>Cupo limitado</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-lg-4">
+            <div class="course-price-card">
+              <div class="price-header">
+                <span class="price-label">Precio</span>
+                <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+              </div>
+              
+              <div class="date-selection">
+                <div class="selected-date" *ngIf="selectedDate">
+                  <i class="bi bi-calendar-check"></i>
+                  <span>{{ selectedDate | date:'longDate' }}</span>
+                </div>
+                <div class="no-date-selected" *ngIf="!selectedDate">
+                  <i class="bi bi-calendar"></i>
+                  <span>Selecciona una fecha</span>
+                </div>
+                <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDateModal(dateSelector)">
+                  {{ selectedDate ? 'Cambiar fecha' : 'Ver fechas disponibles' }}
+                </button>
+              </div>
+              
+              <button 
+                class="btn btn-primary btn-lg w-100 mt-4" 
+                [disabled]="!selectedDate"
+                (click)="proceedToCheckout()">
+                Inscribirme ahora
+              </button>
+              
+              <div class="course-features mt-4">
+                <div class="feature-item">
+                  <i class="bi bi-patch-check"></i>
+                  <span>Certificación incluida</span>
+                </div>
+                <div class="feature-item">
+                  <i class="bi bi-file-earmark-text"></i>
+                  <span>Material digital</span>
+                </div>
+                <div class="feature-item">
+                  <i class="bi bi-headset"></i>
+                  <span>Soporte técnico</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Course Video Preview -->
+      <div class="course-preview mt-5" @slideInUp>
+        <div class="ratio ratio-16x9">
+          <iframe 
+            [src]="course.previewVideoUrl | safeUrl" 
+            title="Curso Preview" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+      
+      <!-- Course Content Navigation -->
+      <div class="course-nav mt-5" @slideInUp>
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link" 
+               [class.active]="activeSection === 'overview'"
+               (click)="changeSection('overview')">
+              Descripción
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" 
+               [class.active]="activeSection === 'curriculum'"
+               (click)="changeSection('curriculum')">
+              Temario
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" 
+               [class.active]="activeSection === 'instructor'"
+               (click)="changeSection('instructor')">
+              Instructor
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" 
+               [class.active]="activeSection === 'reviews'"
+               (click)="changeSection('reviews')">
+              Testimonios
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Course Content Sections -->
+      <div class="course-content mt-4" @slideInUp>
+        <!-- Overview Section -->
+        <div class="content-section" *ngIf="activeSection === 'overview'">
+          <h2>Descripción del curso</h2>
+          <div class="description">
+            <p>{{ course.description }}</p>
+          </div>
+          
+          <div class="learning-objectives mt-4">
+            <h3>Objetivos del curso</h3>
+            <ul>
+              <li>Comprender los fundamentos de la norma {{ course.isoStandards.join(', ') }}</li>
+              <li>Identificar los requisitos clave para implementación y auditoría</li>
+              <li>Desarrollar habilidades prácticas para aplicación en entornos reales</li>
+              <li>Obtener certificación reconocida en el sector industrial</li>
+            </ul>
+          </div>
+          
+          <div class="target-audience mt-4">
+            <h3>Dirigido a</h3>
+            <ul>
+              <li>Profesionales del área de seguridad industrial</li>
+              <li>Responsables de sistemas de gestión</li>
+              <li>Auditores internos y externos</li>
+              <li>Consultores y asesores en normatividad</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Curriculum Section -->
+        <div class="content-section" *ngIf="activeSection === 'curriculum'">
+          <h2>Temario del curso</h2>
+          
+          <div class="accordion" id="courseModules">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#module1">
+                  Módulo 1: Introducción y conceptos fundamentales
+                </button>
+              </h2>
+              <div id="module1" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <ul class="module-topics">
+                    <li>Introducción a la norma y su importancia</li>
+                    <li>Marco regulatorio y evolución</li>
+                    <li>Principios y fundamentos clave</li>
+                    <li>Estructura y organización de la norma</li>
+                  </ul>
+                  <div class="module-duration">Duración: 4 horas</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#module2">
+                  Módulo 2: Requisitos y documentación
+                </button>
+              </h2>
+              <div id="module2" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <ul class="module-topics">
+                    <li>Requisitos generales del sistema</li>
+                    <li>Documentación requerida</li>
+                    <li>Política y objetivos</li>
+                    <li>Implementación práctica</li>
+                  </ul>
+                  <div class="module-duration">Duración: 6 horas</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#module3">
+                  Módulo 3: Proceso de auditoría
+                </button>
+              </h2>
+              <div id="module3" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <ul class="module-topics">
+                    <li>Principios de auditoría</li>
+                    <li>Planificación y preparación</li>
+                    <li>Ejecución y reporte</li>
+                    <li>Seguimiento y cierre</li>
+                  </ul>
+                  <div class="module-duration">Duración: 8 horas</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#module4">
+                  Módulo 4: Casos prácticos y evaluación
+                </button>
+              </h2>
+              <div id="module4" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  <ul class="module-topics">
+                    <li>Ejercicios de simulación</li>
+                    <li>Resolución de casos reales</li>
+                    <li>Evaluación de competencias</li>
+                    <li>Examen de certificación</li>
+                  </ul>
+                  <div class="module-duration">Duración: 6 horas</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Instructor Section -->
+        <div class="content-section" *ngIf="activeSection === 'instructor'">
+          <h2>Acerca del instructor</h2>
+          
+          <div class="instructor-profile">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="instructor-image">
+                  <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name" class="img-fluid rounded-circle">
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div class="instructor-details">
+                  <h3 class="instructor-name">{{ course.instructor.name }}</h3>
+                  <div class="instructor-specialties">
+                    <span class="specialty-badge" *ngFor="let specialty of course.instructor.specialties">
+                      {{ specialty }}
+                    </span>
+                  </div>
+                  <div class="instructor-bio mt-3">
+                    <p>{{ course.instructor.bio }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="content-section" *ngIf="activeSection === 'reviews'">
+          <h2>Lo que dicen nuestros alumnos</h2>
+          
+          <div class="reviews-summary">
+            <div class="overall-rating">
+              <div class="rating-value">4.8</div>
+              <div class="stars">
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-fill"></i>
+                <i class="bi bi-star-half"></i>
+              </div>
+              <div class="total-reviews">Basado en 42 opiniones</div>
+            </div>
+          </div>
+          
+          <div class="review-list mt-4">
+            <div class="review-item">
+              <div class="reviewer-info">
+                <div class="reviewer-avatar">
+                  <img src="assets/images/avatars/user1.jpg" alt="Usuario">
+                </div>
+                <div class="reviewer-details">
+                  <div class="reviewer-name">Carlos Rodríguez</div>
+                  <div class="review-date">15 de febrero de 2025</div>
+                </div>
+                <div class="review-rating">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                </div>
+              </div>
+              <div class="review-content">
+                <p>Excelente curso, el instructor demuestra un amplio conocimiento práctico. Los materiales y ejercicios son muy útiles para aplicar lo aprendido.</p>
+              </div>
+            </div>
+            
+            <div class="review-item">
+              <div class="reviewer-info">
+                <div class="reviewer-avatar">
+                  <img src="assets/images/avatars/user2.jpg" alt="Usuario">
+                </div>
+                <div class="reviewer-details">
+                  <div class="reviewer-name">Laura Méndez</div>
+                  <div class="review-date">28 de enero de 2025</div>
+                </div>
+                <div class="review-rating">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star"></i>
+                </div>
+              </div>
+              <div class="review-content">
+                <p>Muy buena capacitación. El enfoque práctico y casos reales hacen que la información sea más fácil de asimilar y aplicar en el trabajo diario.</p>
+              </div>
+            </div>
+            
+            <div class="review-item">
+              <div class="reviewer-info">
+                <div class="reviewer-avatar">
+                  <img src="assets/images/avatars/user3.jpg" alt="Usuario">
+                </div>
+                <div class="reviewer-details">
+                  <div class="reviewer-name">Miguel Ángel Torres</div>
+                  <div class="review-date">5 de marzo de 2025</div>
+                </div>
+                <div class="review-rating">
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-fill"></i>
+                  <i class="bi bi-star-half"></i>
+                </div>
+              </div>
+              <div class="review-content">
+                <p>Muy completo y bien estructurado. El instructor tiene mucha experiencia y explica los temas complejos de manera muy clara. Recomiendo ampliamente este curso.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Related Courses -->
+      <div class="related-courses mt-5" @slideInUp>
+        <h2>Cursos relacionados</h2>
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <div class="course-card">
+              <div class="card-img-container">
+                <img src="assets/images/courses/related-1.jpg" alt="Curso relacionado">
+                <div class="card-badge">{{ course.category }}</div>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Implementación de Sistemas de Gestión</h3>
+                <p class="card-subtitle">Enfoque práctico para empresas</p>
+                <div class="card-price">
+                  <span class="price-value">$3,800 MXN</span>
+                  <button class="btn btn-sm btn-primary">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-4">
+            <div class="course-card">
+              <div class="card-img-container">
+                <img src="assets/images/courses/related-2.jpg" alt="Curso relacionado">
+                <div class="card-badge">{{ course.category }}</div>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Análisis de Riesgos Avanzado</h3>
+                <p class="card-subtitle">Métodos y herramientas efectivas</p>
+                <div class="card-price">
+                  <span class="price-value">$4,200 MXN</span>
+                  <button class="btn btn-sm btn-primary">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-4 mb-4">
+            <div class="course-card">
+              <div class="card-img-container">
+                <img src="assets/images/courses/related-3.jpg" alt="Curso relacionado">
+                <div class="card-badge">{{ course.category }}</div>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">Formación de Formadores</h3>
+                <p class="card-subtitle">Capacitación efectiva en seguridad</p>
+                <div class="card-price">
+                  <span class="price-value">$3,500 MXN</span>
+                  <button class="btn btn-sm btn-primary">Ver detalles</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Calendar Modal -->
+  <ng-template #dateSelector let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Selecciona una fecha</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+    <div class="modal-body">
+      <div class="calendar-container">
+        <ngb-datepicker
+          #dp
+          [minDate]="{year: 2025, month: 3, day: 1}"
+          [maxDate]="{year: 2025, month: 12, day: 31}"
+          [markDisabled]="isDateAvailable"
+          (dateSelect)="selectDate($event)">
+        </ngb-datepicker>
+        
+        <div class="calendar-legend mt-3">
+          <div class="legend-item">
+            <span class="legend-color available"></span>
+            <span>Fecha disponible</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color selected"></span>
+            <span>Fecha seleccionada</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color unavailable"></span>
+            <span>No disponible</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        [disabled]="!selectedDate"
+        (click)="modal.close()">
+        Confirmar fecha
+      </button>
+    </div>
+  </ng-template>

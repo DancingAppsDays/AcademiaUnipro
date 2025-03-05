@@ -1,0 +1,613 @@
+/* course-detail.component.scss */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+// Uniprotec Theme Colors
+$uniprotec-blue: #0066b3;
+$uniprotec-yellow: #ffba00;
+$uniprotec-light-blue: #0095db;
+$uniprotec-dark-blue: #004c86;
+$uniprotec-white: #ffffff;
+$uniprotec-gray: #f5f5f5;
+$uniprotec-dark-gray: #333333;
+
+.course-detail-container {
+  font-family: 'Montserrat', sans-serif;
+  
+  .course-header {
+    padding: 2rem 0;
+    
+    .course-category-badge {
+      display: inline-block;
+      background-color: $uniprotec-yellow;
+      color: $uniprotec-white;
+      padding: 0.4rem 1.2rem;
+      border-radius: 2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+    }
+    
+    .course-title {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: $uniprotec-dark-blue;
+    }
+    
+    .course-subtitle {
+      font-size: 1.2rem;
+      color: $uniprotec-dark-gray;
+      margin-bottom: 1.5rem;
+    }
+    
+    .course-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+      
+      .meta-item {
+        display: flex;
+        align-items: center;
+        
+        i {
+          color: $uniprotec-blue;
+          margin-right: 0.5rem;
+          font-size: 1.2rem;
+        }
+        
+        span {
+          color: $uniprotec-dark-gray;
+        }
+      }
+    }
+  }
+  
+  .course-price-card {
+    background-color: $uniprotec-white;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    
+    .price-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      
+      .price-label {
+        font-size: 1rem;
+        color: $uniprotec-dark-gray;
+      }
+      
+      .price-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: $uniprotec-blue;
+      }
+    }
+    
+    .date-selection {
+      background-color: $uniprotec-gray;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+      
+      .selected-date, .no-date-selected {
+        display: flex;
+        align-items: center;
+        
+        i {
+          color: $uniprotec-blue;
+          margin-right: 0.5rem;
+          font-size: 1.2rem;
+        }
+        
+        span {
+          color: $uniprotec-dark-gray;
+        }
+      }
+    }
+    
+    .course-features {
+      .feature-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.8rem;
+        
+        i {
+          color: $uniprotec-blue;
+          margin-right: 0.5rem;
+        }
+        
+        span {
+          color: $uniprotec-dark-gray;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+  
+  .course-nav {
+    .nav-tabs {
+      border-bottom: 2px solid $uniprotec-gray;
+      
+      .nav-link {
+        color: $uniprotec-dark-gray;
+        font-weight: 500;
+        border: none;
+        padding: 1rem 1.5rem;
+        margin-right: 1rem;
+        cursor: pointer;
+        
+        &.active {
+          color: $uniprotec-blue;
+          position: relative;
+          
+          &:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: $uniprotec-blue;
+          }
+        }
+        
+        &:hover:not(.active) {
+          color: $uniprotec-light-blue;
+        }
+      }
+    }
+  }
+  
+  .content-section {
+    padding: 2rem 0;
+    
+    h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: $uniprotec-dark-blue;
+    }
+    
+    h3 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: $uniprotec-dark-blue;
+    }
+    
+    .description {
+      p {
+        color: $uniprotec-dark-gray;
+        line-height: 1.7;
+      }
+    }
+    
+    ul {
+      li {
+        margin-bottom: 0.5rem;
+        color: $uniprotec-dark-gray;
+      }
+    }
+    
+    .accordion {
+      .accordion-item {
+        margin-bottom: 1rem;
+        border: 1px solid $uniprotec-gray;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        
+        .accordion-header {
+          .accordion-button {
+            background-color: $uniprotec-white;
+            font-weight: 500;
+            color: $uniprotec-dark-blue;
+            
+            &:not(.collapsed) {
+              background-color: $uniprotec-light-blue;
+              color: $uniprotec-white;
+            }
+            
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+        
+        .accordion-body {
+          padding: 1.5rem;
+          
+          .module-topics {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+          }
+          
+          .module-duration {
+            font-style: italic;
+            color: $uniprotec-dark-gray;
+          }
+        }
+      }
+    }
+    
+    .instructor-profile {
+      background-color: $uniprotec-gray;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      
+      .instructor-image {
+        text-align: center;
+        
+        img {
+          width: 180px;
+          height: 180px;
+          object-fit: cover;
+          border: 4px solid $uniprotec-white;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+      }
+      
+      .instructor-details {
+        .instructor-name {
+          font-weight: 700;
+          font-size: 1.5rem;
+          margin-bottom: 1rem;
+          color: $uniprotec-dark-blue;
+        }
+        
+        .instructor-specialties {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          
+          .specialty-badge {
+            background-color: $uniprotec-blue;
+            color: $uniprotec-white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+          }
+        }
+        
+        .instructor-bio {
+          p {
+            color: $uniprotec-dark-gray;
+            line-height: 1.7;
+          }
+        }
+      }
+    }
+    
+    .reviews-summary {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+      
+      .overall-rating {
+        text-align: center;
+        
+        .rating-value {
+          font-size: 3rem;
+          font-weight: 700;
+          color: $uniprotec-dark-blue;
+          line-height: 1;
+        }
+        
+        .stars {
+          margin: 0.5rem 0;
+          
+          i {
+            color: $uniprotec-yellow;
+            font-size: 1.5rem;
+          }
+        }
+        
+        .total-reviews {
+          color: $uniprotec-dark-gray;
+          font-size: 0.9rem;
+        }
+      }
+    }
+    
+    .review-list {
+      .review-item {
+        background-color: $uniprotec-gray;
+        border-radius: 0.5rem;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        
+        .reviewer-info {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1rem;
+          
+          .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+            
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+          
+          .reviewer-details {
+            flex-grow: 1;
+            
+            .reviewer-name {
+              font-weight: 500;
+              color: $uniprotec-dark-blue;
+            }
+            
+            .review-date {
+              font-size: 0.8rem;
+              color: $uniprotec-dark-gray;
+            }
+          }
+          
+          .review-rating {
+            i {
+              color: $uniprotec-yellow;
+            }
+          }
+        }
+        
+        .review-content {
+          p {
+            color: $uniprotec-dark-gray;
+            line-height: 1.6;
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+  
+  .related-courses {
+    h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: $uniprotec-dark-blue;
+    }
+    
+    .course-card {
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      background-color: white;
+      
+      &:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        
+        .card-img-container img {
+          transform: scale(1.1);
+        }
+      }
+      
+      .card-img-container {
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.6s ease;
+        }
+        
+        .card-badge {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background-color: $uniprotec-yellow;
+          color: white;
+          padding: 0.3rem 0.8rem;
+          border-radius: 20px;
+          font-size: 0.8rem;
+          font-weight: 500;
+        }
+      }
+      
+      .card-body {
+        padding: 1.2rem;
+        
+        .card-title {
+          font-weight: 700;
+          font-size: 1.2rem;
+          margin-bottom: 0.5rem;
+          color: $uniprotec-dark-blue;
+          min-height: 2.8rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .card-subtitle {
+          color: $uniprotec-dark-gray;
+          font-size: 0.9rem;
+          margin-bottom: 0.8rem;
+          min-height: 2.7rem;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .card-price {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          
+          .price-value {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: $uniprotec-blue;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Calendar modal styling
+.calendar-container {
+  .ngb-dp-month {
+    .ngb-dp-week {
+      .ngb-dp-day {
+        .btn-light {
+          &.available {
+            background-color: $uniprotec-light-blue;
+            color: $uniprotec-white;
+          }
+          
+          &.selected {
+            background-color: $uniprotec-blue;
+            color: $uniprotec-white;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+  }
+  
+  .calendar-legend {
+    display: flex;
+    justify-content: space-around;
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      
+      .legend-color {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        margin-right: 0.5rem;
+        
+        &.available {
+          background-color: $uniprotec-light-blue;
+        }
+        
+        &.selected {
+          background-color: $uniprotec-blue;
+        }
+        
+        &.unavailable {
+          background-color: #e9ecef;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 991.98px) {
+  .course-detail-container {
+    .course-header {
+      .course-title {
+        font-size: 2rem;
+      }
+    }
+    
+    .course-price-card {
+      margin-top: 2rem;
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .course-detail-container {
+    .course-header {
+      .course-title {
+        font-size: 1.8rem;
+      }
+      
+      .course-meta {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+    }
+    
+    .content-section {
+      .instructor-profile {
+        .instructor-image {
+          margin-bottom: 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .course-detail-container {
+    .course-nav {
+      .nav-tabs {
+        .nav-link {
+          padding: 0.8rem 1rem;
+          margin-right: 0.5rem;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+// Animation classes
+.fade-in {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
