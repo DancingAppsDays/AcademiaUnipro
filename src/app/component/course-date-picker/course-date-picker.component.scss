@@ -1,0 +1,258 @@
+/* course-date-picker.component.scss */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+// Uniprotec Theme Colors
+$uniprotec-blue: #0066b3;
+$uniprotec-yellow: #ffba00;
+$uniprotec-light-blue: #0095db;
+$uniprotec-dark-blue: #004c86;
+$uniprotec-white: #ffffff;
+$uniprotec-gray: #f5f5f5;
+$uniprotec-dark-gray: #333333;
+
+.course-date-picker {
+  font-family: 'Montserrat', sans-serif;
+  padding: 1rem;
+  
+  .date-picker-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    
+    h4 {
+      font-weight: 700;
+      color: $uniprotec-dark-blue;
+      margin-bottom: 0.5rem;
+    }
+    
+    p {
+      font-size: 0.9rem;
+      margin-bottom: 0;
+    }
+  }
+  
+  .calendar-container {
+    margin-bottom: 1.5rem;
+    
+    ::ng-deep {
+      .ngb-dp-month {
+        width: 100%;
+      }
+      
+      .ngb-dp-weekday {
+        font-style: normal;
+        color: $uniprotec-blue;
+        font-weight: bold;
+      }
+      
+      .ngb-dp-day {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      
+      .ngb-dp-navigation-select {
+        .form-select {
+          background-color: $uniprotec-white;
+          border-color: $uniprotec-blue;
+          
+          &:focus {
+            box-shadow: 0 0 0 0.2rem rgba($uniprotec-blue, 0.25);
+          }
+        }
+      }
+      
+      .ngb-dp-arrow {
+        .btn-link {
+          color: $uniprotec-blue;
+          
+          &:hover, &:focus {
+            color: $uniprotec-dark-blue;
+          }
+        }
+      }
+    }
+  }
+  
+  .custom-day {
+    text-align: center;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    position: relative;
+    width: 2.5rem;
+    height: 2.5rem;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    
+    &.available {
+      background-color: rgba($uniprotec-light-blue, 0.2);
+      color: $uniprotec-dark-blue;
+      font-weight: 500;
+      
+      &:hover {
+        background-color: rgba($uniprotec-light-blue, 0.4);
+      }
+    }
+    
+    &.selected {
+      background-color: $uniprotec-blue;
+      color: $uniprotec-white;
+      font-weight: bold;
+      transform: scale(1.1);
+      box-shadow: 0 2px 6px rgba($uniprotec-blue, 0.4);
+    }
+    
+    &.unavailable {
+      color: #ccc;
+      cursor: default;
+    }
+    
+    &.today {
+      border: 1px solid $uniprotec-blue;
+    }
+    
+    &.focused {
+      box-shadow: 0 0 0 1px $uniprotec-white, 0 0 0 3px $uniprotec-light-blue;
+    }
+    
+    .available-indicator {
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: $uniprotec-blue;
+    }
+  }
+  
+  .calendar-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      font-size: 0.85rem;
+      
+      .legend-color {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
+        
+        &.available {
+          background-color: rgba($uniprotec-light-blue, 0.2);
+          border: 1px solid $uniprotec-light-blue;
+        }
+        
+        &.selected {
+          background-color: $uniprotec-blue;
+        }
+        
+        &.today {
+          background-color: $uniprotec-white;
+          border: 1px solid $uniprotec-blue;
+        }
+        
+        &.unavailable {
+          background-color: #f0f0f0;
+          border: 1px solid #ddd;
+        }
+      }
+    }
+  }
+  
+  .selected-date-info {
+    display: flex;
+    align-items: center;
+    background-color: rgba($uniprotec-light-blue, 0.1);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    
+    .info-badge {
+      background-color: $uniprotec-blue;
+      color: $uniprotec-white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      
+      i {
+        font-size: 1.2rem;
+      }
+    }
+    
+    .info-content {
+      display: flex;
+      flex-direction: column;
+      
+      small {
+        color: $uniprotec-dark-gray;
+        font-size: 0.8rem;
+      }
+      
+      strong {
+        color: $uniprotec-dark-blue;
+        font-size: 1rem;
+      }
+    }
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    
+    .btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+    }
+    
+    .btn-primary {
+      background-color: $uniprotec-blue;
+      border-color: $uniprotec-blue;
+      
+      &:hover, &:focus {
+        background-color: $uniprotec-dark-blue;
+        border-color: $uniprotec-dark-blue;
+      }
+      
+      &:disabled {
+        background-color: lighten($uniprotec-blue, 20%);
+        border-color: lighten($uniprotec-blue, 20%);
+      }
+    }
+    
+    .btn-secondary {
+      background-color: $uniprotec-gray;
+      border-color: $uniprotec-gray;
+      color: $uniprotec-dark-gray;
+      
+      &:hover, &:focus {
+        background-color: darken($uniprotec-gray, 10%);
+        border-color: darken($uniprotec-gray, 10%);
+      }
+    }
+  }
+}
+
+@media (max-width: 767.98px) {
+  .course-date-picker {
+    .calendar-legend {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+}

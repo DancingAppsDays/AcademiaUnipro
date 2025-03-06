@@ -51,7 +51,7 @@
                   <i class="bi bi-calendar"></i>
                   <span>Selecciona una fecha</span>
                 </div>
-                <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDateModal(dateSelector)">
+                <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDateSelector()">
                   {{ selectedDate ? 'Cambiar fecha' : 'Ver fechas disponibles' }}
                 </button>
               </div>
@@ -85,13 +85,15 @@
       <!-- Course Video Preview -->
       <div class="course-preview mt-5" @slideInUp>
         <div class="ratio ratio-16x9">
-          <iframe 
+          <iframe [src]="course.previewVideoUrl | safeUrl"  width="560" height="315" frameborder="0" allowfullscreen></iframe>
+   
+         <!--<iframe 
             [src]="course.previewVideoUrl | safeUrl" 
             title="Curso Preview" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
-          </iframe>
+          </iframe>-->
         </div>
       </div>
       
@@ -449,7 +451,22 @@
         </div>
       </div>
     </div>
-    <div class="modal-footer">
+
+    <div class="date-selection">
+      <div class="selected-date" *ngIf="selectedDate">
+        <i class="bi bi-calendar-check"></i>
+        <span>{{ selectedDate | date:'longDate' }}</span>
+      </div>
+      <div class="no-date-selected" *ngIf="!selectedDate">
+        <i class="bi bi-calendar"></i>
+        <span>Selecciona una fecha</span>
+      </div>
+      <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDateSelector()">
+        {{ selectedDate ? 'Cambiar fecha' : 'Ver fechas disponibles' }}
+      </button>
+    </div>
+
+    <!--<div class="modal-footer">
       <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
       <button 
         type="button" 
@@ -458,5 +475,6 @@
         (click)="modal.close()">
         Confirmar fecha
       </button>
-    </div>
+    </div>-->
+
   </ng-template>

@@ -5,14 +5,15 @@ import { Course } from '../../core/models/course.model';
 import { trigger, transition, style, animate, query, stagger } from '@angular/animations';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { slideInAnimation } from '../../route-animations';
 
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   standalone: true,
-  imports: [CommonModule, NgbCarousel,HttpClientModule], // Import HttpClientModule
+  imports: [CommonModule, NgbCarousel], 
   styleUrls: ['./home.component.scss'],
   animations: [
     trigger('fadeInOut', [

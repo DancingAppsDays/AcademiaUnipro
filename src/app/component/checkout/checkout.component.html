@@ -1,0 +1,122 @@
+<!-- checkout.component.html - Updated to handle loading errors and missing data -->
+<div class="checkout-container" @fadeInOut>
+    <div class="container py-5">
+      <!-- Loading state -->
+      <div class="text-center py-5" *ngIf="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3">Cargando información del curso...</p>
+      </div>
+      
+      <!-- Loading error state -->
+      <div class="text-center py-5" *ngIf="loadError">
+        <div class="alert alert-danger">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          No se pudo cargar la información necesaria para el proceso de compra.
+        </div>
+        <p class="mt-3">Por favor, intenta nuevamente o selecciona otro curso.</p>
+        <button class="btn btn-primary mt-2" routerLink="/courses">
+          Ver cursos disponibles
+        </button>
+      </div>
+      
+      <!-- Missing date warning -->
+      <div class="alert alert-warning mb-4" *ngIf="!loading && !loadError && course && !selectedDate">
+        <i class="bi bi-exclamation-circle me-2"></i>
+        <strong>Atención:</strong> No has seleccionado una fecha para el curso.
+        <button class="btn btn-link p-0 ms-2" (click)="backToCourse()">
+          Regresar para seleccionar una fecha
+        </button>
+      </div>
+      
+      <!-- Main checkout content -->
+      <div *ngIf="!loading && !loadError && course" @slideInOut>
+        <!-- Course Summary -->
+        <div class="row mb-5">
+          <div class="col-md-8">
+            <h1 class="mb-4">Registro para curso</h1>
+            <div class="course-summary">
+              <div class="course-image">
+                <img [src]="course.imageUrl" [alt]="course.title" class="img-fluid rounded">
+              </div>
+              <div class="course-details">
+                <h2>{{ course.title }}</h2>
+                <p class="course-subtitle">{{ course.subtitle }}</p>
+                
+                <div class="course-meta">
+                  <div class="meta-item">
+                    <i class="bi bi-calendar"></i>
+                    <span *ngIf="selectedDate">{{ selectedDate | date:'longDate' }}</span>
+                    <span *ngIf="!selectedDate" class="text-warning">Fecha no seleccionada</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="bi bi-clock"></i>
+                    <span>{{ course.duration }}</span>
+                  </div>
+                  <div class="meta-item">
+                    <i class="bi bi-person"></i>
+                    <span>{{ course.instructor.name }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="price-summary">
+              <h3>Resumen de compra</h3>
+              <div class="price-row">
+                <span>Curso:</span>
+                <span>{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="price-row" *ngIf="purchaseType === 'company'">
+                <span>Cantidad:</span>
+                <span>{{ companyForm.get('quantity')?.value || 1 }}</span>
+              </div>
+              <div class="price-row total">
+                <span>Total:</span>
+                <span>{{ calculateTotal() | currency:'MXN':'symbol':'1.0-0' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Purchase Type Selection -->
+        <div class="purchase-type-selector mb-4">
+          <h3>Tipo de compra</h3>
+          <div class="btn-group w-100">
+            <button type="button" class="btn" 
+              [class.btn-primary]="purchaseType === 'individual'"
+              [class.btn-outline-primary]="purchaseType !== 'individual'"
+              (click)="togglePurchaseType('individual')">
+              <i class="bi bi-person"></i> Individual
+            </button>
+            <button type="button" class="btn"
+              [class.btn-primary]="purchaseType === 'company'"
+              [class.btn-outline-primary]="purchaseType !== 'company'"
+              (click)="togglePurchaseType('company')">
+              <i class="bi bi-building"></i> Empresarial (con factura)
+            </button>
+          </div>
+        </div>
+        
+        <!-- Form sections: Individual and Company (as in the original template) -->
+        <!-- ... -->
+        
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-between mt-4">
+          <button type="button" class="btn btn-outline-secondary" (click)="backToCourse()">
+            Regresar
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary px-5"
+            [disabled]="processingPayment || !selectedDate"
+            (click)="processPayment()">
+            <span class="spinner-border spinner-border-sm me-2" *ngIf="processingPayment"></span>
+            {{ purchaseType === 'individual' ? 'Pagar ahora' : 'Solicitar información' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -2,12 +2,73 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './component/home/home.component';
 import { TestcompComponent } from './component/testcomp/testcomp.component';
 import { CourseDetailComponent } from './component/coursedetails/coursedetails.component';
+import { LoginComponent } from './component/login/login.component';
+import { CourseListComponent } from './component/course-list/course-list.component';
+import { CheckoutComponent } from './component/checkout/checkout.component';
 
-export const routes: Routes = [
+// Guards
+//import { AuthGuard } from './guards/auth.guard';
+
+
    
-    { path: 'home', component:HomeComponent },
-    {path: 'coursedetails', component:CourseDetailComponent },
-    {path: 'test', component:TestcompComponent},
-    {path: '', redirectTo: '/home', pathMatch: 'full'}
-  
-];
+
+    export const routes: Routes = [
+        { 
+          path: '', 
+          component: HomeComponent, 
+          title: 'Academia Uniprotec - Capacitación Industrial',
+          data: { animation: 'HomePage' }
+        },
+        { 
+            path: 'login', 
+            component: LoginComponent,
+            title: 'Iniciar Sesión',
+            data: { animation: 'LoginPage' }
+          },
+       { 
+          path: 'courses', 
+          component: CourseListComponent,
+          title: 'Cursos Disponibles',
+          data: { animation: 'CoursesPage' }
+        },
+        { 
+          path: 'courses/:category', 
+          component: CourseListComponent,
+          title: 'Cursos por Categoría',
+          data: { animation: 'CategoryPage' }
+        },
+        { 
+          path: 'course/:id', 
+          component: CourseDetailComponent,
+          title: 'Detalles del Curso',
+          data: { animation: 'CourseDetailPage' }
+        },
+      { 
+          path: 'checkout/:courseId', 
+          component: CheckoutComponent,
+          title: 'Checkout',
+          data: { animation: 'CheckoutPage' }
+        },
+          /*
+        { 
+          path: 'checkout/success', 
+          component: CheckoutSuccessComponent,
+          title: 'Compra Exitosa',
+          data: { animation: 'SuccessPage' }
+        },
+        /* { 
+          path: 'checkout/company-success', 
+          component: CompanySuccessComponent,
+          title: 'Solicitud Recibida',
+          data: { animation: 'CompanySuccessPage' }
+        },
+       
+        { 
+          path: 'dashboard', 
+          component: UserDashboardComponent,
+          canActivate: [AuthGuard],
+          title: 'Mi Panel',
+          data: { animation: 'DashboardPage' }
+        },*/
+        { path: '**', redirectTo: '', pathMatch: 'full' }
+      ];

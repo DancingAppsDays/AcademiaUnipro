@@ -2,8 +2,12 @@
 
 <nav>
   <ul>
+    <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Logint</a></li>
     <li><a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">First Component</a></li>
-    <li><a routerLink="/coursedetails" routerLinkActive="active" ariaCurrentWhenActive="page">Second Component</a></li>
+    <li><a routerLink="/course" routerLinkActive="active" ariaCurrentWhenActive="page">Second Component</a></li>
+    <li><a routerLink="/courses" routerLinkActive="active" ariaCurrentWhenActive="page">SCourses</a></li>
   </ul>
 </nav>
-<router-outlet />
+<div [@routeAnimations]="prepareRoute(outlet)">
+  <router-outlet #outlet="outlet"></router-outlet>
+</div>

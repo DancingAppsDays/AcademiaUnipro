@@ -39,6 +39,10 @@ export class CourseService {
   getMockCourses(): Observable<Course[]> {
     return of(MOCK_COURSES);
   }
+
+  private getMockCourseById(id: string): Course | undefined {
+    return MOCK_COURSES.find(course => course.id === id);
+  }
   
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
