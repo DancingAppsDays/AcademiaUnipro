@@ -5,6 +5,8 @@ import { CourseDetailComponent } from './component/coursedetails/coursedetails.c
 import { LoginComponent } from './component/login/login.component';
 import { CourseListComponent } from './component/course-list/course-list.component';
 import { CheckoutComponent } from './component/checkout/checkout.component';
+import { CheckoutSuccessComponent } from './component/checkout-sucess/checkout-sucess.component';
+import { CompanySuccessComponent } from './component/company-success/company-success.component';
 
 // Guards
 //import { AuthGuard } from './guards/auth.guard';
@@ -49,20 +51,20 @@ import { CheckoutComponent } from './component/checkout/checkout.component';
           title: 'Checkout',
           data: { animation: 'CheckoutPage' }
         },
-          /*
+        
         { 
           path: 'checkout/success', 
           component: CheckoutSuccessComponent,
           title: 'Compra Exitosa',
           data: { animation: 'SuccessPage' }
         },
-        /* { 
+         { 
           path: 'checkout/company-success', 
           component: CompanySuccessComponent,
           title: 'Solicitud Recibida',
           data: { animation: 'CompanySuccessPage' }
         },
-       
+       /*
         { 
           path: 'dashboard', 
           component: UserDashboardComponent,

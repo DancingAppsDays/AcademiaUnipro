@@ -29,7 +29,34 @@ import { animate, style, transition, trigger } from '@angular/animations';
         style({ transform: 'translateY(20px)', opacity: 0 }),
         animate('300ms ease-out', style({ transform: 'translateY(0)', opacity: 1 }))
       ])
-    ])
+    ]),
+    trigger('accordionAnimation', [
+      transition(':enter', [
+        style({ 
+          opacity: 0,
+          height: 0,
+          transform: 'translateY(-20px)',
+          overflow: 'hidden'
+        }),
+        animate('400ms ease-out', style({ 
+          opacity: 1,
+          height: '*',
+          transform: 'translateY(0)'
+        }))
+      ]),
+      transition(':leave', [
+        style({ 
+          opacity: 1,
+          height: '*',
+          overflow: 'hidden'
+        }),
+        animate('300ms ease-in', style({ 
+          opacity: 0,
+          height: 0,
+          transform: 'translateY(-20px)'
+        }))
+      ]),
+   ] )
   ]
 })
 export class CheckoutComponent implements OnInit {
@@ -202,7 +229,45 @@ private loadFromMockData(courseId: string): void {
   }
   
   togglePurchaseType(type: 'individual' | 'company') {
+    // Only proceed if changing to a different type
+    if (this.purchaseType === type) {
+      return;
+    }
+    
+    // Store previous type for animation
+    const previousType = this.purchaseType;
+    
+    // Update the purchase type
     this.purchaseType = type;
+    
+    // If switching to company, adjust validation
+    if (type === 'company') {
+      // Ensure company form is properly validated
+      this.companyForm.get('companyName')?.updateValueAndValidity();
+      this.companyForm.get('rfc')?.updateValueAndValidity();
+      this.companyForm.get('contactName')?.updateValueAndValidity();
+      this.companyForm.get('contactEmail')?.updateValueAndValidity();
+      this.companyForm.get('contactPhone')?.updateValueAndValidity();
+      
+      // Log for debugging
+      console.log('Switched to company purchase type');
+    } else {
+      // Ensure user form is properly validated
+      if (!this.isExistingUser) {
+        this.userForm.get('email')?.updateValueAndValidity();
+        this.userForm.get('fullName')?.updateValueAndValidity();
+        this.userForm.get('phone')?.updateValueAndValidity();
+      }
+      
+      // Log for debugging
+      console.log('Switched to individual purchase type');
+    }
+    
+    // For animation purposes, you might want to trigger change detection manually
+    // or ensure Angular runs animation by forcing a layout reflow
+    setTimeout(() => {
+      console.log(`Animation should run from ${previousType} to ${type}`);
+    }, 0);
   }
   
   calculateTotal(): number {
@@ -217,7 +282,7 @@ private loadFromMockData(courseId: string): void {
   }
   
   processPayment() {
-    if (this.purchaseType === 'individual' && !this.userForm.valid) {
+   /* if (this.purchaseType === 'individual' && !this.userForm.valid) {
       this.userForm.markAllAsTouched();
       return;
     }
@@ -225,7 +290,7 @@ private loadFromMockData(courseId: string): void {
     if (this.purchaseType === 'company' && !this.companyForm.valid) {
       this.companyForm.markAllAsTouched();
       return;
-    }
+    }*/
     
     if (!this.course || !this.selectedDate) {
       alert('Error: Información del curso o fecha no disponible');
@@ -249,11 +314,17 @@ private loadFromMockData(courseId: string): void {
           }
         });
       } else {
+
+        console.log("User is existing");
         // Use existing user
         this.processPurchase();
       }
     } else {
       // Process company purchase (likely needs direct contact)
+      //DEBUG
+      this.router.navigate(['/checkout/company-success']);
+
+
       this.userService.submitCompanyPurchase({
         courseId: this.course?.id,
         courseName: this.course?.title,
@@ -276,12 +347,21 @@ private loadFromMockData(courseId: string): void {
   }
   
   private processPurchase(userId?: string) {
-    if (!this.course || !this.selectedDate) return;
+    console.log("process pruchase")
+    //if (!this.course || !this.selectedDate) return;
     
+    this.router.navigate(['/checkout/success'], { 
+      queryParams: { 
+        email: this.userForm.get('email')?.value,
+        courseId: this.course?.id
+      } 
+    });
+    if(true) return;
+
     this.userService.purchaseCourse({
-      courseId: this.course.id,
-      courseName: this.course.title,
-      coursePrice: this.course.price,
+      courseId: this.course?.id,
+      courseName: this.course?.title,
+      coursePrice: this.course?.price,
       selectedDate: this.selectedDate,
       userId: userId
     }).subscribe({

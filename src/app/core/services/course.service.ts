@@ -148,7 +148,7 @@ const MOCK_COURSES: Course[] = [
     instructor: {
       id: '4',
       name: 'Elena Ramírez',
-      photoUrl: 'assets/images/instructors/elena-ramirez.jpg',
+      photoUrl: 'assets/images/instructors/liderazgo.jpg.jpg',
       bio: 'Especialista en desarrollo organizacional con enfoque en seguridad industrial y certificación en metodología LEGO SiriusPlay.',
       specialties: ['Liderazgo', 'Cultura Organizacional', 'Gestión del Cambio']
     },
@@ -200,7 +200,7 @@ const MOCK_COURSES: Course[] = [
     instructor: {
       id: '6',
       name: 'Patricia Morales',
-      photoUrl: 'assets/images/instructors/patricia-morales.jpg',
+      photoUrl: 'assets/images/instructors/liderazgo.jpg',
       bio: 'Consultora de calidad con más de 18 años implementando sistemas de gestión en empresas nacionales e internacionales.',
       specialties: ['ISO 9001', 'Gestión de Calidad', 'Auditorías']
     },
@@ -252,7 +252,7 @@ const MOCK_COURSES: Course[] = [
     instructor: {
       id: '2',
       name: 'Laura Sánchez',
-      photoUrl: 'assets/images/instructors/laura-sanchez.jpg',
+      photoUrl: 'assets/images/instructors/liderazgo.jpg.jpg',
       bio: 'Consultora ambiental con experiencia en implementación de sistemas de gestión en más de 50 empresas.',
       specialties: ['ISO 14001', 'Gestión Ambiental', 'Economía Circular']
     },

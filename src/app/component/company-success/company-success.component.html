@@ -1,0 +1,141 @@
+<!-- company-success.component.html -->
+<div class="success-container" @fadeInUp>
+    <div class="container py-5">
+      <div class="success-card">
+        <div class="success-icon">
+          <i class="bi bi-building-check"></i>
+        </div>
+        
+        <h1 class="mt-4">¡Solicitud Recibida!</h1>
+        
+        <div class="request-info" *ngIf="requestId">
+          <div class="request-badge">Solicitud #{{ requestId }}</div>
+        </div>
+        
+        <div class="company-info mt-4" *ngIf="companyName">
+          <div class="company-badge">
+            <i class="bi bi-building"></i>
+          </div>
+          <div>
+            <h3>Información de la Empresa</h3>
+            <p><strong>{{ companyName }}</strong></p>
+            <p *ngIf="contactEmail">Email de contacto: {{ contactEmail }}</p>
+          </div>
+        </div>
+        
+        <div class="course-info mt-4" *ngIf="course">
+          <h2>{{ course.title }}</h2>
+          <p>{{ course.subtitle }}</p>
+          
+          <div class="course-details">
+            <div class="detail-item">
+              <i class="bi bi-calendar2-check"></i>
+              <div>
+                <strong>Fecha solicitada</strong>
+                <p *ngIf="selectedDate">{{ selectedDate | date:'fullDate':'':'es' }}</p>
+                <p *ngIf="!selectedDate">A coordinar</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <i class="bi bi-people"></i>
+              <div>
+                <strong>Participantes</strong>
+                <p>{{ quantity }} {{ quantity === 1 ? 'persona' : 'personas' }}</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <i class="bi bi-clock"></i>
+              <div>
+                <strong>Duración</strong>
+                <p>{{ course.duration }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="next-steps mt-5">
+          <div class="next-step-header">
+            <i class="bi bi-check2-circle"></i>
+            <h3>Próximos pasos</h3>
+          </div>
+          
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-point active">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <div class="timeline-content">
+                <h4>Solicitud recibida</h4>
+                <p>Hemos registrado su solicitud de capacitación empresarial.</p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-point">
+                <span>2</span>
+              </div>
+              <div class="timeline-content">
+                <h4>Revisión y contacto</h4>
+                <p>Un representante revisará su solicitud y se pondrá en contacto en las próximas 24 horas laborales.</p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-point">
+                <span>3</span>
+              </div>
+              <div class="timeline-content">
+                <h4>Cotización personalizada</h4>
+                <p>Recibirá una cotización detallada y opciones de fechas disponibles.</p>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-point">
+                <span>4</span>
+              </div>
+              <div class="timeline-content">
+                <h4>Coordinación logística</h4>
+                <p>Una vez confirmada la cotización, coordinaremos todos los detalles para la implementación.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="contact-info mt-5">
+          <div class="contact-box">
+            <h3>¿Tiene preguntas?</h3>
+            <p>Puede contactarnos directamente:</p>
+            <div class="contact-methods">
+              <div class="contact-method">
+                <i class="bi bi-telephone"></i>
+                <span>(55) 1234-5678</span>
+              </div>
+              <div class="contact-method">
+                <i class="bi bi-envelope"></i>
+                <span>empresas&#64;uniprotec.com</span>
+              </div>
+              <div class="contact-method">
+                <i class="bi bi-whatsapp"></i>
+                <span>55-8765-4321</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="action-buttons mt-5">
+          <button class="btn btn-primary me-3" (click)="downloadRequestDetails()">
+            <i class="bi bi-file-earmark-pdf me-2"></i>
+            Descargar detalles
+          </button>
+          
+          <button class="btn btn-outline-primary" routerLink="/courses">
+            <i class="bi bi-search me-2"></i>
+            Explorar más cursos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

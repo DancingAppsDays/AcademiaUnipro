@@ -1,0 +1,361 @@
+/* checkout.component.scss with enhanced styling */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+// Uniprotec Theme Colors
+$uniprotec-blue: #0066b3;
+$uniprotec-yellow: #ffba00;
+$uniprotec-light-blue: #0095db;
+$uniprotec-dark-blue: #004c86;
+$uniprotec-white: #ffffff;
+$uniprotec-gray: #f5f5f5;
+$uniprotec-dark-gray: #333333;
+
+.checkout-container {
+  font-family: 'Montserrat', sans-serif;
+}
+
+// Purchase Type Selector
+.purchase-type-selector {
+  margin-bottom: 2rem;
+  
+  h3 {
+    font-weight: 700;
+    color: $uniprotec-dark-blue;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  
+  .purchase-options {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    
+    .purchase-option {
+      background-color: $uniprotec-white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      width: 230px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      
+      &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+      
+      &.active {
+        border-color: $uniprotec-blue;
+        background-color: rgba($uniprotec-blue, 0.05);
+        
+        .option-icon {
+          background-color: $uniprotec-blue;
+          color: $uniprotec-white;
+        }
+        
+        h4 {
+          color: $uniprotec-blue;
+        }
+      }
+      
+      .option-icon {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background-color: $uniprotec-gray;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        
+        i {
+          font-size: 2rem;
+          color: $uniprotec-dark-blue;
+          transition: all 0.3s ease;
+        }
+      }
+      
+      .option-details {
+        h4 {
+          font-weight: 700;
+          font-size: 1.2rem;
+          margin-bottom: 0.5rem;
+          color: $uniprotec-dark-blue;
+        }
+        
+        p {
+          margin-bottom: 0;
+          color: $uniprotec-dark-gray;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+
+// Section headers
+.section-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  
+  h3 {
+    font-weight: 700;
+    color: $uniprotec-dark-blue;
+    margin-bottom: 0.5rem;
+  }
+  
+  p {
+    color: $uniprotec-dark-gray;
+    margin-bottom: 0;
+  }
+}
+
+// Panel styling
+.checkout-panel {
+  background-color: $uniprotec-white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  }
+  
+  .panel-header {
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    
+    .header-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+      
+      i {
+        font-size: 1.5rem;
+      }
+    }
+    
+    h3 {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0;
+    }
+  }
+  
+  .panel-body {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+  }
+  
+  // Registration panel styling
+  &.registration-panel {
+    .panel-header {
+      background-color: rgba($uniprotec-blue, 0.1);
+      
+      .header-icon {
+        background-color: $uniprotec-blue;
+        color: $uniprotec-white;
+      }
+      
+      h3 {
+        color: $uniprotec-dark-blue;
+      }
+    }
+  }
+  
+  // User panel styling (for existing users)
+  &.user-panel {
+    .panel-header {
+      background-color: rgba($uniprotec-light-blue, 0.1);
+      
+      .header-icon {
+        background-color: $uniprotec-light-blue;
+        color: $uniprotec-white;
+      }
+      
+      h3 {
+        color: $uniprotec-dark-blue;
+      }
+    }
+  }
+  
+  // Payment panel styling
+  &.payment-panel {
+    .panel-header {
+      background-color: rgba($uniprotec-yellow, 0.1);
+      
+      .header-icon {
+        background-color: $uniprotec-yellow;
+        color: $uniprotec-white;
+      }
+      
+      h3 {
+        color: $uniprotec-dark-blue;
+      }
+    }
+  }
+  
+  // Company panel styling
+  &.company-panel {
+    .panel-header {
+      background-color: rgba($uniprotec-blue, 0.1);
+      
+      .header-icon {
+        background-color: $uniprotec-blue;
+        color: $uniprotec-white;
+      }
+      
+      h3 {
+        color: $uniprotec-dark-blue;
+      }
+    }
+  }
+}
+
+// User profile summary
+.user-profile-summary {
+  display: flex;
+  align-items: center;
+  
+  .user-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba($uniprotec-light-blue, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+    
+    i {
+      font-size: 2rem;
+      color: $uniprotec-light-blue;
+    }
+  }
+  
+  .user-details {
+    h4 {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      color: $uniprotec-dark-blue;
+    }
+    
+    p {
+      margin-bottom: 0.3rem;
+      color: $uniprotec-dark-gray;
+      
+      i {
+        color: $uniprotec-blue;
+        margin-right: 0.5rem;
+      }
+    }
+  }
+}
+
+// Form styling
+.form-label {
+  font-weight: 500;
+  color: $uniprotec-dark-gray;
+  margin-bottom: 0.5rem;
+}
+
+.form-control, .input-group-text {
+  padding: 0.7rem 0.75rem;
+  border-radius: 8px;
+  
+  &:focus {
+    border-color: $uniprotec-light-blue;
+    box-shadow: 0 0 0 0.2rem rgba($uniprotec-light-blue, 0.25);
+  }
+  
+  &.is-invalid {
+    border-color: #dc3545;
+    
+    &:focus {
+      box-shadow: 0 0 0 0.2rem rgba(#dc3545, 0.25);
+    }
+  }
+}
+
+// Payment method styling
+.payment-method-icons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+  
+  img {
+    height: 35px;
+    object-fit: contain;
+  }
+}
+
+// Action buttons
+.btn-primary {
+  background-color: $uniprotec-blue;
+  border-color: $uniprotec-blue;
+  font-weight: 500;
+  
+  &:hover, &:focus:not(:disabled) {
+    background-color: $uniprotec-dark-blue;
+    border-color: $uniprotec-dark-blue;
+  }
+  
+  &:disabled {
+    background-color: lighten($uniprotec-blue, 20%);
+    border-color: lighten($uniprotec-blue, 20%);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 767.98px) {
+  .purchase-type-selector {
+    .purchase-options {
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      
+      .purchase-option {
+        width: 100%;
+        max-width: 280px;
+      }
+    }
+  }
+  
+  .checkout-panel {
+    .panel-header {
+      flex-direction: column;
+      text-align: center;
+      
+      .header-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+      }
+    }
+  }
+  
+  .user-profile-summary {
+    flex-direction: column;
+    text-align: center;
+    
+    .user-avatar {
+      margin-right: 0;
+      margin-bottom: 1rem;
+    }
+  }
+}

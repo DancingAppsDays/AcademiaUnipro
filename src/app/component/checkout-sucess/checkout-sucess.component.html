@@ -1,0 +1,110 @@
+<!-- checkout-success.component.html -->
+<div class="success-container" @fadeInUp>
+    <div class="container py-5">
+      <div class="success-card">
+        <div class="success-icon">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        
+        <h1 class="mt-4">¡Compra exitosa!</h1>
+        
+        <div class="order-info" *ngIf="purchaseId">
+          <div class="order-badge">Pedido #{{ purchaseId }}</div>
+        </div>
+        
+        <div class="course-info mt-4" *ngIf="course">
+          <h2>{{ course.title }}</h2>
+          <p>{{ course.subtitle }}</p>
+          
+          <div class="course-details" *ngIf="selectedDate">
+            <div class="detail-item">
+              <i class="bi bi-calendar2-check"></i>
+              <div>
+                <strong>Fecha del curso</strong>
+                <p>{{ selectedDate | date:'fullDate':'':'es' }}</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <i class="bi bi-clock"></i>
+              <div>
+                <strong>Duración</strong>
+                <p>{{ course.duration }}</p>
+              </div>
+            </div>
+            
+            <div class="detail-item">
+              <i class="bi bi-person-badge"></i>
+              <div>
+                <strong>Instructor</strong>
+                <p>{{ course.instructor.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="email-info mt-4" *ngIf="email">
+          <div class="email-badge">
+            <i class="bi bi-envelope-check"></i>
+          </div>
+          <div>
+            <h3>Confirmación enviada por correo</h3>
+            <p>Hemos enviado todos los detalles a <strong>{{ email }}</strong>.</p>
+            <p>Por favor, revisa tu bandeja de entrada (y carpeta de spam si es necesario).</p>
+          </div>
+        </div>
+        
+        <div class="next-steps mt-5">
+          <h3>Próximos pasos</h3>
+          <ul>
+            <li>
+              <div class="step-icon"><span>1</span></div>
+              <div class="step-content">
+                <strong>Revisa tu correo electrónico</strong>
+                <p>Encontrarás todos los detalles de acceso al curso.</p>
+              </div>
+            </li>
+            <li>
+              <div class="step-icon"><span>2</span></div>
+              <div class="step-content">
+                <strong>Prepara los materiales necesarios</strong>
+                <p>Asegúrate de tener todo lo necesario para participar.</p>
+              </div>
+            </li>
+            <li>
+              <div class="step-icon"><span>3</span></div>
+              <div class="step-content">
+                <strong>Conéctate puntualmente</strong>
+                <p>Ingresa 10 minutos antes para verificar tu conexión.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        
+        <div class="action-buttons mt-5">
+          <button class="btn btn-primary me-3" (click)="addToCalendar()" *ngIf="course && selectedDate">
+            <i class="bi bi-calendar-plus me-2"></i>
+            Agregar a Google Calendar
+          </button>
+          
+          <button class="btn btn-outline-primary me-3" (click)="downloadConfirmation()">
+            <i class="bi bi-file-earmark-pdf me-2"></i>
+            Descargar confirmación
+          </button>
+          
+          <button class="btn btn-outline-secondary" routerLink="/dashboard">
+            <i class="bi bi-person-circle me-2"></i>
+            Ver mis cursos
+          </button>
+        </div>
+        
+        <div class="additional-courses mt-5">
+          <h3>¿Busca capacitación complementaria?</h3>
+          <p>Explore nuestra oferta completa de cursos para fortalecer sus conocimientos.</p>
+          <button class="btn btn-primary" routerLink="/courses">
+            Ver más cursos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
