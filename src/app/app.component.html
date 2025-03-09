@@ -1,4 +1,3 @@
-
 <!-- TODO: make a cool mobile menu 
 <nav>
   <ul>
@@ -8,6 +7,14 @@
     <li><a routerLink="/courses" routerLinkActive="active" ariaCurrentWhenActive="page">SCourses</a></li>
   </ul>
 </nav>-->
+<section class="hero-section">
+  <div class="logo-container text-center py-4">
+    <a routerLink="/home">
+      <img src="assets/images/uniprotec-logo.png" alt="Academia Uniprotec" class="logo">
+    </a>
+  </div>
+</section>
+
 <div [@routeAnimations]="prepareRoute(outlet)">
   <router-outlet #outlet="outlet"></router-outlet>
 </div>

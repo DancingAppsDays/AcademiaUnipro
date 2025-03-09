@@ -1,122 +1,113 @@
 <!-- course-list.component.html -->
 <div class="course-list-container" @fadeIn>
-    <div class="container py-4">
-      <!-- Page Header -->
-      <div class="course-list-header">
-        <h1 class="page-title">
-          {{ selectedCategory ? selectedCategory : 'Todos los Cursos' }}
-        </h1>
-        <p class="page-subtitle">
-          {{ selectedCategory ? 'Cursos especializados en ' + selectedCategory : 'Explora nuestra oferta completa de capacitación' }}
-        </p>
-      </div>
-      
-      <!-- Filters Section -->
-      <div class="filters-section">
-        <div class="row align-items-center">
-          <div class="col-md-6 mb-3 mb-md-0">
-            <div class="categories-filter">
-              <button 
-                class="category-btn" 
-                [class.active]="!selectedCategory"
-                (click)="changeCategory(null)">
-                Todos
-              </button>
-              <button 
-                *ngFor="let category of categories" 
-                class="category-btn" 
-                [class.active]="selectedCategory === category"
-                (click)="changeCategory(category)">
-                {{ category }}
-              </button>
-            </div>
-          </div>
-          
-          <div class="col-md-4 mb-3 mb-md-0">
-            <div class="search-box">
-              <i class="bi bi-search"></i>
-              <input 
-                type="text" 
-                class="form-control" 
-                placeholder="Buscar cursos..." 
-                (input)="onSearch($event)">
-            </div>
-          </div>
-          
-          <div class="col-md-2">
-            <div class="dropdown">
-              <button class="btn btn-sort dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown">
-                Ordenar por
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="sortDropdown">
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0)" (click)="changeSorting('date')">
-                    Fecha más próxima
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0)" (click)="changeSorting('price')">
-                    Precio: menor a mayor
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item" href="javascript:void(0)" (click)="changeSorting('title')">
-                    Alfabético: A-Z
-                  </a>
-                </li>
-              </ul>
-            </div>
+  <div class="container py-4">
+    <!-- Page Header -->
+    <div class="course-list-header">
+      <h1 class="page-title">
+        {{ selectedCategory ? selectedCategory : 'Todos los Cursos' }}
+      </h1>
+      <p class="page-subtitle">
+        {{ selectedCategory ? 'Cursos especializados en ' + selectedCategory : 'Explora nuestra oferta completa de
+        capacitación' }}
+      </p>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="filters-section">
+      <div class="row align-items-center">
+        <div class="col-md-6 mb-3 mb-md-0">
+          <div class="categories-filter">
+            <button class="category-btn" [class.active]="!selectedCategory" (click)="changeCategory(null)">
+              Todos
+            </button>
+            <button *ngFor="let category of categories" class="category-btn"
+              [class.active]="selectedCategory === category" (click)="changeCategory(category)">
+              {{ category }}
+            </button>
           </div>
         </div>
-      </div>
-      
-      <!-- Loading State -->
-      <div class="text-center py-5" *ngIf="loading">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Cargando...</span>
-        </div>
-        <p class="mt-3">Cargando cursos...</p>
-      </div>
-      
-      <!-- Courses Grid -->
-      <div class="courses-grid mt-4" *ngIf="!loading">
-        <div class="row" @staggerList *ngIf="filteredCourses.length > 0">
-          <div class="col-lg-4 col-md-6 mb-4" *ngFor="let course of filteredCourses">
-            <div class="course-card" (click)="viewCourseDetails(course.id)">
-              <div class="card-img-container">
-                <img [src]="course.imageUrl" [alt]="course.title">
-                <div class="card-badge">{{ course.category }}</div>
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">{{ course.title }}</h3>
-                <p class="card-subtitle">{{ course.subtitle }}</p>
-                <div class="card-details">
-                  <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
-                  <span><i class="bi bi-calendar"></i> {{ course.nextDate | date:'shortDate' }}</span>
-                </div>
-                <div class="instructor-preview">
-                  <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name">
-                  <span>{{ course.instructor.name }}</span>
-                </div>
-                <div class="card-price">
-                  <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
-                  <button class="btn btn-sm btn-primary">Ver detalles</button>
-                </div>
-              </div>
-            </div>
+
+        <div class="col-md-4 mb-3 mb-md-0">
+          <div class="search-box">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control" placeholder="Buscar cursos..." (input)="onSearch($event)">
           </div>
         </div>
-        
-        <!-- No Courses Found -->
-        <div class="no-courses-found" *ngIf="filteredCourses.length === 0 && !loading">
-          <div class="alert alert-info">
-            <i class="bi bi-info-circle"></i>
-            No se encontraron cursos que coincidan con tu búsqueda.
+
+        <div class="col-md-2">
+          <div class="dropdown">
+            <button class="btn btn-sort dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown">
+              Ordenar por
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+              <li>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="changeSorting('date')">
+                  Fecha más próxima
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="changeSorting('price')">
+                  Precio: menor a mayor
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="javascript:void(0)" (click)="changeSorting('title')">
+                  Alfabético: A-Z
+                </a>
+              </li>
+            </ul>
           </div>
-          <button class="btn btn-outline-primary mt-3" (click)="changeCategory(null); searchTerm = ''">
-            Mostrar todos los cursos
-          </button>
         </div>
       </div>
     </div>
+
+    <!-- Loading State -->
+    <div class="text-center py-5" *ngIf="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-3">Cargando cursos...</p>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="courses-grid mt-4" *ngIf="!loading">
+      <div class="row" @staggerList *ngIf="filteredCourses.length > 0">
+        <div class="col-lg-4 col-md-6 mb-4" *ngFor="let course of filteredCourses">
+          <div class="course-card" (click)="viewCourseDetails(course.id)">
+            <div class="card-img-container">
+              <img [src]="course.imageUrl" [alt]="course.title">
+              <div class="card-badge">{{ course.category }}</div>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">{{ course.title }}</h3>
+              <p class="card-subtitle">{{ course.subtitle }}</p>
+              <div class="card-details">
+                <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
+                <span><i class="bi bi-calendar"></i> {{ course.nextDate | date:'shortDate' }}</span>
+              </div>
+              <div class="instructor-preview">
+                <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name">
+                <span>{{ course.instructor.name }}</span>
+              </div>
+              <div class="card-price">
+                <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+                <button class="btn btn-sm btn-primary">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- No Courses Found -->
+      <div class="no-courses-found" *ngIf="filteredCourses.length === 0 && !loading">
+        <div class="alert alert-info">
+          <i class="bi bi-info-circle"></i>
+          No se encontraron cursos que coincidan con tu búsqueda.
+        </div>
+        <button class="btn btn-outline-primary mt-3" (click)="changeCategory(null); searchTerm = ''">
+          Mostrar todos los cursos
+        </button>
+      </div>
+    </div>
   </div>
+</div>

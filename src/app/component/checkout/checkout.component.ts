@@ -32,31 +32,31 @@ import { animate, style, transition, trigger } from '@angular/animations';
     ]),
     trigger('accordionAnimation', [
       transition(':enter', [
-        style({ 
+        style({
           opacity: 0,
           height: 0,
           transform: 'translateY(-20px)',
           overflow: 'hidden'
         }),
-        animate('400ms ease-out', style({ 
+        animate('400ms ease-out', style({
           opacity: 1,
           height: '*',
           transform: 'translateY(0)'
         }))
       ]),
       transition(':leave', [
-        style({ 
+        style({
           opacity: 1,
           height: '*',
           overflow: 'hidden'
         }),
-        animate('300ms ease-in', style({ 
+        animate('300ms ease-in', style({
           opacity: 0,
           height: 0,
           transform: 'translateY(-20px)'
         }))
       ]),
-   ] )
+    ])
   ]
 })
 export class CheckoutComponent implements OnInit {
@@ -69,13 +69,13 @@ export class CheckoutComponent implements OnInit {
   loading = true;
   loadError = false;
   processingPayment = false;
-  
+
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private courseService = inject(CourseService);
   private userService = inject(UserService);
-  
+
   constructor() {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -85,10 +85,10 @@ export class CheckoutComponent implements OnInit {
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       jobRole: [''],
       companyName: ['']
-    }, { 
+    }, {
       validators: this.passwordMatchValidator
     });
-    
+
     this.companyForm = this.fb.group({
       companyName: ['', Validators.required],
       rfc: ['', [Validators.required, Validators.pattern(/^[A-Z&Ñ]{3,4}\d{6}[A-Z\d]{3}$/)]],
@@ -104,21 +104,21 @@ export class CheckoutComponent implements OnInit {
     this.loadCheckoutData();
     this.checkUserLoginStatus();
   }
-  
+
   private loadCheckoutData(): void {
     const courseId = this.route.snapshot.paramMap.get('courseId');
     const dateParam = this.route.snapshot.queryParamMap.get('date');
-    
+
     if (!courseId) {
       this.handleDataError('No se ha especificado un curso');
       return;
     }
-    
+
     // Parse the date if provided
     if (dateParam) {
       try {
         this.selectedDate = new Date(dateParam);
-        
+
         // Check for invalid date
         if (isNaN(this.selectedDate.getTime())) {
           this.selectedDate = null;
@@ -128,71 +128,71 @@ export class CheckoutComponent implements OnInit {
         console.error('Error parsing date', error);
       }
     }
-    
-   // Fetch course data
-   this.courseService.getCourseById(courseId).subscribe({
-    next: (course) => {
-      // Check if the course is undefined or null
-      if (!course) {
-        this.loadFromMockData(courseId);
-        return;
-      }
-      
-      this.course = course;
-      this.validateSelectedDate();
-      this.loading = false;
-    },
-    error: (error) => {
-      console.error('Error loading course details', error);
-      this.loadFromMockData(courseId);
-    }
-  });
-}
 
-// Separate method for loading from mock data
-private loadFromMockData(courseId: string): void {
-  console.log('Attempting to load from mock data');
-  
-  this.courseService.getMockCourses().subscribe({
-    next: (courses) => {
-      const mockCourse = courses.find(c => c.id === courseId);
-      if (mockCourse) {
-        this.course = mockCourse;
+    // Fetch course data
+    this.courseService.getCourseById(courseId).subscribe({
+      next: (course) => {
+        // Check if the course is undefined or null
+        if (!course) {
+          this.loadFromMockData(courseId);
+          return;
+        }
+
+        this.course = course;
         this.validateSelectedDate();
         this.loading = false;
-      } else {
-        this.handleDataError('No se pudo encontrar el curso especificado');
+      },
+      error: (error) => {
+        console.error('Error loading course details', error);
+        this.loadFromMockData(courseId);
       }
-    },
-    error: (fallbackError) => {
-      this.handleDataError('Error al cargar los datos del curso');
-    }
-  });
-}
-  
+    });
+  }
+
+  // Separate method for loading from mock data
+  private loadFromMockData(courseId: string): void {
+    console.log('Attempting to load from mock data');
+
+    this.courseService.getMockCourses().subscribe({
+      next: (courses) => {
+        const mockCourse = courses.find(c => c.id === courseId);
+        if (mockCourse) {
+          this.course = mockCourse;
+          this.validateSelectedDate();
+          this.loading = false;
+        } else {
+          this.handleDataError('No se pudo encontrar el curso especificado');
+        }
+      },
+      error: (fallbackError) => {
+        this.handleDataError('Error al cargar los datos del curso');
+      }
+    });
+  }
+
   private validateSelectedDate(): void {
     if (!this.selectedDate || !this.course?.availableDates || this.course.availableDates.length === 0) {
       return;
     }
-    
+
     // Check if selected date is in available dates
     const isDateAvailable = this.course.availableDates.some(date => {
       const availableDate = new Date(date);
       return availableDate.toDateString() === this.selectedDate?.toDateString();
     });
-    
+
     if (!isDateAvailable) {
       console.warn('Selected date is not available, resetting');
       this.selectedDate = null;
     }
   }
-  
+
   private handleDataError(message: string): void {
     this.loading = false;
     this.loadError = true;
     console.error(message);
   }
-  
+
   private checkUserLoginStatus(): void {
     this.userService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -204,42 +204,42 @@ private loadFromMockData(courseId: string): void {
           jobRole: user.jobRole || '',
           companyName: user.companyName || ''
         });
-        
+
         // Disable password fields for logged-in users
         this.userForm.get('password')?.disable();
         this.userForm.get('confirmPassword')?.disable();
       }
     });
   }
-  
+
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
     const confirmPassword = form.get('confirmPassword')?.value;
-    
+
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
-  
+
   switchToLogin() {
-    this.router.navigate(['/login'], { 
-      queryParams: { 
+    this.router.navigate(['/login'], {
+      queryParams: {
         redirect: `/checkout/${this.course?.id}`,
-        date: this.selectedDate?.toISOString() 
-      } 
+        date: this.selectedDate?.toISOString()
+      }
     });
   }
-  
+
   togglePurchaseType(type: 'individual' | 'company') {
     // Only proceed if changing to a different type
     if (this.purchaseType === type) {
       return;
     }
-    
+
     // Store previous type for animation
     const previousType = this.purchaseType;
-    
+
     // Update the purchase type
     this.purchaseType = type;
-    
+
     // If switching to company, adjust validation
     if (type === 'company') {
       // Ensure company form is properly validated
@@ -248,7 +248,7 @@ private loadFromMockData(courseId: string): void {
       this.companyForm.get('contactName')?.updateValueAndValidity();
       this.companyForm.get('contactEmail')?.updateValueAndValidity();
       this.companyForm.get('contactPhone')?.updateValueAndValidity();
-      
+
       // Log for debugging
       console.log('Switched to company purchase type');
     } else {
@@ -258,21 +258,21 @@ private loadFromMockData(courseId: string): void {
         this.userForm.get('fullName')?.updateValueAndValidity();
         this.userForm.get('phone')?.updateValueAndValidity();
       }
-      
+
       // Log for debugging
       console.log('Switched to individual purchase type');
     }
-    
+
     // For animation purposes, you might want to trigger change detection manually
     // or ensure Angular runs animation by forcing a layout reflow
     setTimeout(() => {
       console.log(`Animation should run from ${previousType} to ${type}`);
     }, 0);
   }
-  
+
   calculateTotal(): number {
     if (!this.course) return 0;
-    
+
     if (this.purchaseType === 'individual') {
       return this.course.price;
     } else {
@@ -280,28 +280,28 @@ private loadFromMockData(courseId: string): void {
       return this.course.price * quantity;
     }
   }
-  
+
   processPayment() {
-   /* if (this.purchaseType === 'individual' && !this.userForm.valid) {
-      this.userForm.markAllAsTouched();
-      return;
-    }
-    
-    if (this.purchaseType === 'company' && !this.companyForm.valid) {
-      this.companyForm.markAllAsTouched();
-      return;
-    }*/
-    
+    /* if (this.purchaseType === 'individual' && !this.userForm.valid) {
+       this.userForm.markAllAsTouched();
+       return;
+     }
+     
+     if (this.purchaseType === 'company' && !this.companyForm.valid) {
+       this.companyForm.markAllAsTouched();
+       return;
+     }*/
+
     if (!this.course || !this.selectedDate) {
       alert('Error: Información del curso o fecha no disponible');
       return;
     }
-    
+
     this.processingPayment = true;
-    
+
     if (this.purchaseType === 'individual') {
       // Process individual registration
-      if (!this.isExistingUser) {
+      if (false) {//debug//!this.isExistingUser) {
         // Register new user
         this.userService.registerUser(this.userForm.value).subscribe({
           next: (user) => {
@@ -345,18 +345,18 @@ private loadFromMockData(courseId: string): void {
       });
     }
   }
-  
+
   private processPurchase(userId?: string) {
     console.log("process pruchase")
     //if (!this.course || !this.selectedDate) return;
-    
-    this.router.navigate(['/checkout/success'], { 
-      queryParams: { 
+
+    this.router.navigate(['/checkout/success'], {
+      queryParams: {
         email: this.userForm.get('email')?.value,
         courseId: this.course?.id
-      } 
+      }
     });
-    if(true) return;
+    if (true) return;
 
     this.userService.purchaseCourse({
       courseId: this.course?.id,
@@ -367,11 +367,11 @@ private loadFromMockData(courseId: string): void {
     }).subscribe({
       next: (response) => {
         // Navigate to success page with email confirmation
-        this.router.navigate(['/checkout/success'], { 
-          queryParams: { 
+        this.router.navigate(['/checkout/success'], {
+          queryParams: {
             email: this.userForm.get('email')?.value,
             courseId: this.course?.id
-          } 
+          }
         });
       },
       error: (error) => {
@@ -381,7 +381,7 @@ private loadFromMockData(courseId: string): void {
       }
     });
   }
-  
+
   // Method to return to course details
   backToCourse() {
     if (this.course) {

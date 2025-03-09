@@ -35,17 +35,17 @@ import { animate, style, transition, trigger, query, stagger } from '@angular/an
 export class CourseListComponent implements OnInit {
   courses: Course[] = [];
   filteredCourses: Course[] = [];
-  categories: string[] = ['Seguridad Industrial', 'Certificación ISO', 'Liderazgo', 'Gestión Ambiental'];
-  
+  categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención', 'Calidad', 'Desarrollo Profesional'];
+
   selectedCategory: string | null = null;
   searchTerm: string = '';
   sortBy: 'price' | 'date' | 'title' = 'date';
   loading = true;
-  
+
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private courseService = inject(CourseService);
-  
+
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const category = params.get('category');
@@ -53,10 +53,10 @@ export class CourseListComponent implements OnInit {
       this.loadCourses();
     });
   }
-  
+
   loadCourses(): void {
     this.loading = true;
-    
+
     //TODO: debug tool
     this.courseService.getMockCourses().subscribe(courses => {
       this.courses = courses;
@@ -64,7 +64,7 @@ export class CourseListComponent implements OnInit {
       console.log('Mock courses loaded', courses);
       this.loading = false;
     });
-    
+
     this.courseService.getAllCourses().subscribe({
       next: (coursess) => {
         //this.courses = courses;
@@ -74,7 +74,7 @@ export class CourseListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading courses', error);
-        
+
         // Fallback to mock data
         this.courseService.getMockCourses().subscribe(courses => {
           this.courses = courses;
@@ -85,66 +85,70 @@ export class CourseListComponent implements OnInit {
       }
     });
   }
-  
+
   applyFilters(): void {
     let filtered = [...this.courses];
-    
+
     // Apply category filter
     if (this.selectedCategory) {
       filtered = filtered.filter(course => course.category === this.selectedCategory);
     }
-    
+
     // Apply search filter
     if (this.searchTerm) {
       const search = this.searchTerm.toLowerCase();
-      filtered = filtered.filter(course => 
-        course.title.toLowerCase().includes(search) || 
+      filtered = filtered.filter(course =>
+        course.title.toLowerCase().includes(search) ||
         course.subtitle.toLowerCase().includes(search) ||
         course.description.toLowerCase().includes(search)
       );
     }
-    
-     // Apply sorting
-  switch (this.sortBy) {
-    case 'price':
-      filtered.sort((a, b) => a.price - b.price);
-      break;
-    case 'title':
-      filtered.sort((a, b) => a.title.localeCompare(b.title));
-      break;
-    case 'date':
-      filtered.sort((a, b) => {
-        const dateA = a.nextDate ? new Date(a.nextDate).getTime() : 0;
-        const dateB = b.nextDate ? new Date(b.nextDate).getTime() : 0;
-        return dateA - dateB;
-      });
-      break;
-  }
-    
+
+    // Apply sorting
+    switch (this.sortBy) {
+      case 'price':
+        filtered.sort((a, b) => a.price - b.price);
+        break;
+      case 'title':
+        filtered.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'date':
+        filtered.sort((a, b) => {
+          const dateA = a.nextDate ? new Date(a.nextDate).getTime() : 0;
+          const dateB = b.nextDate ? new Date(b.nextDate).getTime() : 0;
+          return dateA - dateB;
+        });
+        break;
+    }
+
     this.filteredCourses = filtered;
   }
-  
+
   changeCategory(category: string | null): void {
     this.selectedCategory = category;
-    
+
     if (category) {
       this.router.navigate(['/courses', category]);
     } else {
       this.router.navigate(['/courses']);
     }
   }
-  
+
   onSearch(event: Event): void {
     this.searchTerm = (event.target as HTMLInputElement).value;
     this.applyFilters();
   }
-  
+
   changeSorting(sortBy: 'price' | 'date' | 'title'): void {
     this.sortBy = sortBy;
     this.applyFilters();
   }
-  
+
   viewCourseDetails(courseId: string): void {
     this.router.navigate(['/course', courseId]);
+  }
+
+  navigateToCategory(category: string): void {
+    this.router.navigate(['/courses', category]);
   }
 }

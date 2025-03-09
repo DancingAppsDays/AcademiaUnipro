@@ -12,65 +12,66 @@ import { CompanySuccessComponent } from './component/company-success/company-suc
 //import { AuthGuard } from './guards/auth.guard';
 
 
-   
 
-    export const routes: Routes = [
-        { 
-          path: '', 
-          component: HomeComponent, 
-          title: 'Academia Uniprotec - Capacitación Industrial',
-          data: { animation: 'HomePage' }
-        },
-        { 
-            path: 'login', 
-            component: LoginComponent,
-            title: 'Iniciar Sesión',
-            data: { animation: 'LoginPage' }
-          },
-       { 
-          path: 'courses', 
-          component: CourseListComponent,
-          title: 'Cursos Disponibles',
-          data: { animation: 'CoursesPage' }
-        },
-        { 
-          path: 'courses/:category', 
-          component: CourseListComponent,
-          title: 'Cursos por Categoría',
-          data: { animation: 'CategoryPage' }
-        },
-        { 
-          path: 'course/:id', 
-          component: CourseDetailComponent,
-          title: 'Detalles del Curso',
-          data: { animation: 'CourseDetailPage' }
-        },
-      { 
-          path: 'checkout/:courseId', 
-          component: CheckoutComponent,
-          title: 'Checkout',
-          data: { animation: 'CheckoutPage' }
-        },
-        
-        { 
-          path: 'checkout/success', 
-          component: CheckoutSuccessComponent,
-          title: 'Compra Exitosa',
-          data: { animation: 'SuccessPage' }
-        },
-         { 
-          path: 'checkout/company-success', 
-          component: CompanySuccessComponent,
-          title: 'Solicitud Recibida',
-          data: { animation: 'CompanySuccessPage' }
-        },
-       /*
-        { 
-          path: 'dashboard', 
-          component: UserDashboardComponent,
-          canActivate: [AuthGuard],
-          title: 'Mi Panel',
-          data: { animation: 'DashboardPage' }
-        },*/
-        { path: '**', redirectTo: '', pathMatch: 'full' }
-      ];
+
+export const routes: Routes = [
+  {
+    path: '',
+    component: HomeComponent,
+    title: 'Academia Uniprotec - Capacitación Industrial',
+    data: { animation: 'HomePage' }
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
+    title: 'Iniciar Sesión',
+    data: { animation: 'LoginPage' }
+  },
+  {
+    path: 'courses',
+    component: CourseListComponent,
+    title: 'Cursos Disponibles',
+    data: { animation: 'CoursesPage' }
+  },
+  {
+    path: 'courses/:category',
+    component: CourseListComponent,
+    title: 'Cursos por Categoría',
+    data: { animation: 'CategoryPage' }
+  },
+  {
+    path: 'course/:id',
+    component: CourseDetailComponent,
+    title: 'Detalles del Curso',
+    data: { animation: 'CourseDetailPage' }
+  },
+  {
+    path: 'checkout/success',
+    component: CheckoutSuccessComponent,
+    title: 'Compra Exitosa',
+    data: { animation: 'SuccessPage' }
+  },
+  {
+    path: 'checkout/company-success',
+    component: CompanySuccessComponent,
+    title: 'Solicitud Recibida',
+    data: { animation: 'CompanySuccessPage' }
+  },
+  {
+    path: 'checkout/:courseId',
+    component: CheckoutComponent,
+    title: 'Checkout',
+    data: { animation: 'CheckoutPage' }
+  },
+
+
+  /*
+   { 
+     path: 'dashboard', 
+     component: UserDashboardComponent,
+     canActivate: [AuthGuard],
+     title: 'Mi Panel',
+     data: { animation: 'DashboardPage' }
+   },*/
+  { path: '**', redirectTo: '', pathMatch: 'full' }
+];

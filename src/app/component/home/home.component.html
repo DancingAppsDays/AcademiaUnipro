@@ -1,216 +1,229 @@
-
 <div class="uniprotec-home-container" @fadeInOut>
-    <!-- Hero Section with Logo and Carousel -->
-    <section class="hero-section">
-      <div class="logo-container text-center py-4">
-        <img src="../../../assets/images/uniprotec-logo.png" alt="Academia Uniprotec" class="logo">
-        <h1 class="mt-3 mb-0">Academia Uniprotec</h1>
-        <p class="lead">Capacitación Continua de Alto Impacto</p>
-      </div>
-      
-      <ngb-carousel 
-        [interval]="5000"
-        [pauseOnHover]="true"
-        [showNavigationArrows]="true"
-        [showNavigationIndicators]="true">
-        <ng-template ngbSlide *ngFor="let slide of carouselImages">
-          <div class="carousel-container">
-            <div class="carousel-overlay"></div>
-            <img [src]="slide.src" alt="Academia Uniprotec cursos">
-            <div class="carousel-caption">
-              <div class="caption-badge">
-                NUEVO
-              </div>
-              <h2>{{ slide.title }}</h2>
-              <p>{{ slide.subtitle }}</p>
-              <button class="btn btn-primary btn-yellow">Ver Cursos</button>
+  <!-- Hero Section with Logo and Carousel -->
+  <section class="hero-section">
+    <div class="logo-container text-center py-4">
+
+      <h1 class="mt-3 mb-0">Academia Uniprotec</h1>
+      <p class="lead">Capacitación Continua de Alto Impacto</p>
+    </div>
+
+    <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true"
+      [showNavigationIndicators]="false">
+      <ng-template ngbSlide *ngFor="let slide of carouselImages">
+        <div class="carousel-container">
+          <div class="carousel-overlay"></div>
+          <img [src]="slide.src" alt="Academia Uniprotec cursos">
+          <div class="carousel-caption">
+            <div class="caption-badge">
+              NUEVO
             </div>
+            <h2>{{ slide.title }}</h2>
+            <p>{{ slide.subtitle }}</p>
+            <button class="btn btn-primary btn-yellow" (click)="navigateToAllCourses()">Ver Cursos</button>
+
           </div>
-        </ng-template>
-      </ngb-carousel>
-    </section>
-    
-    <!-- Stats Section -->
-    <section class="stats-section py-5">
-      <div class="container">
-        <div class="row text-center">
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">11+</div>
-              <div class="stat-label">Años de Experiencia</div>
-            </div>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+
+    <!-- Fix carousel button -->
+
+
+    <!-- Fix the "Ver Todos los Cursos" button -->
+
+
+
+    <!-- Also update any category-specific buttons -->
+
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section py-5">
+    <div class="text-center mt-4">
+      <button class="btn btn-outline-primary btn-lg" (click)="navigateToAllCourses()">Ver Todos los Cursos</button>
+    </div>
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item">
+            <div class="stat-number">11+</div>
+            <div class="stat-label">Años de Experiencia</div>
           </div>
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">70+</div>
-              <div class="stat-label">Cursos Semanales</div>
-            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item">
+            <div class="stat-number">70+</div>
+            <div class="stat-label">Cursos Semanales</div>
           </div>
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">500+</div>
-              <div class="stat-label">Empresas Capacitadas</div>
-            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item">
+            <div class="stat-number">500+</div>
+            <div class="stat-label">Empresas Capacitadas</div>
           </div>
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">15K+</div>
-              <div class="stat-label">Alumnos Egresados</div>
-            </div>
+        </div>
+        <div class="col-md-3 col-6 mb-4">
+          <div class="stat-item">
+            <div class="stat-number">15K+</div>
+            <div class="stat-label">Alumnos Egresados</div>
           </div>
         </div>
       </div>
-    </section>
-    
-    <!-- Featured Courses -->
-    <section class="featured-courses py-5">
-      <div class="container">
-        <div class="section-header text-center mb-5">
-          <div class="section-badge">DESTACADOS</div>
-          <h2>Cursos de Alta Demanda</h2>
-          <p>Formaciones con mayor impacto en el sector industrial</p>
-        </div>
-        
-        <div class="row" @staggerList *ngIf="!loading">
-          <div class="col-lg-3 col-md-6 mb-4" *ngFor="let course of featuredCourses">
-            <div class="course-card" (click)="navigateToCourse(course.id)">
-              <div class="card-img-container">
-                <img [src]="course.imageUrl" [alt]="course.title">
-                <div class="card-badge">{{ course.category }}</div>
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">{{ course.title }}</h3>
-                <p class="card-subtitle">{{ course.subtitle }}</p>
-                <div class="card-details">
-                  <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
-                  <span><i class="bi bi-calendar"></i> {{ course.nextDate | date:'shortDate' }}</span>
-                </div>
-                <div class="instructor-preview">
-                  <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name">
-                  <span>{{ course.instructor.name }}</span>
-                </div>
-                <div class="card-price">
-                  <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
-                  <button class="btn btn-sm btn-primary">Ver detalles</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Loading skeleton -->
-        <div class="row" *ngIf="loading">
-          <div class="col-lg-3 col-md-6 mb-4" *ngFor="let i of [1,2,3,4]">
-            <div class="course-card skeleton">
-              <div class="card-img-container skeleton-img"></div>
-              <div class="card-body">
-                <div class="skeleton-text skeleton-title"></div>
-                <div class="skeleton-text skeleton-subtitle"></div>
-                <div class="skeleton-text skeleton-details"></div>
-                <div class="skeleton-text skeleton-instructor"></div>
-                <div class="skeleton-text skeleton-price"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="text-center mt-4">
-          <button class="btn btn-outline-primary btn-lg">Ver Todos los Cursos</button>
-        </div>
+    </div>
+  </section>
+
+  <!-- Featured Courses -->
+  <section class="featured-courses py-5" *ngIf="featuredCourses.length > 0">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <div class="section-badge">DESTACADOS</div>
+        <h2>Cursos de Alta Demanda</h2>
+        <p>Formaciones con mayor impacto en el sector industrial</p>
       </div>
-    </section>
-    
-    <!-- Course Categories -->
-    <section class="course-categories py-5" *ngFor="let category of categories; let even = even">
-      <div class="container">
-        <div class="section-header text-center mb-5">
-          <div class="section-badge">{{ category }}</div>
-          <h2>Cursos de {{ category }}</h2>
-          <p>Formación especializada para profesionales del sector</p>
-        </div>
-        
-        <div class="row" [class.flex-row-reverse]="even" @staggerList *ngIf="!loading">
-          <div class="col-lg-3 col-md-6 mb-4" *ngFor="let course of categoryCourses[category]">
-            <div class="course-card" (click)="navigateToCourse(course.id)">
-              <div class="card-img-container">
-                <img [src]="course.imageUrl" [alt]="course.title">
-                <div class="card-badge">{{ course.category }}</div>
-              </div>
-              <div class="card-body">
-                <h3 class="card-title">{{ course.title }}</h3>
-                <p class="card-subtitle">{{ course.subtitle }}</p>
-                <div class="card-details">
-                  <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
-                  <span><i class="bi bi-calendar"></i> {{ course.nextDate | date:'shortDate' }}</span>
-                </div>
-                <div class="instructor-preview">
-                  <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name">
-                  <span>{{ course.instructor.name }}</span>
-                </div>
-                <div class="card-price">
-                  <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
-                  <button class="btn btn-sm btn-primary">Ver detalles</button>
-                </div>
-              </div>
+
+      <div class="row" @staggerList *ngIf="!loading">
+        <div class="col-lg-3 col-md-6 mb-4" *ngFor="let course of featuredCourses">
+          <div class="course-card" (click)="navigateToCourse(course.id)">
+            <div class="card-img-container">
+              <img [src]="course.imageUrl" [alt]="course.title">
+              <div class="card-badge">{{ course.category }}</div>
             </div>
-          </div>
-        </div>
-        
-        <div class="text-center mt-4">
-          <button class="btn btn-outline-primary btn-lg" (click)="navigateToCategory(category)">
-            Ver todos los cursos de {{ category }}
-          </button>
-        </div>
-      </div>
-    </section>
-    
-    <!-- Benefits Section -->
-    <section class="benefits-section py-5">
-      <div class="container">
-        <div class="section-header text-center mb-5">
-          <div class="section-badge">BENEFICIOS</div>
-          <h2>¿Por qué elegirnos?</h2>
-          <p>Formación de calidad con ventajas competitivas</p>
-        </div>
-        
-        <div class="row">
-          <div class="col-md-4 mb-4">
-            <div class="benefit-card">
-              <div class="benefit-icon">
-                <i class="bi bi-award"></i>
+            <div class="card-body">
+              <h3 class="card-title">{{ course.title }}</h3>
+              <p class="card-subtitle">{{ course.subtitle }}</p>
+              <div class="card-details">
+                <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
+                <span><i class="bi bi-calendar"></i> {{ course.nextDate | date:'shortDate' }}</span>
               </div>
-              <h3>Certificación Reconocida</h3>
-              <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más exigentes.</p>
-            </div>
-          </div>
-          <div class="col-md-4 mb-4">
-            <div class="benefit-card">
-              <div class="benefit-icon">
-                <i class="bi bi-person-video3"></i>
+              <div class="instructor-preview">
+                <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name">
+                <span>{{ course.instructor.name }}</span>
               </div>
-              <h3>Instructores Expertos</h3>
-              <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones internacionales.</p>
-            </div>
-          </div>
-          <div class="col-md-4 mb-4">
-            <div class="benefit-card">
-              <div class="benefit-icon">
-                <i class="bi bi-laptop"></i>
+              <div class="card-price">
+                <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+                <button class="btn btn-sm btn-primary">Ver detalles</button>
               </div>
-              <h3>Formato Flexible</h3>
-              <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
-    
-    <!-- Call to Action Section -->
-    <section class="cta-section py-5">
-      <div class="container text-center">
-        <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
-        <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
-        <button class="btn btn-primary btn-lg mt-4">Explorar Cursos Disponibles</button>
+
+      <!-- Loading skeleton -->
+      <div class="row" *ngIf="loading">
+        <div class="col-lg-3 col-md-6 mb-4" *ngFor="let i of [1,2,3,4]">
+          <div class="course-card skeleton">
+            <div class="card-img-container skeleton-img"></div>
+            <div class="card-body">
+              <div class="skeleton-text skeleton-title"></div>
+              <div class="skeleton-text skeleton-subtitle"></div>
+              <div class="skeleton-text skeleton-details"></div>
+              <div class="skeleton-text skeleton-instructor"></div>
+              <div class="skeleton-text skeleton-price"></div>
+            </div>
+          </div>
+        </div>
       </div>
-    </section>
-  </div>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-primary btn-lg">Ver Todos los Cursos</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Course Categories -->
+  <section class="course-categories py-5" *ngFor="let category of categories; let even = even">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <div class="section-badge">{{ category }}</div>
+        <h2>Cursos de {{ category }}</h2>
+        <p>Formación especializada para profesionales del sector</p>
+      </div>
+
+      <div class="row" [class.flex-row-reverse]="even" @staggerList *ngIf="!loading">
+        <div class="col-lg-3 col-md-6 mb-4" *ngFor="let course of categoryCourses[category]">
+          <div class="course-card" (click)="navigateToCourse(course.id)">
+            <div class="card-img-container">
+              <img [src]="course.imageUrl" [alt]="course.title">
+              <div class="card-badge">{{ course.category }}</div>
+            </div>
+            <div class="card-body">
+              <h3 class="card-title">{{ course.title }}</h3>
+              <p class="card-subtitle">{{ course.subtitle }}</p>
+              <div class="card-details">
+                <span><i class="bi bi-clock"></i> {{ course.duration }}</span>
+                <span><i class="bi bi-calendar"></i> {{ course.nextDate | date:'shortDate' }}</span>
+              </div>
+              <div class="instructor-preview">
+                <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name">
+                <span>{{ course.instructor.name }}</span>
+              </div>
+              <div class="card-price">
+                <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+                <button class="btn btn-sm btn-primary">Ver detalles</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-outline-primary btn-lg" (click)="navigateToCategory(category)">
+          Ver todos los cursos de {{ category }}
+        </button>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits-section py-5">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <div class="section-badge">BENEFICIOS</div>
+        <h2>¿Por qué elegirnos?</h2>
+        <p>Formación de calidad con ventajas competitivas</p>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="bi bi-award"></i>
+            </div>
+            <h3>Certificación Reconocida</h3>
+            <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más
+              exigentes.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="bi bi-person-video3"></i>
+            </div>
+            <h3>Instructores Expertos</h3>
+            <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones
+              internacionales.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="bi bi-laptop"></i>
+            </div>
+            <h3>Formato Flexible</h3>
+            <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action Section -->
+  <section class="cta-section py-5">
+    <div class="container text-center">
+      <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
+      <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
+      <button class="btn btn-primary btn-lg mt-4">Explorar Cursos Disponibles</button>
+    </div>
+  </section>
+</div>

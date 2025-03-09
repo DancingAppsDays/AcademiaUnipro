@@ -20,7 +20,13 @@ export class AppComponent {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
   constructor(private router: Router) {
- 
+
     this.router.navigate(['/home']);
+    /*this.router.navigate(['/checkout/company-success'], {
+      queryParams: {
+        // email: this.userForm.get('email')?.value,
+        // courseId: this.course?.id
+      }
+    });*/
   }
 }
