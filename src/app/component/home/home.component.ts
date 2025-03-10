@@ -124,4 +124,35 @@ export class HomeComponent implements OnInit {
   navigateToAllCourses(): void {
     this.router.navigate(['/courses']);
   }
+  getCoursesForCategory(category: string): Course[] {
+    return this.categoryCourses[category] || [];
+  }
+
+  getTopCoursesForCategory(category: string): Course[] {
+    return this.getCoursesForCategory(category).slice(0, 3);
+  }
+
+  selectedTabIndex: number = 0;
+
+  selectTab(index: number): void {
+    this.selectedTabIndex = index;
+  }
+
+  getCategoryIcon(category: string): string {
+    const icons: { [key: string]: string } = {
+      'Normativas Clave': 'bi bi-clipboard-check',
+      'Seguridad Especializada': 'bi bi-shield-check',
+      'Protección y Prevención': 'bi bi-exclamation-triangle',
+      'Calidad': 'bi bi-award',
+      'Desarrollo Profesional': 'bi bi-person-workspace'
+    };
+    return icons[category] || 'bi bi-book';
+  }
+
+  getImageName(category: string): string {
+    // Convert category name to lowercase and replace spaces with hyphens
+    return category.toLowerCase().replace(/\s+/g, '-');
+  }
+
+
 }

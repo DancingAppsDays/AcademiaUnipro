@@ -7,6 +7,7 @@ import { CourseListComponent } from './component/course-list/course-list.compone
 import { CheckoutComponent } from './component/checkout/checkout.component';
 import { CheckoutSuccessComponent } from './component/checkout-sucess/checkout-sucess.component';
 import { CompanySuccessComponent } from './component/company-success/company-success.component';
+import { QuickCheckoutComponent } from './component/quick-checkout/quick-checkout.component';
 
 // Guards
 //import { AuthGuard } from './guards/auth.guard';
@@ -62,6 +63,12 @@ export const routes: Routes = [
     component: CheckoutComponent,
     title: 'Checkout',
     data: { animation: 'CheckoutPage' }
+  },
+  {
+    path: 'quick-checkout/:courseId',
+    component: QuickCheckoutComponent,
+    title: 'Proceso de Compra Rápido',
+    data: { animation: 'QuickCheckoutPage' }
   },
 
 

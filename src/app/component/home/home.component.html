@@ -175,6 +175,60 @@
     </div>
   </section>
 
+  <section class="categories-section py-5">
+    <div class="container">
+      <div class="section-header text-center mb-5">
+        <div class="section-badge">CATEGORÍAS</div>
+        <h2>Nuestras Áreas de Capacitación</h2>
+        <p>Programas especializados para cada necesidad de tu organización</p>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+  <section class="hero-categories">
+    <div class="category-block" *ngFor="let category of categories; let i = index">
+      <div class="gradient-bg category-gradient-{{i}}"></div>
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6" [ngClass]="{'order-lg-2': i % 2 !== 0}">
+            <div class="category-image">
+              <img [src]="'assets/images/courses/montacargas.jpg'" [alt]="'Cursos de ' + category">
+            </div>
+          </div>
+          <div class="col-lg-6" [ngClass]="{'order-lg-1': i % 2 !== 0}">
+            <div class="category-info">
+              <div class="category-badge">{{ category }}</div>
+              <h2>Cursos de {{ category }}</h2>
+              <p>Formación especializada para profesionales del sector con programas certificados y enfoque práctico.
+              </p>
+
+              <div class="course-pills">
+                <div class="pill" *ngFor="let course of getTopCoursesForCategory(category).slice(0, 3)">
+                  {{ course.title }}
+                </div>
+              </div>
+
+              <button class="btn btn-outline-light btn-lg mt-4" (click)="navigateToCategory(category)">
+                Explorar cursos <i class="bi bi-arrow-right-circle"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
   <!-- Benefits Section -->
   <section class="benefits-section py-5">
     <div class="container">

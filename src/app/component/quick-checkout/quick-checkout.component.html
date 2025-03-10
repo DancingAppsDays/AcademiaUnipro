@@ -1,0 +1,314 @@
+<!-- quick-checkout.component.html -->
+<div class="checkout-container" @fadeInOut>
+    <div class="container py-5">
+        <!-- Loading and error states -->
+        <div class="text-center py-5" *ngIf="loading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-3">Cargando información del curso...</p>
+        </div>
+
+        <div class="alert alert-danger" *ngIf="loadError">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            Ocurrió un error al cargar los datos del curso. Por favor, intente de nuevo más tarde.
+            <button class="btn btn-outline-danger btn-sm ms-3" (click)="backToCourse()">
+                Volver
+            </button>
+        </div>
+
+        <!-- Main checkout content -->
+        <div *ngIf="!loading && !loadError && course" @slideInOut>
+            <!-- Course Summary -->
+            <div class="course-summary mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <img [src]="course.imageUrl" [alt]="course.title" class="img-fluid rounded shadow">
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="course-title">{{ course.title }}</h2>
+                        <p class="course-subtitle">{{ course.subtitle }}</p>
+                        <div class="course-details">
+                            <span class="badge bg-primary">{{ course.category }}</span>
+                            <div class="details-item">
+                                <i class="bi bi-clock"></i>
+                                <span>{{ course.duration }}</span>
+                            </div>
+                            <div class="details-item">
+                                <i class="bi bi-calendar-check"></i>
+                                <span *ngIf="selectedDate">{{ selectedDate | date:'fullDate':'':'es' }}</span>
+                                <span *ngIf="!selectedDate" class="text-warning">
+                                    <i class="bi bi-exclamation-circle"></i> Seleccione una fecha
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="price-tag">
+                            <div class="price-label">Precio</div>
+                            <div class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Purchase Type Selection -->
+            <div class="purchase-type-selector mb-4">
+                <h3>Selecciona el tipo de compra</h3>
+                <div class="purchase-options">
+                    <div class="purchase-option" [class.active]="purchaseType === 'individual'"
+                        (click)="togglePurchaseType('individual')">
+                        <div class="option-icon">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        <div class="option-details">
+                            <h4>Individual</h4>
+                            <p>Para uso personal</p>
+                        </div>
+                    </div>
+
+                    <div class="purchase-option" [class.active]="purchaseType === 'corporate'"
+                        (click)="togglePurchaseType('corporate')">
+                        <div class="option-icon">
+                            <i class="bi bi-building-fill"></i>
+                        </div>
+                        <div class="option-details">
+                            <h4>Empresarial</h4>
+                            <p>Para grupos o con factura</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Individual Purchase Form -->
+            <div *ngIf="purchaseType === 'individual'" @slideInOut>
+                <div class="checkout-panel mb-4" [@shakeAnimation]="shakeState">
+                    <div class="panel-header">
+                        <div class="header-icon">
+                            <i class="bi bi-person-vcard"></i>
+                        </div>
+                        <h3>Información de contacto</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form [formGroup]="customerForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fullName" class="form-label">Nombre completo</label>
+                                    <input type="text" class="form-control" id="fullName" formControlName="fullName"
+                                        [ngClass]="{'is-invalid': customerForm.get('fullName')?.invalid && customerForm.get('fullName')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese su nombre completo
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="email" class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" id="email" formControlName="email"
+                                        [ngClass]="{'is-invalid': customerForm.get('email')?.invalid && customerForm.get('email')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese un correo electrónico válido
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="phone" class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="phone" formControlName="phone"
+                                        placeholder="10 dígitos"
+                                        [ngClass]="{'is-invalid': customerForm.get('phone')?.invalid && customerForm.get('phone')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese un número de teléfono válido (10 dígitos)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="acceptTerms"
+                                    formControlName="acceptTerms"
+                                    [ngClass]="{'is-invalid': customerForm.get('acceptTerms')?.invalid && customerForm.get('acceptTerms')?.touched}">
+                                <label class="form-check-label" for="acceptTerms">
+                                    Acepto los <a href="#" target="_blank">términos y condiciones</a> y la <a href="#"
+                                        target="_blank">política de privacidad</a>
+                                </label>
+                                <div class="invalid-feedback">
+                                    Debe aceptar los términos y condiciones para continuar
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="checkout-panel mb-4">
+                    <div class="panel-header">
+                        <div class="header-icon">
+                            <i class="bi bi-credit-card"></i>
+                        </div>
+                        <h3>Método de pago</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Para proteger tu información, procesaremos el pago una vez que confirmes la solicitud.
+                        </div>
+
+                        <div class="payment-methods">
+                            <div class="payment-option active">
+                                <div class="payment-icon">
+                                    <i class="bi bi-credit-card"></i>
+                                </div>
+                                <div class="payment-details">
+                                    <h4>Tarjeta de crédito o débito</h4>
+                                    <p>Paga con cualquier tarjeta bancaria</p>
+                                </div>
+                            </div>
+
+                            <div class="payment-icons">
+                                <img src="assets/images/payment/visa.png" alt="Visa">
+                                <img src="assets/images/payment/mastercard.png" alt="Mastercard">
+                                <img src="assets/images/payment/amex.png" alt="American Express">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Corporate Purchase Form -->
+            <div *ngIf="purchaseType === 'corporate'" @slideInOut>
+                <div class="checkout-panel mb-4">
+                    <div class="panel-header">
+                        <div class="header-icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <h3>Información empresarial</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form [formGroup]="corporateForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="companyName" class="form-label">Nombre de la empresa</label>
+                                    <input type="text" class="form-control" id="companyName"
+                                        formControlName="companyName"
+                                        [ngClass]="{'is-invalid': corporateForm.get('companyName')?.invalid && corporateForm.get('companyName')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese el nombre de la empresa
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactName" class="form-label">Nombre del contacto</label>
+                                    <input type="text" class="form-control" id="contactName"
+                                        formControlName="contactName"
+                                        [ngClass]="{'is-invalid': corporateForm.get('contactName')?.invalid && corporateForm.get('contactName')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese el nombre del contacto
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactEmail" class="form-label">Correo electrónico del contacto</label>
+                                    <input type="email" class="form-control" id="contactEmail"
+                                        formControlName="contactEmail"
+                                        [ngClass]="{'is-invalid': corporateForm.get('contactEmail')?.invalid && corporateForm.get('contactEmail')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese un correo electrónico válido
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="contactPhone" class="form-label">Teléfono del contacto</label>
+                                    <input type="tel" class="form-control" id="contactPhone"
+                                        formControlName="contactPhone" placeholder="10 dígitos"
+                                        [ngClass]="{'is-invalid': corporateForm.get('contactPhone')?.invalid && corporateForm.get('contactPhone')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese un número de teléfono válido (10 dígitos)
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="quantity" class="form-label">Cantidad de participantes</label>
+                                    <input type="number" class="form-control" id="quantity" formControlName="quantity"
+                                        min="1"
+                                        [ngClass]="{'is-invalid': corporateForm.get('quantity')?.invalid && corporateForm.get('quantity')?.touched}">
+                                    <div class="invalid-feedback">
+                                        Por favor, ingrese un número válido de participantes
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 mb-3">
+                                    <label for="additionalInfo" class="form-label">Información adicional
+                                        (opcional)</label>
+                                    <textarea class="form-control" id="additionalInfo" formControlName="additionalInfo"
+                                        rows="3"></textarea>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="alert alert-primary mt-3">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Para compras empresariales, un representante se pondrá en contacto para coordinar los
+                            detalles del pago y la facturación en un plazo máximo de 24 horas hábiles.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="checkout-panel order-summary mb-4">
+                <div class="panel-header">
+                    <div class="header-icon">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+                    <h3>Resumen del pedido</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="summary-row">
+                        <div class="summary-label">Curso</div>
+                        <div class="summary-value">{{ course.title }}</div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-label">Categoría</div>
+                        <div class="summary-value">{{ course.category }}</div>
+                    </div>
+                    <div class="summary-row">
+                        <div class="summary-label">Fecha</div>
+                        <div class="summary-value" *ngIf="selectedDate">{{ selectedDate | date:'fullDate':'':'es' }}
+                        </div>
+                        <div class="summary-value text-warning" *ngIf="!selectedDate">No seleccionada</div>
+                    </div>
+                    <div class="summary-row" *ngIf="purchaseType === 'corporate'">
+                        <div class="summary-label">Participantes</div>
+                        <div class="summary-value">{{ corporateForm.get('quantity')?.value || 1 }}</div>
+                    </div>
+                    <div class="summary-row total-row">
+                        <div class="summary-label">Total</div>
+                        <div class="summary-value total-value">{{ calculateTotal() | currency:'MXN':'symbol':'1.0-0' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-between mt-4">
+                <button type="button" class="btn btn-outline-secondary" (click)="backToCourse()">
+                    Regresar
+                </button>
+
+                <button type="button" class="btn btn-primary btn-lg px-5"
+                    [disabled]="processingPayment || !selectedDate" (click)="processPayment()">
+                    <span class="spinner-border spinner-border-sm me-2" *ngIf="processingPayment"></span>
+                    {{ purchaseType === 'individual' ? 'Confirmar compra' : 'Solicitar información' }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="error-alert" [ngClass]="{'show-alert': showErrorAlert}" @fadeInOut>
+        <div class="alert-content">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            <span>{{ errorMessage }}</span>
+            <button class="alert-close-btn" (click)="showErrorAlert = false">
+                <i class="bi bi-x"></i>
+            </button>
+        </div>
+    </div>
+</div>

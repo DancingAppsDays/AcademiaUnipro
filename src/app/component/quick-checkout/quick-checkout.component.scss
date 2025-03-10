@@ -1,0 +1,172 @@
+/* quick-checkout.component.scss */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+// Uniprotec Theme Colors
+$uniprotec-blue: #0066b3;
+$uniprotec-yellow: #ffba00;
+$uniprotec-light-blue: #0095db;
+$uniprotec-dark-blue: #004c86;
+$uniprotec-white: #ffffff;
+$uniprotec-gray: #f5f5f5;
+$uniprotec-dark-gray: #333333;
+
+// Gradient backgrounds
+$gradient-blue: linear-gradient(135deg, $uniprotec-blue, $uniprotec-dark-blue);
+$gradient-yellow: linear-gradient(135deg, $uniprotec-yellow, darken($uniprotec-yellow, 15%));
+$gradient-light: linear-gradient(135deg, $uniprotec-white, $uniprotec-gray);
+
+.checkout-container {
+    font-family: 'Montserrat', sans-serif;
+    background-color: $uniprotec-gray;
+    min-height: calc(100vh - 70px);
+
+    // Course Summary
+    .course-summary {
+        background: $gradient-light;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+
+        .course-title {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: $uniprotec-dark-blue;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-subtitle {
+            color: $uniprotec-dark-gray;
+            margin-bottom: 1rem;
+        }
+
+        .course-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+
+            .badge {
+                padding: 0.5rem 1rem;
+            }
+
+            .details-item {
+                display: flex;
+                align-items: center;
+
+                i {
+                    color: $uniprotec-blue;
+                    margin-right: 0.5rem;
+                }
+            }
+        }
+
+        .price-tag {
+            background: $gradient-blue;
+            padding: 1.2rem;
+            border-radius: 10px;
+            color: white;
+            display: inline-block;
+            box-shadow: 0 5px 15px rgba(0, 102, 179, 0.3);
+
+            .price-label {
+                font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+
+            .price-value {
+                font-size: 1.8rem;
+                font-weight: 700;
+            }
+        }
+    }
+
+    // Purchase Type Selector
+    .purchase-type-selector {
+        margin-bottom: 2rem;
+
+        h3 {
+            font-weight: 700;
+            color: $uniprotec-dark-blue;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .purchase-options {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+
+            @media (max-width: 768px) {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .purchase-option {
+                background-color: $uniprotec-white;
+                border-radius: 12px;
+                padding: 1.5rem;
+                width: 230px;
+                cursor: pointer;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+                transition: all 0.3s ease;
+                border: 2px solid transparent;
+
+                &:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+                }
+
+                &.active {
+                    border-color: $uniprotec-blue;
+                    background-color: rgba($uniprotec-blue, 0.05);
+
+                    .option-icon {
+                        background-color: $uniprotec-blue;
+                        color: $uniprotec-white;
+                    }
+
+                    h4 {
+                        color: $uniprotec-blue;
+                    }
+                }
+
+                .option-icon {
+                    width: 70px;
+                    height: 70px;
+                    border-radius: 50%;
+                    background-color: $uniprotec-gray;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-bottom: 1rem;
+                    transition: all 0.3s ease;
+
+                    i {
+                        font-size: 2rem;
+                        color: $uniprotec-dark-blue;
+                        transition: all 0.3s ease;
+                    }
+                }
+
+                .option-details {
+                    h4 {
+                        font-weight: 700;
+                        font-size: 1.2rem;
+                        margin-bottom: 0.5rem;
+                        color: $uniprotec-dark-blue;
+                    }
+
+                    p {
+                        margin-bottom: 0;
+                        color: $uniprotec-dark-gray;
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+        }
+    }
+}

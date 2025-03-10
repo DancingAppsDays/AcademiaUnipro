@@ -22,22 +22,22 @@ $uniprotec-dark-gray: #333333;
 .hero-section {
   background-color: $uniprotec-blue;
   color: $uniprotec-white;
-  
+
   .logo {
     max-height: 80px;
     margin: 0 auto;
     transition: transform 0.3s ease;
-    
+
     &:hover {
       transform: scale(1.05);
     }
   }
-  
+
   h1 {
     font-weight: 700;
     font-size: 2.5rem;
   }
-  
+
   .lead {
     font-size: 1.2rem;
   }
@@ -47,14 +47,14 @@ $uniprotec-dark-gray: #333333;
   position: relative;
   height: 500px;
   overflow: hidden;
-  
+
   img {
     width: 100%;
     height: 500px;
     object-fit: cover;
     object-position: center;
   }
-  
+
   .carousel-overlay {
     position: absolute;
     top: 0;
@@ -64,7 +64,7 @@ $uniprotec-dark-gray: #333333;
     background: rgba(0, 0, 0, 0.4);
     z-index: 1;
   }
-  
+
   .carousel-caption {
     position: absolute;
     top: 50%;
@@ -73,20 +73,20 @@ $uniprotec-dark-gray: #333333;
     z-index: 2;
     text-align: center;
     width: 80%;
-    
+
     h2 {
       font-weight: 700;
       font-size: 3rem;
       margin-bottom: 1rem;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
-    
+
     p {
       font-size: 1.5rem;
       margin-bottom: 2rem;
       text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
     }
-    
+
     .caption-badge {
       display: inline-block;
       background-color: $uniprotec-yellow;
@@ -103,21 +103,21 @@ $uniprotec-dark-gray: #333333;
 // Stats Section
 .stats-section {
   background-color: $uniprotec-gray;
-  
+
   .stat-item {
     padding: 1.5rem;
     transition: transform 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-10px);
     }
-    
+
     .stat-number {
       font-size: 2.5rem;
       font-weight: 700;
       color: $uniprotec-blue;
     }
-    
+
     .stat-label {
       font-size: 1rem;
       color: $uniprotec-dark-gray;
@@ -128,19 +128,19 @@ $uniprotec-dark-gray: #333333;
 // Section Headers
 .section-header {
   margin-bottom: 3rem;
-  
+
   h2 {
     font-weight: 700;
     font-size: 2rem;
     color: $uniprotec-dark-blue;
     margin-bottom: 1rem;
   }
-  
+
   p {
     color: $uniprotec-dark-gray;
     font-size: 1.1rem;
   }
-  
+
   .section-badge {
     display: inline-block;
     background-color: $uniprotec-yellow;
@@ -163,28 +163,28 @@ $uniprotec-dark-gray: #333333;
   height: 100%;
   cursor: pointer;
   background-color: white;
-  
+
   &:hover {
     transform: translateY(-10px);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    
+
     .card-img-container img {
       transform: scale(1.1);
     }
   }
-  
+
   .card-img-container {
     position: relative;
     height: 180px;
     overflow: hidden;
-    
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.6s ease;
     }
-    
+
     .card-badge {
       position: absolute;
       top: 10px;
@@ -197,10 +197,10 @@ $uniprotec-dark-gray: #333333;
       font-weight: 500;
     }
   }
-  
+
   .card-body {
     padding: 1.2rem;
-    
+
     .card-title {
       font-weight: 700;
       font-size: 1.2rem;
@@ -212,7 +212,7 @@ $uniprotec-dark-gray: #333333;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    
+
     .card-subtitle {
       color: $uniprotec-dark-gray;
       font-size: 0.9rem;
@@ -223,25 +223,25 @@ $uniprotec-dark-gray: #333333;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    
+
     .card-details {
       display: flex;
       justify-content: space-between;
       margin-bottom: 0.8rem;
       font-size: 0.85rem;
       color: $uniprotec-dark-gray;
-      
+
       i {
         color: $uniprotec-light-blue;
         margin-right: 0.3rem;
       }
     }
-    
+
     .instructor-preview {
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
-      
+
       img {
         width: 32px;
         height: 32px;
@@ -249,18 +249,18 @@ $uniprotec-dark-gray: #333333;
         margin-right: 0.8rem;
         object-fit: cover;
       }
-      
+
       span {
         font-size: 0.9rem;
         color: $uniprotec-dark-gray;
       }
     }
-    
+
     .card-price {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
+
       .price-value {
         font-weight: 700;
         font-size: 1.3rem;
@@ -273,22 +273,22 @@ $uniprotec-dark-gray: #333333;
 // Benefits Section
 .benefits-section {
   background-color: $uniprotec-gray;
-  
+
   .benefit-card {
     background-color: white;
     padding: 2rem;
     border-radius: 10px;
     height: 100%;
     transition: transform 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-10px);
-      
+
       .benefit-icon {
         background-color: $uniprotec-yellow;
       }
     }
-    
+
     .benefit-icon {
       width: 70px;
       height: 70px;
@@ -299,20 +299,20 @@ $uniprotec-dark-gray: #333333;
       align-items: center;
       margin-bottom: 1.5rem;
       transition: background-color 0.3s ease;
-      
+
       i {
         font-size: 2rem;
         color: white;
       }
     }
-    
+
     h3 {
       font-weight: 700;
       font-size: 1.3rem;
       margin-bottom: 1rem;
       color: $uniprotec-dark-blue;
     }
-    
+
     p {
       color: $uniprotec-dark-gray;
       font-size: 0.95rem;
@@ -324,7 +324,7 @@ $uniprotec-dark-gray: #333333;
 .cta-section {
   background-color: $uniprotec-blue;
   color: white;
-  
+
   h2 {
     font-weight: 700;
     font-size: 2.2rem;
@@ -335,17 +335,19 @@ $uniprotec-dark-gray: #333333;
 .btn-primary {
   background-color: $uniprotec-blue;
   border-color: $uniprotec-blue;
-  
-  &:hover, &:focus {
+
+  &:hover,
+  &:focus {
     background-color: $uniprotec-dark-blue;
     border-color: $uniprotec-dark-blue;
   }
-  
+
   &.btn-yellow {
     background-color: $uniprotec-yellow;
     border-color: $uniprotec-yellow;
-    
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
       background-color: darken($uniprotec-yellow, 10%);
       border-color: darken($uniprotec-yellow, 10%);
     }
@@ -355,8 +357,9 @@ $uniprotec-dark-gray: #333333;
 .btn-outline-primary {
   color: $uniprotec-blue;
   border-color: $uniprotec-blue;
-  
-  &:hover, &:focus {
+
+  &:hover,
+  &:focus {
     background-color: $uniprotec-blue;
     border-color: $uniprotec-blue;
   }
@@ -370,7 +373,7 @@ $uniprotec-dark-gray: #333333;
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }
-  
+
   .skeleton-text {
     height: 15px;
     margin-bottom: 10px;
@@ -378,22 +381,23 @@ $uniprotec-dark-gray: #333333;
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
     border-radius: 4px;
-    
+
     &.skeleton-title {
       height: 24px;
       width: 90%;
     }
-    
+
     &.skeleton-subtitle {
       height: 16px;
       width: 80%;
     }
-    
-    &.skeleton-details, &.skeleton-instructor {
+
+    &.skeleton-details,
+    &.skeleton-instructor {
       height: 14px;
       width: 95%;
     }
-    
+
     &.skeleton-price {
       height: 30px;
       width: 100%;
@@ -405,6 +409,7 @@ $uniprotec-dark-gray: #333333;
   0% {
     background-position: -200% 0;
   }
+
   100% {
     background-position: 200% 0;
   }
@@ -414,16 +419,16 @@ $uniprotec-dark-gray: #333333;
 @media (max-width: 991.98px) {
   .carousel-container {
     height: 400px;
-    
+
     img {
       height: 400px;
     }
-    
+
     .carousel-caption {
       h2 {
         font-size: 2.5rem;
       }
-      
+
       p {
         font-size: 1.2rem;
       }
@@ -434,34 +439,34 @@ $uniprotec-dark-gray: #333333;
 @media (max-width: 767.98px) {
   .carousel-container {
     height: 350px;
-    
+
     img {
       height: 350px;
     }
-    
+
     .carousel-caption {
       h2 {
         font-size: 2rem;
       }
-      
+
       p {
         font-size: 1rem;
       }
     }
   }
-  
+
   .hero-section {
     h1 {
       font-size: 2rem;
     }
   }
-  
+
   .section-header {
     h2 {
       font-size: 1.8rem;
     }
   }
-  
+
   .cta-section {
     h2 {
       font-size: 1.8rem;
@@ -472,26 +477,225 @@ $uniprotec-dark-gray: #333333;
 @media (max-width: 575.98px) {
   .carousel-container {
     height: 300px;
-    
+
     img {
       height: 300px;
     }
-    
+
     .carousel-caption {
       h2 {
         font-size: 1.6rem;
         margin-bottom: 0.5rem;
       }
-      
+
       p {
         font-size: 0.9rem;
         margin-bottom: 1.5rem;
       }
-      
+
       .caption-badge {
         padding: 0.3rem 1rem;
         font-size: 0.8rem;
       }
     }
+  }
+}
+
+
+
+
+//hero section
+// SCSS with animated gradients
+.hero-categories {
+  .category-block {
+    position: relative;
+    padding: 5rem 0;
+    overflow: hidden;
+    color: white;
+
+    &:nth-child(even) {
+      color: #333;
+
+      .btn-outline-light {
+        color: #333;
+        border-color: #333;
+
+        &:hover {
+          background-color: #333;
+          color: white;
+        }
+      }
+
+      .category-badge {
+        color: #333;
+        background: rgba(255, 255, 255, 0.5);
+      }
+
+      .pill {
+        background: rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  .gradient-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+    &.category-gradient-0 {
+      background: linear-gradient(180deg, rgb(0, 255, 42), $uniprotec-dark-blue);
+      background-size: 300% 200%;
+      animation: gradientShift3 2s ease infinite;
+    }
+
+    &.category-gradient-1 {
+      background: linear-gradient(180deg, $uniprotec-yellow, white);
+      background-size: 200% 200%;
+      animation: gradientShift4 3s ease infinite;
+    }
+
+    &.category-gradient-2 {
+      background: linear-gradient(180deg, $uniprotec-light-blue, $uniprotec-dark-blue);
+      background-size: 200% 200%;
+      animation: gradientShift3 3s ease infinite;
+    }
+
+    &.category-gradient-3 {
+      background: linear-gradient(180deg, $uniprotec-yellow, white);
+      background-size: 200% 200%;
+      animation: gradientShift4 3s ease infinite;
+    }
+
+    &.category-gradient-4 {
+      background: linear-gradient(180deg, $uniprotec-dark-blue, $uniprotec-light-blue);
+      background-size: 200% 200%;
+      animation: gradientShift5 3s ease infinite;
+    }
+
+    // Add more for each category
+  }
+
+  .category-image {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+
+    img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  .category-info {
+    padding: 2rem;
+
+    .category-badge {
+      display: inline-block;
+      background-color: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .course-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 1.5rem;
+
+      .pill {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+// Animations for gradients
+@keyframes gradientShift1 {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  90% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes gradientShift2 {
+  0% {
+    background-position: 100% 50%;
+  }
+
+  90% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes gradientShift3 {
+  0% {
+    background-position: 50% 0%;
+  }
+
+  90% {
+    background-position: 50% 100%;
+  }
+
+  100% {
+    background-position: 50% 0%;
+  }
+}
+
+@keyframes gradientShift4 {
+  0% {
+    background-position: 50% 0%;
+  }
+
+  90% {
+    background-position: 50% 100%;
+  }
+
+  100% {
+    background-position: 50% 0%;
+  }
+}
+
+@keyframes gradientShift5 {
+  0% {
+    background-position: 50% 0%;
+  }
+
+  50% {
+    background-position: 50% 100%;
+  }
+
+  100% {
+    background-position: 50% 0%;
   }
 }
