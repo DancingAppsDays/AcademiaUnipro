@@ -134,6 +134,26 @@ export class CourseListComponent implements OnInit {
     }
   }
 
+  getSortLabel(): string {
+    switch (this.sortBy) {
+      case 'date':
+        return 'Fecha';
+      case 'price':
+        return 'Precio';
+      case 'title':
+        return 'Nombre';
+      default:
+        return 'Ordenar';
+    }
+  }
+  formatDate(date: Date | undefined): string {
+    if (!date) return '';
+    
+    const d = new Date(date);
+    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear().toString().substr(2)}`;
+  }
+
+
   onSearch(event: Event): void {
     this.searchTerm = (event.target as HTMLInputElement).value;
     this.applyFilters();

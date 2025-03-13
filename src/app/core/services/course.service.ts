@@ -169,7 +169,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample5',
-    imageUrl: 'assets/images/courses/montacargas.jpg',
+    imageUrl: 'assets/images/courses/001.jpg',
     featured: true,
     nextDate: new Date('2025-04-10'),
     instructor: {
@@ -221,7 +221,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample7',
-    imageUrl: 'assets/images/courses/legos.png',
+    imageUrl: 'assets/images/courses/003.jpg',
     featured: false,
     nextDate: new Date('2025-04-20'),
     instructor: {
@@ -247,7 +247,7 @@ export class CourseService {
     duration: '24 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample8',
-    imageUrl: 'assets/images/courses/iso14000.jpg',
+    imageUrl: 'assets/images/courses/002.jpg',
     featured: true,
     nextDate: new Date('2025-04-15'),
     instructor: {
