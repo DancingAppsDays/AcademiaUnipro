@@ -63,7 +63,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample1',
-    imageUrl: 'assets/images/courses/nom-004.jpg',
+    imageUrl: 'assets/images/courses/lideres.jpg',
     featured: true,
     nextDate: new Date('2025-04-15'),
     instructor: {
@@ -89,7 +89,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample2',
-    imageUrl: 'assets/images/courses/nom-018.jpg',
+    imageUrl: 'assets/images/courses/002.jpg',
     featured: false,
     nextDate: new Date('2025-04-22'),
     instructor: {
@@ -115,7 +115,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample3',
-    imageUrl: 'assets/images/courses/nom-027.jpg',
+    imageUrl: 'assets/images/courses/003.jpg',
     featured: false,
     nextDate: new Date('2025-04-18'),
     instructor: {
@@ -141,7 +141,7 @@ export class CourseService {
     duration: '24 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample4',
-    imageUrl: 'assets/images/courses/nom-029.jpg',
+    imageUrl: 'assets/images/courses/001.jpg',
     featured: true,
     nextDate: new Date('2025-04-25'),
     instructor: {
@@ -168,7 +168,7 @@ export class CourseService {
     price: 2500,
     duration: '16 horas',
     isoStandards: [],
-    previewVideoUrl: 'https://www.youtube.com/watch?v=sample5',
+    previewVideoUrl: 'https://www.youtube.com/embed/evT-E8LtsQo',
     imageUrl: 'assets/images/courses/001.jpg',
     featured: true,
     nextDate: new Date('2025-04-10'),
@@ -195,7 +195,7 @@ export class CourseService {
     duration: '24 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample6',
-    imageUrl: 'assets/images/courses/successful.jpg',
+    imageUrl: 'assets/images/courses/successful-business.jpg',
     featured: false,
     nextDate: new Date('2025-05-13'),
     instructor: {
@@ -275,7 +275,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample9',
-    imageUrl: 'assets/images/courses/nom-011.jpg',
+    imageUrl: 'assets/images/courses/iso14000.jpg',
     featured: false,
     nextDate: new Date('2025-04-28'),
     instructor: {
@@ -301,7 +301,7 @@ export class CourseService {
     duration: '8 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample10',
-    imageUrl: 'assets/images/courses/nom-017.jpg',
+    imageUrl: 'assets/images/courses/brigadas.jpg',
     featured: true,
     nextDate: new Date('2025-04-12'),
     instructor: {
@@ -380,7 +380,7 @@ export class CourseService {
     duration: '8 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample13',
-    imageUrl: 'assets/images/courses/nom-026.jpg',
+    imageUrl: 'assets/images/courses/001.jpg',
     featured: false,
     nextDate: new Date('2025-04-05'),
     instructor: {
@@ -408,7 +408,7 @@ export class CourseService {
     duration: '16 horas',
     isoStandards: [],
     previewVideoUrl: 'https://www.youtube.com/watch?v=sample14',
-    imageUrl: 'assets/images/courses/amef.jpg',
+    imageUrl: 'assets/images/courses/003.jpg',
     featured: true,
     nextDate: new Date('2025-04-08'),
     instructor: {

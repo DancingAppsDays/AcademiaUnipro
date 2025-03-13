@@ -10,6 +10,15 @@ $uniprotec-white: #ffffff;
 $uniprotec-gray: #f5f5f5;
 $uniprotec-dark-gray: #333333;
 
+
+//actual uniprotec colors
+$background-color: #d6ebf9;
+$primary-blue: #0086ff; // Active filter button (#0086ff)
+$light-blue-btn: rgba(255, 255, 255, 0.7); // Inactive filter buttons
+$category-orange: #ffa400; // Category label (#ffa400)
+$dark-text: #575864; // Dark text color for headings
+$price-blue: #0455b0; // Color for the price text
+
 :host {
   font-family: 'Montserrat', sans-serif;
 }
@@ -546,7 +555,7 @@ $uniprotec-dark-gray: #333333;
     z-index: -1;
 
     &.category-gradient-0 {
-      background: linear-gradient(180deg, rgb(0, 255, 42), $uniprotec-dark-blue);
+      background: linear-gradient(180deg, $primary-blue, $uniprotec-dark-blue);
       background-size: 300% 200%;
       animation: gradientShift3 2s ease infinite;
     }
