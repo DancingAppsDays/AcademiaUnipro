@@ -221,8 +221,20 @@ export class QuickCheckoutComponent implements OnInit {
       ? this.prepareIndividualData()
       : this.prepareCorporateData();
 
+
+
+
+
+      
     // Log the data being sent
     console.log('Sending checkout data to backend:', JSON.stringify(paymentData, null, 2));
+    
+    this.router.navigate(['/checkout/success'], {
+      queryParams: {
+        email: this.customerForm.get('email')?.value,
+        courseId: this.course?.id
+      }
+    });
 
     // Send to external backend
     this.sendToExternalBackend(paymentData);

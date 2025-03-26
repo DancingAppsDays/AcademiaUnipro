@@ -170,3 +170,9 @@ $gradient-light: linear-gradient(135deg, $uniprotec-white, $uniprotec-gray);
         }
     }
 }
+
+.purchase-option.disabled {
+    pointer-events: none; // Disable interaction
+    opacity: 0.5; // Make it look faded
+    cursor: not-allowed; // Change the cursor to indicate it's disabled
+}

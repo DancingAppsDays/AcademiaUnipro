@@ -56,7 +56,7 @@
             <div class="purchase-type-selector mb-4">
                 <h3>Selecciona el tipo de compra</h3>
                 <div class="purchase-options">
-                    <div class="purchase-option" [class.active]="purchaseType === 'individual'"
+                    <div class="purchase-option disabled" [class.active]="purchaseType === 'individual'"
                         (click)="togglePurchaseType('individual')">
                         <div class="option-icon">
                             <i class="bi bi-person-fill"></i>
