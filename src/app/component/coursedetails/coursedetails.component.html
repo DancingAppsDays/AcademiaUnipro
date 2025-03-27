@@ -8,7 +8,21 @@
     <p class="mt-3">Cargando información del curso...</p>
   </div>
 
-  <div *ngIf="!loading && course" class="container py-4">
+  <!-- Error state -->
+  <div class="container py-5" *ngIf="loadError">
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      {{ errorMessage || 'Ocurrió un error al cargar el curso. Por favor, intente de nuevo más tarde.' }}
+      <div class="mt-3">
+        <button class="btn btn-outline-danger" routerLink="/courses">
+          Volver a cursos
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course content -->
+  <div *ngIf="!loading && !loadError && course" class="container py-4">
     <!-- Course Header -->
     <div class="course-header" @slideInRight>
       <div class="row align-items-center">
@@ -45,38 +59,34 @@
             <div class="date-selection">
               <div class="selected-date" *ngIf="selectedDate">
                 <i class="bi bi-calendar-check"></i>
-                <span>{{ selectedDate | date:'longDate' }}</span>
+                <span>{{ formatDate(selectedDate) }}</span>
               </div>
               <div class="no-date-selected" *ngIf="!selectedDate">
                 <i class="bi bi-calendar"></i>
                 <span>Selecciona una fecha</span>
               </div>
-              <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDateSelector()">
+              <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDatePicker()">
                 {{ selectedDate ? 'Cambiar fecha' : 'Ver fechas disponibles' }}
               </button>
             </div>
 
-            <!--<button class="btn btn-primary btn-lg w-100 mt-4" [disabled]="!selectedDate" (click)="proceedToCheckout()">
-              Inscribirme ahora
-            </button>-->
-
             <div class="checkout-options mt-3">
-               <!--
-              <button class="btn btn-primary btn-lg w-100" (click)="checkDateAndProceed('regular')">
-                <i class="bi bi-person-check me-2"></i> Inscribirme ahora
-              </button>-->
+              <button class="btn btn-primary btn-lg w-100" (click)="proceedToCheckout()">
+                <i class="bi bi-cart-check me-2"></i> Inscribirme ahora
+              </button>
 
-              <button class="btn btn-outline-primary btn-lg w-100 mt-2" (click)="checkDateAndProceed('quick')">
-                <i class="bi bi-lightning-charge me-2"></i> Inscribirme ahora
+              <button class="btn btn-outline-primary btn-lg w-100 mt-2" (click)="proceedToQuickCheckout()">
+                <i class="bi bi-lightning-charge me-2"></i> Inscripción Rápida
               </button>
             </div>
+            
+            <!-- Date alert -->
             <div class="date-alert" [ngClass]="{'show-alert': showDateAlert}" @alertAnimation>
               <div class="alert-content">
                 <i class="bi bi-calendar-exclamation"></i>
                 <span>Por favor selecciona una fecha para continuar</span>
               </div>
             </div>
-
 
             <div class="course-features mt-4">
               <div class="feature-item">
@@ -98,18 +108,14 @@
     </div>
 
     <!-- Course Video Preview -->
-    <div class="course-preview mt-5" @slideInUp>
+    <div class="course-preview mt-5" @slideInUp *ngIf="course.previewVideoUrl">
       <div class="ratio ratio-16x9">
-        <iframe src="https://www.youtube.com/embed/evT-E8LtsQo" width="560" height="315" frameborder="0"
-          allowfullscreen></iframe>
-
-        <!--<iframe 
-            [src]="course.previewVideoUrl | safeUrl" 
-            title="Curso Preview" 
-            frameborder="0" 
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-            allowfullscreen>
-          </iframe>-->
+        <iframe [src]="course.previewVideoUrl | safeUrl" 
+          title="Curso Preview" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
       </div>
     </div>
 
@@ -432,59 +438,3 @@
     </div>
   </div>
 </div>
-
-<!-- Calendar Modal -->
-<ng-template #dateSelector let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">Selecciona una fecha</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
-  </div>
-  <div class="modal-body">
-    <div class="calendar-container">
-      <ngb-datepicker #dp [minDate]="{year: 2025, month: 3, day: 1}" [maxDate]="{year: 2025, month: 12, day: 31}"
-        [markDisabled]="isDateAvailable" (dateSelect)="selectDate($event)">
-      </ngb-datepicker>
-
-      <div class="calendar-legend mt-3">
-        <div class="legend-item">
-          <span class="legend-color available"></span>
-          <span>Fecha disponible</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color selected"></span>
-          <span>Fecha seleccionada</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color unavailable"></span>
-          <span>No disponible</span>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="date-selection">
-    <div class="selected-date" *ngIf="selectedDate">
-      <i class="bi bi-calendar-check"></i>
-      <span>{{ selectedDate | date:'longDate' }}</span>
-    </div>
-    <div class="no-date-selected" *ngIf="!selectedDate">
-      <i class="bi bi-calendar"></i>
-      <span>Selecciona una fecha</span>
-    </div>
-    <button class="btn btn-outline-primary btn-sm w-100 mt-2" (click)="openDateSelector()">
-      {{ selectedDate ? 'Cambiar fecha' : 'Ver fechas disponibles' }}
-    </button>
-  </div>
-
-  <!--<div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
-      <button 
-        type="button" 
-        class="btn btn-primary" 
-        [disabled]="!selectedDate"
-        (click)="modal.close()">
-        Confirmar fecha
-      </button>
-    </div>-->
-
-</ng-template>

@@ -1,8 +1,8 @@
-// course.service.ts
+// course.service.ts - Fixed version
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import { Course } from '../models/course.model';
 import { environment } from '../../../environments/environment';
 
@@ -15,32 +15,60 @@ export class CourseService {
   constructor(private http: HttpClient) { }
 
   getAllCourses(): Observable<Course[]> {
+    // Directly return mock data if we're sure backend isn't available 
+    // Uncomment this line to bypass HTTP request entirely
+    // return this.getMockCourses();
+    
     return this.http.get<Course[]>(this.apiUrl)
       .pipe(
-        catchError(this.handleError<Course[]>('getAllCourses', []))
+        tap(courses => console.log('Fetched courses from API:', courses)),
+        catchError(error => {
+          console.error('Error fetching courses. Falling back to mock data:', error);
+          return this.getMockCourses();  // Return mock data on error
+        })
       );
   }
 
   getCourseById(id: string): Observable<Course> {
+    // Directly return mock data if we're sure backend isn't available
+    // Uncomment this line to bypass HTTP request entirely
+    // return this.getMockCourseById(id);
+    
     return this.http.get<Course>(`${this.apiUrl}/${id}`)
       .pipe(
-        catchError(this.handleError<Course>('getCourseById'))
+        catchError(error => {
+          console.error(`Error fetching course with id ${id}. Falling back to mock data:`, error);
+          const mockCourse = this.getMockCourseById(id);
+          if (mockCourse) {
+            return of(mockCourse);
+          } else {
+            return throwError(() => new Error(`Course with id ${id} not found in mock data`));
+          }
+        })
       );
   }
 
   getCoursesByCategory(category: string): Observable<Course[]> {
+    // Directly return filtered mock data if we're sure backend isn't available
+    // Uncomment this line to bypass HTTP request entirely
+    // return of(MOCK_COURSES.filter(course => course.category === category));
+    
     return this.http.get<Course[]>(`${this.apiUrl}/category/${category}`)
       .pipe(
-        catchError(this.handleError<Course[]>('getCoursesByCategory', []))
+        catchError(error => {
+          console.error(`Error fetching courses by category ${category}. Falling back to mock data:`, error);
+          return of(MOCK_COURSES.filter(course => course.category === category));
+        })
       );
   }
 
-  // Fallback method that returns mock data
+  // This method directly returns mock data without HTTP request
   getMockCourses(): Observable<Course[]> {
-    return of(MOCK_COURSES);
+    console.log('Returning mock courses', MOCK_COURSES);
+    return of([...MOCK_COURSES]); // Return a copy to prevent modifications
   }
 
-  private getMockCourseById(id: string): Course | undefined {
+  getMockCourseById(id: string): Course | undefined {
     return MOCK_COURSES.find(course => course.id === id);
   }
 
@@ -51,7 +79,10 @@ export class CourseService {
       return of(result as T);
     };
   }
-} const MOCK_COURSES: Course[] = [
+} 
+
+
+const MOCK_COURSES: Course[] = [
   // Normativas Clave category
   {
     id: '1',
@@ -164,7 +195,7 @@ export class CourseService {
     title: 'Bloqueo de Energía LOTO',
     subtitle: 'Procedimientos de bloqueo y etiquetado de energías peligrosas',
     description: 'Desarrolle e implemente un programa efectivo de Control de Energías Peligrosas (LOTO) en su organización. Este curso proporciona los conocimientos para establecer procedimientos de bloqueo/etiquetado, seleccionar dispositivos adecuados y cumplir con los requerimientos normativos aplicables.',
-    category: 'Seguridad Especializada',
+    category: 'Normativas Clave',
     price: 2500,
     duration: '16 horas',
     isoStandards: [],

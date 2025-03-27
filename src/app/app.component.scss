@@ -1,0 +1,16 @@
+/* Add to styles.scss (global styles) */
+body {
+    background-color: #c9e6f3; /* Light blue to match the top of the gradient */
+  }
+  
+  /* Or add to app.component.scss */
+  :host {
+    display: block;
+    background-color: #c9e6f3;
+    min-height: 100vh;
+  }
+  
+  /* You might also want to update the app container if you have one */
+  .app-container {
+    background-color: #c9e6f3;
+  }

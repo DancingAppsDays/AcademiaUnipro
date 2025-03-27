@@ -1,0 +1,243 @@
+/* enhanced-course-card.component.scss */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+// Uniprotec Theme Colors
+$uniprotec-blue: #0066b3;
+$uniprotec-yellow: #ffba00;
+$uniprotec-light-blue: #0095db;
+$uniprotec-dark-blue: #004c86;
+$uniprotec-white: #ffffff;
+$uniprotec-gray: #f5f5f5;
+$uniprotec-dark-gray: #333333;
+
+.enhanced-course-card {
+  background-color: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    
+    .card-img-container img {
+      transform: scale(1.05);
+    }
+    
+    .quick-actions {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  &.has-selected-date {
+    border: 2px solid $uniprotec-blue;
+  }
+  
+  .card-img-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    
+    .card-category-badge {
+      position: absolute;
+      top: 1rem;
+      left: 0;
+      background-color: $uniprotec-yellow;
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: 0 20px 20px 0;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 2;
+    }
+    
+    .quick-actions {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      z-index: 3;
+    }
+  }
+  
+  .card-content {
+    padding: 1.5rem;
+    
+    .card-title {
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: $uniprotec-blue;
+      min-height: 2.8rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .course-description {
+      color: $uniprotec-dark-gray;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      min-height: 2.7rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .course-basic-details {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+      
+      .price {
+        font-weight: 700;
+        font-size: 1.3rem;
+        color: $uniprotec-blue;
+      }
+      
+      .duration {
+        color: $uniprotec-dark-gray;
+        display: flex;
+        align-items: center;
+        
+        i {
+          margin-right: 0.5rem;
+          color: $uniprotec-light-blue;
+        }
+      }
+    }
+    
+    .selected-date-indicator {
+      background-color: rgba(0, 102, 179, 0.1);
+      padding: 0.5rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      
+      i {
+        color: $uniprotec-blue;
+        margin-right: 0.5rem;
+      }
+      
+      span {
+        color: $uniprotec-blue;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  .course-expanded-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-top: 1px solid rgba(0, 102, 179, 0.2);
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    
+    .overlay-content {
+      padding: 1.5rem;
+      
+      .instructor-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        
+        .instructor-avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          object-fit: cover;
+          margin-right: 0.8rem;
+          border: 2px solid white;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        span {
+          font-size: 0.9rem;
+          color: $uniprotec-dark-gray;
+          font-weight: 500;
+        }
+      }
+      
+      .next-date {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        
+        i {
+          color: $uniprotec-light-blue;
+          margin-right: 0.5rem;
+        }
+        
+        span {
+          color: $uniprotec-dark-gray;
+          font-size: 0.9rem;
+        }
+      }
+      
+      .card-actions {
+        display: flex;
+        gap: 0.5rem;
+        
+        .btn-action {
+          flex: 1;
+          font-size: 0.9rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.7rem 0.5rem;
+          
+          i {
+            margin-right: 0.5rem;
+          }
+        }
+        
+        .btn-primary {
+          background-color: $uniprotec-blue;
+          border-color: $uniprotec-blue;
+          
+          &:hover {
+            background-color: $uniprotec-dark-blue;
+            border-color: $uniprotec-dark-blue;
+          }
+          
+          &:disabled {
+            background-color: lighten($uniprotec-blue, 30%);
+            border-color: lighten($uniprotec-blue, 30%);
+            cursor: not-allowed;
+          }
+        }
+        
+        .btn-outline-primary {
+          color: $uniprotec-blue;
+          border-color: $uniprotec-blue;
+          
+          &:hover {
+            background-color: $uniprotec-blue;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

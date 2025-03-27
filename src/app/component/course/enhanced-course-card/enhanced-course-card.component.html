@@ -1,0 +1,51 @@
+<!-- enhanced-course-card.component.html -->
+<div class="enhanced-course-card" 
+     (mouseenter)="toggleExpanded(true)" 
+     (mouseleave)="toggleExpanded(false)"
+     (click)="cardClick($event)">
+  
+  <!-- Card image container -->
+  <div class="card-img-container">
+    <img [src]="course.imageUrl" [alt]="course.title">
+    <div class="card-category-badge">{{ course.category }}</div>
+  </div>
+  
+  <!-- Card content -->
+  <div class="card-content">
+    <h3 class="card-title">{{ course.title }}</h3>
+    <p class="course-description">{{ course.subtitle }}</p>
+    
+    <!-- Basic details always visible -->
+    <div class="course-basic-details">
+      <span class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+      <span class="duration"><i class="bi bi-clock"></i> {{ course.duration }}</span>
+    </div>
+  </div>
+  
+  <!-- Overlay expanded details (shown on hover) -->
+  <div class="course-expanded-overlay" [@expandAnimation]="isExpanded ? 'expanded' : 'collapsed'">
+    <div class="overlay-content">
+      <div class="instructor-info">
+        <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name" class="instructor-avatar">
+        <span>{{ course.instructor.name }}</span>
+      </div>
+      
+      <div class="next-date" *ngIf="course.nextDate">
+        <i class="bi bi-calendar-event"></i>
+        <span>Próximo: {{ course.nextDate | date:'mediumDate' }}</span>
+      </div>
+      
+      <div class="card-actions">
+        <button type="button" class="btn btn-outline-primary btn-action"
+                (click)="viewCourseDetails($event)">
+          <i class="bi bi-info-circle"></i> Ver Detalles
+        </button>
+        
+        <button type="button" class="btn btn-primary btn-action"
+                (click)="consultDates($event)">
+          <i class="bi bi-calendar-check"></i> Consultar Fechas
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

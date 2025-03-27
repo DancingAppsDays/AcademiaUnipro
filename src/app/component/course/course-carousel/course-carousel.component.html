@@ -1,0 +1,83 @@
+<!-- fixed-course-carousel.component.html -->
+<div class="course-carousel-section">
+    <div class="section-header mb-3">
+      <h3>{{ subtitle }}</h3>
+    </div>
+    
+    <!-- No courses message -->
+    <div class="no-courses-message" *ngIf="!hasCoursesToShow">
+      <p>No hay cursos disponibles en esta categoría actualmente.</p>
+    </div>
+    
+    <!-- Desktop Carousel (3 items per slide) -->
+    <div class="desktop-carousel d-none d-lg-block" *ngIf="hasCoursesToShow && groupedCourses.length > 0">
+      <ngb-carousel 
+        [interval]="5000" 
+        [pauseOnHover]="true" 
+        [showNavigationArrows]="groupedCourses.length > 1"
+        [showNavigationIndicators]="false"
+        [wrap]="true">
+        
+        <ng-template ngbSlide *ngFor="let group of groupedCourses">
+          <div class="carousel-container">
+            <div class="row">
+              <div class="col-md-4" *ngFor="let course of group">
+                <app-enhanced-course-card 
+                  [course]="course"
+                  (dateSelected)="onDateSelected($event)">
+                </app-enhanced-course-card>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+    
+    <!-- Tablet Carousel (2 items per slide) -->
+    <div class="tablet-carousel d-none d-md-block d-lg-none" *ngIf="hasCoursesToShow && tabletGroupedCourses.length > 0">
+      <ngb-carousel 
+        [interval]="5000" 
+        [pauseOnHover]="true" 
+        [showNavigationArrows]="tabletGroupedCourses.length > 1"
+        [showNavigationIndicators]="false"
+        [wrap]="true">
+        
+        <ng-template ngbSlide *ngFor="let group of tabletGroupedCourses">
+          <div class="carousel-container">
+            <div class="row">
+              <div class="col-md-6" *ngFor="let course of group">
+                <app-enhanced-course-card 
+                  [course]="course"
+                  (dateSelected)="onDateSelected($event)">
+                </app-enhanced-course-card>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+    
+    <!-- Mobile Carousel (1 item per slide) -->
+    <div class="mobile-carousel d-block d-md-none" *ngIf="hasCoursesToShow && courses.length > 0">
+      <ngb-carousel 
+        [interval]="5000" 
+        [pauseOnHover]="true" 
+        [showNavigationArrows]="courses.length > 1"
+        [showNavigationIndicators]="false" 
+        [wrap]="true">
+        
+        <ng-template ngbSlide *ngFor="let course of courses">
+          <div class="carousel-container">
+            <div class="row">
+              <div class="col-12">
+                <app-enhanced-course-card 
+                  [course]="course"
+                  (dateSelected)="onDateSelected($event)">
+                </app-enhanced-course-card>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+  </div>

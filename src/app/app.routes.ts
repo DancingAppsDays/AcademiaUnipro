@@ -8,6 +8,7 @@ import { CheckoutComponent } from './component/checkout/checkout.component';
 import { CheckoutSuccessComponent } from './component/checkout-sucess/checkout-sucess.component';
 import { CompanySuccessComponent } from './component/company-success/company-success.component';
 import { QuickCheckoutComponent } from './component/quick-checkout/quick-checkout.component';
+import { RedesignedHomeComponent } from './component/homere/homere.component';
 
 // Guards
 //import { AuthGuard } from './guards/auth.guard';
@@ -18,7 +19,7 @@ import { QuickCheckoutComponent } from './component/quick-checkout/quick-checkou
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent,
+    component: RedesignedHomeComponent,//HomeComponent,
     title: 'Academia Uniprotec - Capacitación Industrial',
     data: { animation: 'HomePage' }
   },
