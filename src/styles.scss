@@ -1,4 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
-
-/* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == "small" {
+      @media (max-width: 576px) { @content; }
+    }
+    @else if $breakpoint == "medium" {
+      @media (max-width: 768px) { @content; }
+    }
+    @else if $breakpoint == "large" {
+      @media (max-width: 992px) { @content; }
+    }
+  }
+  

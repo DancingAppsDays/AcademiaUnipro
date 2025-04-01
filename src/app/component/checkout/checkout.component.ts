@@ -7,6 +7,9 @@ import { CourseService } from '../../core/services/course.service';
 import { UserService } from '../../core/services/user.service';
 import { Course } from '../../core/models/course.model';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-checkout',
@@ -69,6 +72,8 @@ export class CheckoutComponent implements OnInit {
   loading = true;
   loadError = false;
   processingPayment = false;
+  showDateAlert: boolean = false;
+  private http = inject(HttpClient);
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
@@ -76,7 +81,7 @@ export class CheckoutComponent implements OnInit {
   private courseService = inject(CourseService);
   private userService = inject(UserService);
 
-  constructor() {
+  constructor(http: HttpClient) {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -193,6 +198,7 @@ export class CheckoutComponent implements OnInit {
     console.error(message);
   }
 
+ 
   private checkUserLoginStatus(): void {
     this.userService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -200,17 +206,19 @@ export class CheckoutComponent implements OnInit {
         this.userForm.patchValue({
           email: user.email,
           fullName: user.fullName,
-          phone: user.phone,
-          jobRole: user.jobRole || '',
-          companyName: user.companyName || ''
+          phone: user.phone
         });
-
+        
+        // Add userId to the form for later use
+        this.userForm.addControl('userId', this.fb.control(user.id));
+        
         // Disable password fields for logged-in users
         this.userForm.get('password')?.disable();
         this.userForm.get('confirmPassword')?.disable();
       }
     });
   }
+  
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
@@ -280,44 +288,43 @@ export class CheckoutComponent implements OnInit {
       return this.course.price * quantity;
     }
   }
-
   processPayment() {
-    /* if (this.purchaseType === 'individual' && !this.userForm.valid) {
-       this.userForm.markAllAsTouched();
-       return;
-     }
-     
-     if (this.purchaseType === 'company' && !this.companyForm.valid) {
-       this.companyForm.markAllAsTouched();
-       return;
-     }*/
-
-    if (!this.course || !this.selectedDate) {
-      alert('Error: Información del curso o fecha no disponible');
+    if (!this.selectedDate) {
+      this.showDateAlert = true;
       return;
     }
-
+  
+    if (this.purchaseType === 'individual' && !this.userForm.valid) {
+      this.userForm.markAllAsTouched();
+      return;
+    }
+    
     this.processingPayment = true;
-
+  
     if (this.purchaseType === 'individual') {
-      // Process individual registration
-      if (false) {//debug//!this.isExistingUser) {
-        // Register new user
-        this.userService.registerUser(this.userForm.value).subscribe({
-          next: (user) => {
-            this.processPurchase(user.id);
-          },
-          error: (error) => {
-            console.error('Registration failed', error);
-            this.processingPayment = false;
-            // Handle error (e.g., show error message)
-          }
-        });
+      // First register or get user
+      const userData = {
+        email: this.userForm.get('email')?.value,
+        fullName: this.userForm.get('fullName')?.value,
+        phone: this.userForm.get('phone')?.value,
+        password: this.userForm.get('password')?.value
+      };
+  
+      // If user is logged in, use their ID directly
+      if (this.isExistingUser) {
+        this.processPurchase(this.userForm.get('userId')?.value);
       } else {
-
-        console.log("User is existing");
-        // Use existing user
-        this.processPurchase();
+        // Register new user
+        this.http.post<any>(`${environment.apiUrl}/users/register`, userData)
+          .subscribe({
+            next: (response) => {
+              this.processPurchase(response.user.id);
+            },
+            error: (error) => {
+              console.error('Registration failed', error);
+              this.processingPayment = false;
+            }
+          });
       }
     } else {
       // Process company purchase (likely needs direct contact)
@@ -346,6 +353,35 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
+
+private processPurchase(userId?: string) {
+  if (!this.course || !this.selectedDate) return;
+
+  const purchaseData = {
+    courseId: this.course.id,
+    courseTitle: this.course.title,
+    price: this.course.price,
+    quantity: 1,
+    customerEmail: this.userForm.get('email')?.value,
+    selectedDate: this.selectedDate.toISOString(),
+    successUrl: `${window.location.origin}/checkout/success`,
+    cancelUrl: `${window.location.origin}/checkout/${this.course.id}`,
+    userId: userId
+  };
+
+  this.http.post<any>(`${environment.apiUrl}/payments/create-checkout-session`, purchaseData)
+    .subscribe({
+      next: (response) => {
+        // Redirect to Stripe checkout
+        window.location.href = response.url;
+      },
+      error: (error) => {
+        console.error('Payment creation failed', error);
+        this.processingPayment = false;
+      }
+    });
+}
+/*
   private processPurchase(userId?: string) {
     console.log("process pruchase")
     //if (!this.course || !this.selectedDate) return;
@@ -356,8 +392,7 @@ export class CheckoutComponent implements OnInit {
         courseId: this.course?.id
       }
     });
-    if (true) return;
-
+   // if (true) return;
     this.userService.purchaseCourse({
       courseId: this.course?.id,
       courseName: this.course?.title,
@@ -380,7 +415,7 @@ export class CheckoutComponent implements OnInit {
         // Handle error
       }
     });
-  }
+  }*/
 
   // Method to return to course details
   backToCourse() {

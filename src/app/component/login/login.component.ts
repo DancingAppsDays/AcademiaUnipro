@@ -6,6 +6,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserService } from '../../core/services/user.service';
 import { GoogleAuthService } from '../../core/services/google-auth.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { environment } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +33,7 @@ export class LoginComponent implements OnInit {
   redirectUrl: string | null = null;
   redirectParams: any = {};
   
+  private http = inject(HttpClient);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
@@ -81,7 +84,7 @@ export class LoginComponent implements OnInit {
     this.activeView = view;
     this.errorMessage = '';
   }
-  
+  /*
   login() {
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -105,6 +108,45 @@ export class LoginComponent implements OnInit {
       }
     });
   }
+*/
+
+
+  // Update login.component.ts
+login() {
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    return;
+  }
+  
+  this.loading = true;
+  this.errorMessage = '';
+  
+  const loginData = {
+    email: this.loginForm.get('email')?.value,
+    password: this.loginForm.get('password')?.value
+  };
+  
+  this.http.post<any>(`${environment.apiUrl}/auth/login`, loginData)
+    .subscribe({
+      next: (response) => {
+        // Store user and token
+        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        localStorage.setItem('token', response.token);
+        
+        // Update user service
+        this.userService.setCurrentUser(response.user);
+        
+        // Redirect
+        this.redirectAfterAuth();
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Login failed', error);
+        this.loading = false;
+        this.errorMessage = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+      }
+    });
+}
   
   register() {
     if (this.registerForm.invalid) {
