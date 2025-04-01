@@ -1,146 +1,135 @@
-<!-- redesigned-home.component.html -->
 <div class="redesigned-home-container" @fadeInOut>
-    <!-- Hero Section with Banner Carousel -->
-    <section class="hero-section">
-      <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true" [wrap]="true">
-        <ng-template ngbSlide *ngFor="let slide of heroSlides">
-          <div class="carousel-container">
-            <div class="carousel-overlay"></div>
-            <img [src]="slide.imageUrl" [alt]="slide.title">
-            <div class="carousel-caption">
-              <div class="caption-badge" *ngIf="slide.badge">
-                {{ slide.badge }}
-              </div>
-              <h1>{{ slide.title }}</h1>
-              <p>{{ slide.subtitle }}</p>
-              <button class="btn btn-primary btn-lg" (click)="navigateToSection(slide.action)">
-                {{ slide.actionText }}
-              </button>
+  <section class="hero-section">
+    <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true" [wrap]="true">
+      <ng-template ngbSlide *ngFor="let slide of heroSlides">
+        <div class="carousel-container">
+          <img [src]="slide.imageUrl" [alt]="slide.title">
+          <div class="carousel-caption">
+            <div class="caption-badge" *ngIf="slide.badge">
+              {{ slide.badge }}
             </div>
+            <h1>{{ slide.title }}</h1>
+            <p>{{ slide.subtitle }}</p>
+            <button class="btn btn-primary btn-lg" (click)="navigateToSection(slide.action)">
+              {{ slide.actionText }}
+            </button>
           </div>
-        </ng-template>
-      </ngb-carousel>
-    </section>
-  
-    <!-- Quick Stats Section -->
-    <section class="stats-section py-5">
-      <div class="container">
-        <div class="row text-center">
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">+11</div>
-              <div class="stat-label">Años de Experiencia</div>
-            </div>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+  </section>
+
+  <section class="stats-section">
+    <div class="container">
+      <div class="row text-center">
+        <div class="col-md-3 col-6">
+          <div class="stat-item">
+            <div class="stat-number">+11</div>
+            <div class="stat-label">Años de Experiencia</div>
           </div>
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">+70</div>
-              <div class="stat-label">Cursos Semanales</div>
-            </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-item">
+            <div class="stat-number">+70</div>
+            <div class="stat-label">Cursos Semanales</div>
           </div>
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">+500</div>
-              <div class="stat-label">Empresas Capacitadas</div>
-            </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-item">
+            <div class="stat-number">+500</div>
+            <div class="stat-label">Empresas Capacitadas</div>
           </div>
-          <div class="col-md-3 col-6 mb-4">
-            <div class="stat-item">
-              <div class="stat-number">+15k</div>
-              <div class="stat-label">Alumnos Egresados</div>
-            </div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="stat-item">
+            <div class="stat-number">+15k</div>
+            <div class="stat-label">Alumnos Egresados</div>
           </div>
         </div>
       </div>
-    </section>
-  
-    <!-- Loading Indicator -->
-    <div class="text-center py-5" *ngIf="loading">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Cargando...</span>
-      </div>
-      <p class="mt-3">Cargando cursos...</p>
     </div>
-  
-    <!-- Featured Courses Carousel -->
-    <section class="featured-courses-section py-3" *ngIf="!loading && featuredCourses.length > 0" id="featured">
+  </section>
+
+  <div class="text-center py-4" *ngIf="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+    <p class="mt-2">Cargando cursos...</p>
+  </div>
+
+  <section class="featured-courses-section" *ngIf="!loading && featuredCourses.length > 0" id="featured">
+    <div class="container">
+      <app-course-carousel
+        [courses]="featuredCourses"
+        subtitle="Cursos Destacados"
+        (dateSelected)="onDateSelected($event)">
+      </app-course-carousel>
+    </div>
+  </section>
+
+  <section class="category-courses-section" *ngIf="!loading" id="categories">
+    <div *ngFor="let category of categories; let even = even" 
+          class="category-section">
       <div class="container">
         <app-course-carousel
-          [courses]="featuredCourses"
-          subtitle="Cursos Destacados"
+          [courses]="categoryCourses[category] || []"
+          [subtitle]="'Cursos de ' + category"
+          [category]="category"
           (dateSelected)="onDateSelected($event)">
         </app-course-carousel>
       </div>
-    </section>
-  
-    <!-- Courses by Category (Multiple Carousels) -->
-    <section class="category-courses-section" *ngIf="!loading" id="categories">
-      <div *ngFor="let category of categories; let even = even; let i = index" 
-            class="category-section py-3"
-            [class.even-section]="even"
-            [class.odd-section]="!even">
-        <div class="container">
-          <app-course-carousel
-            [courses]="categoryCourses[category] || []"
-            [subtitle]="'Cursos de ' + category"
-            [category]="category"
-            (dateSelected)="onDateSelected($event)">
-          </app-course-carousel>
-        </div>
+    </div>
+  </section>
+
+  <section class="benefits-section" id="benefits">
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-badge">BENEFICIOS</div>
+        <h2>¿Por qué elegirnos?</h2>
+        <p>Formación de calidad con ventajas competitivas</p>
       </div>
-    </section>
-  
-    <!-- Benefits Section -->
-    <section class="benefits-section py-5" id="benefits">
-      <div class="container">
-        <div class="section-header text-center mb-5">
-          <div class="section-badge">BENEFICIOS</div>
-          <h2>¿Por qué elegirnos?</h2>
-          <p>Formación de calidad con ventajas competitivas</p>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="bi bi-award"></i>
+            </div>
+            <h3>Certificación Reconocida</h3>
+            <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más
+              exigentes.</p>
+          </div>
         </div>
-  
-        <div class="row">
-          <div class="col-md-4 mb-4">
-            <div class="benefit-card">
-              <div class="benefit-icon">
-                <i class="bi bi-award"></i>
-              </div>
-              <h3>Certificación Reconocida</h3>
-              <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más
-                exigentes.</p>
+        <div class="col-md-4 mb-3">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="bi bi-person-video3"></i>
             </div>
+            <h3>Instructores Expertos</h3>
+            <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones
+              internacionales.</p>
           </div>
-          <div class="col-md-4 mb-4">
-            <div class="benefit-card">
-              <div class="benefit-icon">
-                <i class="bi bi-person-video3"></i>
-              </div>
-              <h3>Instructores Expertos</h3>
-              <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones
-                internacionales.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="bi bi-laptop"></i>
             </div>
-          </div>
-          <div class="col-md-4 mb-4">
-            <div class="benefit-card">
-              <div class="benefit-icon">
-                <i class="bi bi-laptop"></i>
-              </div>
-              <h3>Formato Flexible</h3>
-              <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
-            </div>
+            <h3>Formato Flexible</h3>
+            <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
           </div>
         </div>
       </div>
-    </section>
-  
-    <!-- Call to Action Section -->
-    <section class="cta-section py-5">
-      <div class="container text-center">
-        <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
-        <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
-        <button class="btn btn-primary btn-lg mt-4" (click)="navigateToAllCourses()">
-          Explorar Cursos Disponibles
-        </button>
-      </div>
-    </section>
-  </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
+      <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
+      <button class="btn btn-primary mt-3" (click)="navigateToAllCourses()">
+        Explorar Cursos Disponibles
+      </button>
+    </div>
+  </section>
+</div>

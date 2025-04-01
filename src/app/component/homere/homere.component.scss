@@ -1,7 +1,5 @@
-/* redesigned-home.component.scss */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
-// Uniprotec Theme Colors
 $uniprotec-blue: #0066b3;
 $uniprotec-yellow: #ffba00;
 $uniprotec-light-blue: #0095db;
@@ -15,7 +13,6 @@ $uniprotec-dark-gray: #333333;
   overflow-x: hidden;
 }
 
-// Hero Section
 .hero-section {
   .carousel-container {
     position: relative;
@@ -34,18 +31,12 @@ $uniprotec-dark-gray: #333333;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position:  center top;
+      object-position: center top;
     }
     
     .carousel-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-       // background: linear-gradient(to bottom, rgba(0, 149, 219, 0.7) 0%, rgba(0, 76, 134, 0.5) 100%);
-        z-index: 1;
-      }
+      display: none;
+    }
     
     .carousel-caption {
       position: absolute;
@@ -118,17 +109,12 @@ $uniprotec-dark-gray: #333333;
   }
 }
 
-// Stats Section
 .stats-section {
-  background-color: $uniprotec-gray;
+  padding: 1rem 0 0;
+  margin: 0;
   
   .stat-item {
-    padding: 1.5rem;
-    transition: transform 0.3s ease;
-    
-    &:hover {
-      transform: translateY(-10px);
-    }
+    padding: 0.5rem 0;
     
     .stat-number {
       font-size: 2.5rem;
@@ -143,31 +129,53 @@ $uniprotec-dark-gray: #333333;
   }
 }
 
-// Category Sections
-.category-section {
-  &.even-section {
-    background-color: #f8f9fa;
-  }
-  
-  &.odd-section {
-    background-color: white;
-  }
-  
-  margin-bottom: 1rem;
+.featured-courses-section {
+  padding-top: 1.5rem;
+  margin-bottom: -20px;
 }
 
-// Benefits Section
-.benefits-section {
-  background-color: $uniprotec-gray;
+.category-courses-section {
+  padding: 0;
+  margin: 0;
+  
+  .category-section {
+    padding: 0;
+    margin: 0;
+    margin-bottom: -20px;
+  }
+}
+
+::ng-deep .course-carousel-section {
+  margin-bottom: -20px;
   
   .section-header {
-    margin-bottom: 3rem;
+    margin-bottom: 0.5rem;
+    
+    h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0;
+    }
+  }
+}
+
+::ng-deep .carousel-control-prev,
+::ng-deep .carousel-control-next {
+  width: 5%;
+}
+
+.benefits-section {
+  background-color: $uniprotec-gray;
+  padding: 2rem 0;
+  margin-top: 1rem;
+  
+  .section-header {
+    margin-bottom: 2rem;
     
     h2 {
       font-weight: 700;
       font-size: 2rem;
       color: $uniprotec-blue;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
     
     p {
@@ -182,7 +190,7 @@ $uniprotec-dark-gray: #333333;
       padding: 0.4rem 1.2rem;
       border-radius: 2rem;
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       text-transform: uppercase;
       font-size: 0.9rem;
     }
@@ -190,14 +198,14 @@ $uniprotec-dark-gray: #333333;
   
   .benefit-card {
     background-color: white;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 10px;
     height: 100%;
     transition: transform 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     
     &:hover {
-      transform: translateY(-10px);
+      transform: translateY(-5px);
       
       .benefit-icon {
         background-color: $uniprotec-yellow;
@@ -205,52 +213,51 @@ $uniprotec-dark-gray: #333333;
     }
     
     .benefit-icon {
-      width: 70px;
-      height: 70px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       background-color: $uniprotec-blue;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       transition: background-color 0.3s ease;
       
       i {
-        font-size: 2rem;
+        font-size: 1.75rem;
         color: white;
       }
     }
     
     h3 {
       font-weight: 700;
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
       color: $uniprotec-blue;
     }
     
     p {
       color: $uniprotec-dark-gray;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       margin-bottom: 0;
     }
   }
 }
 
-// CTA Section
 .cta-section {
   background: linear-gradient(135deg, $uniprotec-blue, $uniprotec-dark-blue);
   color: white;
-  padding: 4rem 0;
+  padding: 2.5rem 0;
   
   h2 {
     font-weight: 700;
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
   }
   
   .lead {
-    font-size: 1.3rem;
-    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
     opacity: 0.9;
   }
   
@@ -264,6 +271,69 @@ $uniprotec-dark-gray: #333333;
     &:hover {
       background-color: darken($uniprotec-yellow, 10%);
       border-color: darken($uniprotec-yellow, 10%);
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  ::ng-deep .course-carousel-section {
+    margin-bottom: -15px;
+  }
+  
+  .featured-courses-section {
+    margin-bottom: -15px;
+  }
+  
+  .category-courses-section .category-section {
+    margin-bottom: -15px;
+  }
+  
+  .benefits-section {
+    margin-top: 0.5rem;
+  }
+}
+::ng-deep .course-carousel-section {
+  .carousel-control-prev,
+  .carousel-control-next {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  .carousel-control-prev {
+    left: -20px;
+  }
+  
+  .carousel-control-next {
+    right: -20px;
+  }
+  
+  /* Add padding to course carousel containers */
+  .carousel-container {
+    padding: 0 25px;
+  }
+}
+
+/* Adjust for mobile */
+@media (max-width: 767px) {
+  ::ng-deep .course-carousel-section {
+    .carousel-control-prev {
+      left: -10px;
+    }
+    
+    .carousel-control-next {
+      right: -10px;
+    }
+    
+    .carousel-container {
+      padding: 0 15px;
     }
   }
 }
