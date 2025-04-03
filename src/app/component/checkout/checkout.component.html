@@ -1,13 +1,58 @@
-<!-- checkout.component.html with improved layout and styling -->
+<!-- checkout.component.html - Complete version -->
 <div class="checkout-container" @fadeInOut>
   <div class="container py-5">
-    <!-- Loading and error states remain the same -->
+    <!-- Loading and error states -->
+    <div class="text-center py-5" *ngIf="loading">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-3">Cargando información del curso...</p>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="loadError">
+      <i class="bi bi-exclamation-triangle me-2"></i>
+      Ocurrió un error al cargar los datos del curso. Por favor, intente de nuevo más tarde.
+      <button class="btn btn-outline-danger btn-sm ms-3" (click)="backToCourse()">
+        Volver
+      </button>
+    </div>
 
     <!-- Main checkout content -->
-    <div *ngIf="!loading && !loadError && course" @slideInUp>
-      <!-- Course Summary section remains the same -->
+    <div *ngIf="!loading && !loadError && course" @slideInOut>
+      <!-- Course Summary -->
+      <div class="course-summary mb-4">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <img [src]="course.imageUrl" [alt]="course.title" class="img-fluid rounded shadow">
+          </div>
+          <div class="col-md-6">
+            <h2 class="course-title">{{ course.title }}</h2>
+            <p class="course-subtitle">{{ course.subtitle }}</p>
+            <div class="course-details">
+              <span class="badge bg-primary">{{ course.category }}</span>
+              <div class="details-item">
+                <i class="bi bi-clock"></i>
+                <span>{{ course.duration }}</span>
+              </div>
+              <div class="details-item">
+                <i class="bi bi-calendar-check"></i>
+                <span *ngIf="selectedDate">{{ selectedDate | date:'fullDate':'':'es' }}</span>
+                <span *ngIf="!selectedDate" class="text-warning">
+                  <i class="bi bi-exclamation-circle"></i> Seleccione una fecha
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 text-center">
+            <div class="price-tag">
+              <div class="price-label">Precio</div>
+              <div class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- Purchase Type Selection - Moved above all panels -->
+      <!-- Purchase Type Selection -->
       <div class="purchase-type-selector mb-4">
         <h3>Selecciona el tipo de compra</h3>
         <div class="purchase-options">
@@ -42,33 +87,8 @@
           <p>Complete la información para procesar su compra</p>
         </div>
 
-        <!-- User Registration Panel -->
-        <div class="checkout-panel registration-panel mb-4" *ngIf="!isExistingUser">
-          <div class="panel-header">
-            <div class="header-icon">
-              <i class="bi bi-person-plus"></i>
-            </div>
-            <h3>Crea tu cuenta</h3>
-          </div>
-          <div class="panel-body">
-            <div class="mb-4 text-center">
-              <p>¿Ya tienes una cuenta?</p>
-              <button type="button" class="btn btn-outline-primary" (click)="switchToLogin()">
-                Iniciar sesión
-              </button>
-            </div>
-
-            <form [formGroup]="userForm">
-              <div class="row">
-                <!-- Form fields remain the same -->
-                <!-- Email and other user fields -->
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- User Profile Display for Existing Users -->
-        <div class="checkout-panel user-panel mb-4" *ngIf="isExistingUser">
+        <!-- User Profile Display -->
+        <div class="checkout-panel user-panel mb-4">
           <div class="panel-header">
             <div class="header-icon">
               <i class="bi bi-person-check"></i>
@@ -77,12 +97,19 @@
           </div>
           <div class="panel-body">
             <div class="user-profile-summary">
-              <!-- User display remains the same -->
+              <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="user-details">
+                <h4>{{ userForm.get('fullName')?.value }}</h4>
+                <p><i class="bi bi-envelope"></i> {{ userForm.get('email')?.value }}</p>
+                <p><i class="bi bi-phone"></i> {{ userForm.get('phone')?.value }}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <!-- Payment Method Panel -->
+        <!-- Stripe Payment Component -->
         <div class="checkout-panel payment-panel mb-4">
           <div class="panel-header">
             <div class="header-icon">
@@ -91,7 +118,13 @@
             <h3>Método de pago</h3>
           </div>
           <div class="panel-body">
-            <!-- Payment form remains the same -->
+            <app-stripe-payment
+              [amount]="calculateTotal()"
+              [courseId]="course?.id || ''"
+              [customerEmail]="userForm.get('email')?.value || ''"
+              (paymentSuccess)="handlePaymentSuccess($event)"
+              (paymentError)="handlePaymentError($event)">
+            </app-stripe-payment>
           </div>
         </div>
       </div>
@@ -113,7 +146,64 @@
           <div class="panel-body">
             <form [formGroup]="companyForm">
               <div class="row">
-                <!-- Company form fields remain the same -->
+                <div class="col-md-6 mb-3">
+                  <label for="companyName" class="form-label">Nombre de la empresa</label>
+                  <input type="text" class="form-control" id="companyName" formControlName="companyName"
+                    [ngClass]="{'is-invalid': companyForm.get('companyName')?.invalid && companyForm.get('companyName')?.touched}">
+                  <div class="invalid-feedback">
+                    Por favor, ingrese el nombre de la empresa
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="rfc" class="form-label">RFC</label>
+                  <input type="text" class="form-control" id="rfc" formControlName="rfc"
+                    [ngClass]="{'is-invalid': companyForm.get('rfc')?.invalid && companyForm.get('rfc')?.touched}">
+                  <div class="invalid-feedback">
+                    Por favor, ingrese un RFC válido
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="contactName" class="form-label">Nombre de contacto</label>
+                  <input type="text" class="form-control" id="contactName" formControlName="contactName"
+                    [ngClass]="{'is-invalid': companyForm.get('contactName')?.invalid && companyForm.get('contactName')?.touched}">
+                  <div class="invalid-feedback">
+                    Por favor, ingrese el nombre del contacto
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="contactEmail" class="form-label">Email de contacto</label>
+                  <input type="email" class="form-control" id="contactEmail" formControlName="contactEmail"
+                    [ngClass]="{'is-invalid': companyForm.get('contactEmail')?.invalid && companyForm.get('contactEmail')?.touched}">
+                  <div class="invalid-feedback">
+                    Por favor, ingrese un email válido
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="contactPhone" class="form-label">Teléfono de contacto</label>
+                  <input type="tel" class="form-control" id="contactPhone" formControlName="contactPhone"
+                    [ngClass]="{'is-invalid': companyForm.get('contactPhone')?.invalid && companyForm.get('contactPhone')?.touched}">
+                  <div class="invalid-feedback">
+                    Por favor, ingrese un número de teléfono válido (10 dígitos)
+                  </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label for="quantity" class="form-label">Cantidad de participantes</label>
+                  <input type="number" class="form-control" id="quantity" formControlName="quantity" min="1"
+                    [ngClass]="{'is-invalid': companyForm.get('quantity')?.invalid && companyForm.get('quantity')?.touched}">
+                  <div class="invalid-feedback">
+                    Por favor, ingrese un número válido de participantes
+                  </div>
+                </div>
+
+                <div class="col-md-12 mb-3">
+                  <label for="additionalInfo" class="form-label">Información adicional (opcional)</label>
+                  <textarea class="form-control" id="additionalInfo" formControlName="additionalInfo" rows="3"></textarea>
+                </div>
               </div>
             </form>
 
@@ -126,17 +216,67 @@
         </div>
       </div>
 
-      <!-- Action Buttons  || !reservationActive -->
-      <div class="d-flex justify-content-between mt-4">
+      <!-- Order Summary Panel -->
+      <div class="checkout-panel summary-panel mb-4">
+        <div class="panel-header">
+          <div class="header-icon">
+            <i class="bi bi-receipt"></i>
+          </div>
+          <h3>Resumen de la compra</h3>
+        </div>
+        <div class="panel-body">
+          <div class="summary-item">
+            <span class="item-label">Curso:</span>
+            <span class="item-value">{{ course.title }}</span>
+          </div>
+          
+          <div class="summary-item">
+            <span class="item-label">Fecha:</span>
+            <span class="item-value" *ngIf="selectedDate">{{ selectedDate | date:'longDate':'':'es' }}</span>
+            <span class="item-value text-danger" *ngIf="!selectedDate">
+              <i class="bi bi-exclamation-circle me-1"></i>No seleccionada
+            </span>
+          </div>
+          
+          <div class="summary-item" *ngIf="purchaseType === 'company'">
+            <span class="item-label">Participantes:</span>
+            <span class="item-value">{{ companyForm.get('quantity')?.value || 1 }}</span>
+          </div>
+          
+          <div class="summary-item">
+            <span class="item-label">Precio:</span>
+            <span class="item-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+          </div>
+          
+          <div class="summary-item total-item">
+            <span class="item-label">Total:</span>
+            <span class="item-value">{{ calculateTotal() | currency:'MXN':'symbol':'1.0-0' }}</span>
+          </div>
+          
+          <div class="date-alert alert alert-warning mt-3" *ngIf="showDateAlert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            Por favor seleccione una fecha para continuar
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons (only for corporate purchase since individual uses the payment component's button) -->
+      <div class="d-flex justify-content-between mt-4" *ngIf="purchaseType === 'company'">
         <button type="button" class="btn btn-outline-secondary" (click)="backToCourse()">
           Regresar
         </button>
         <button type="button" class="btn btn-primary btn-lg px-5" [disabled]="processingPayment || !selectedDate"
           (click)="processPayment()">
           <span class="spinner-border spinner-border-sm me-2" *ngIf="processingPayment"></span>
-          {{ purchaseType === 'individual' ? 'Pagar ahora' : 'Solicitar información' }}
+          Solicitar información
         </button>
-
+      </div>
+      
+      <!-- Back button only for individual purchase -->
+      <div class="mt-4" *ngIf="purchaseType === 'individual'">
+        <button type="button" class="btn btn-outline-secondary" (click)="backToCourse()">
+          Regresar al curso
+        </button>
       </div>
     </div>
   </div>

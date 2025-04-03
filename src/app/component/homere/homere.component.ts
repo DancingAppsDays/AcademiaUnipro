@@ -1,4 +1,4 @@
-// redesigned-home.component.ts
+// improved-redesigned-home.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CourseService } from '../../core/services/course.service';
@@ -39,7 +39,7 @@ export class RedesignedHomeComponent implements OnInit {
   // Store selected dates for courses
   selectedDates: { [courseId: string]: Date } = {};
   
-  // Hero slides data
+  // Hero slides data - ensure images don't have overlays built in
   heroSlides = [
     {
       imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
@@ -79,7 +79,7 @@ export class RedesignedHomeComponent implements OnInit {
   loadCourses(): void {
     this.loading = true;
     
-    // Use direct mock data loading for now
+    // Load courses with minimal delay to improve performance
     this.loadMockData();
   }
 

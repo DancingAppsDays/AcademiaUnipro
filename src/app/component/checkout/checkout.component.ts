@@ -1,4 +1,3 @@
-// checkout.component.ts - Revised for courseId and date parameters
 import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -9,12 +8,17 @@ import { Course } from '../../core/models/course.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-
+import { StripePaymentComponent } from '../stripe-payment/stripe-payment.component';
 
 @Component({
   selector: 'app-checkout',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule, 
+    RouterModule, 
+    StripePaymentComponent
+  ],
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss'],
   animations: [
@@ -72,16 +76,16 @@ export class CheckoutComponent implements OnInit {
   loading = true;
   loadError = false;
   processingPayment = false;
-  showDateAlert: boolean = false;
+  showDateAlert = false;
+  
   private http = inject(HttpClient);
-
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private courseService = inject(CourseService);
   private userService = inject(UserService);
 
-  constructor(http: HttpClient) {
+  constructor() {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
@@ -107,7 +111,16 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCheckoutData();
-    this.checkUserLoginStatus();
+    
+    // For demo purposes, skip user login check and add mock data
+    this.isExistingUser = true;
+    this.userForm.patchValue({
+      email: 'demo@example.com',
+      fullName: 'Demo User',
+      phone: '5512345678'
+    });
+    this.userForm.get('password')?.disable();
+    this.userForm.get('confirmPassword')?.disable();
   }
 
   private loadCheckoutData(): void {
@@ -198,7 +211,6 @@ export class CheckoutComponent implements OnInit {
     console.error(message);
   }
 
- 
   private checkUserLoginStatus(): void {
     this.userService.getCurrentUser().subscribe(user => {
       if (user) {
@@ -218,7 +230,6 @@ export class CheckoutComponent implements OnInit {
       }
     });
   }
-  
 
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
@@ -257,7 +268,6 @@ export class CheckoutComponent implements OnInit {
       this.companyForm.get('contactEmail')?.updateValueAndValidity();
       this.companyForm.get('contactPhone')?.updateValueAndValidity();
 
-      // Log for debugging
       console.log('Switched to company purchase type');
     } else {
       // Ensure user form is properly validated
@@ -267,15 +277,8 @@ export class CheckoutComponent implements OnInit {
         this.userForm.get('phone')?.updateValueAndValidity();
       }
 
-      // Log for debugging
       console.log('Switched to individual purchase type');
     }
-
-    // For animation purposes, you might want to trigger change detection manually
-    // or ensure Angular runs animation by forcing a layout reflow
-    setTimeout(() => {
-      console.log(`Animation should run from ${previousType} to ${type}`);
-    }, 0);
   }
 
   calculateTotal(): number {
@@ -288,6 +291,7 @@ export class CheckoutComponent implements OnInit {
       return this.course.price * quantity;
     }
   }
+  
   processPayment() {
     if (!this.selectedDate) {
       this.showDateAlert = true;
@@ -302,120 +306,57 @@ export class CheckoutComponent implements OnInit {
     this.processingPayment = true;
   
     if (this.purchaseType === 'individual') {
-      // First register or get user
-      const userData = {
-        email: this.userForm.get('email')?.value,
-        fullName: this.userForm.get('fullName')?.value,
-        phone: this.userForm.get('phone')?.value,
-        password: this.userForm.get('password')?.value
-      };
-  
-      // If user is logged in, use their ID directly
-      if (this.isExistingUser) {
-        this.processPurchase(this.userForm.get('userId')?.value);
-      } else {
-        // Register new user
-        this.http.post<any>(`${environment.apiUrl}/users/register`, userData)
-          .subscribe({
-            next: (response) => {
-              this.processPurchase(response.user.id);
-            },
-            error: (error) => {
-              console.error('Registration failed', error);
-              this.processingPayment = false;
-            }
-          });
-      }
+      // The actual payment processing is now handled by the StripePaymentComponent
+      // We'll just simulate a success callback for demo purposes
+      setTimeout(() => {
+        this.handlePaymentSuccess({ paymentId: 'demo_' + Math.random().toString(36).substring(2, 15) });
+      }, 1000);
     } else {
       // Process company purchase (likely needs direct contact)
-      //DEBUG
-      this.router.navigate(['/checkout/company-success']);
-
-
-      this.userService.submitCompanyPurchase({
-        courseId: this.course?.id,
-        courseName: this.course?.title,
-        selectedDate: this.selectedDate,
-        price: this.course?.price,
-        totalAmount: this.calculateTotal(),
-        ...this.companyForm.value
-      }).subscribe({
-        next: () => {
-          // Navigate to success page for company purchases
-          this.router.navigate(['/checkout/company-success']);
-        },
-        error: (error) => {
-          console.error('Company purchase request failed', error);
-          this.processingPayment = false;
-          // Handle error
-        }
-      });
+      this.processCompanyRequest();
     }
   }
-
-
-private processPurchase(userId?: string) {
-  if (!this.course || !this.selectedDate) return;
-
-  const purchaseData = {
-    courseId: this.course.id,
-    courseTitle: this.course.title,
-    price: this.course.price,
-    quantity: 1,
-    customerEmail: this.userForm.get('email')?.value,
-    selectedDate: this.selectedDate.toISOString(),
-    successUrl: `${window.location.origin}/checkout/success`,
-    cancelUrl: `${window.location.origin}/checkout/${this.course.id}`,
-    userId: userId
-  };
-
-  this.http.post<any>(`${environment.apiUrl}/payments/create-checkout-session`, purchaseData)
-    .subscribe({
-      next: (response) => {
-        // Redirect to Stripe checkout
-        window.location.href = response.url;
-      },
-      error: (error) => {
-        console.error('Payment creation failed', error);
-        this.processingPayment = false;
-      }
-    });
-}
-/*
-  private processPurchase(userId?: string) {
-    console.log("process pruchase")
-    //if (!this.course || !this.selectedDate) return;
-
+  
+  handlePaymentSuccess(result: { paymentId: string }) {
+    console.log('Payment successful', result);
+    
+    // Navigate to success page
     this.router.navigate(['/checkout/success'], {
       queryParams: {
         email: this.userForm.get('email')?.value,
-        courseId: this.course?.id
+        courseId: this.course?.id,
+        date: this.selectedDate?.toISOString(),
+        purchaseId: result.paymentId
       }
     });
-   // if (true) return;
-    this.userService.purchaseCourse({
-      courseId: this.course?.id,
-      courseName: this.course?.title,
-      coursePrice: this.course?.price,
-      selectedDate: this.selectedDate,
-      userId: userId
-    }).subscribe({
-      next: (response) => {
-        // Navigate to success page with email confirmation
-        this.router.navigate(['/checkout/success'], {
-          queryParams: {
-            email: this.userForm.get('email')?.value,
-            courseId: this.course?.id
-          }
-        });
-      },
-      error: (error) => {
-        console.error('Purchase failed', error);
-        this.processingPayment = false;
-        // Handle error
-      }
-    });
-  }*/
+  }
+  
+  handlePaymentError(error: string) {
+    console.error('Payment error:', error);
+    this.processingPayment = false;
+  }
+
+  private processCompanyRequest() {
+    if (!this.companyForm.valid) {
+      this.companyForm.markAllAsTouched();
+      this.processingPayment = false;
+      return;
+    }
+    
+    // For demo purposes, simply redirect to company success page
+    setTimeout(() => {
+      this.router.navigate(['/checkout/company-success'], {
+        queryParams: {
+          companyName: this.companyForm.get('companyName')?.value,
+          contactEmail: this.companyForm.get('contactEmail')?.value,
+          courseId: this.course?.id,
+          date: this.selectedDate?.toISOString(),
+          quantity: this.companyForm.get('quantity')?.value,
+          requestId: 'DEMO-COMP-' + Math.floor(Math.random() * 10000)
+        }
+      });
+    }, 1500);
+  }
 
   // Method to return to course details
   backToCourse() {
