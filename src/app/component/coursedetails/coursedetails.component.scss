@@ -516,6 +516,140 @@ $uniprotec-dark-gray: #333333;
   }
 }
 
+
+
+/* Styling for dates section */
+.loading-dates {
+  text-align: center;
+  padding: 2rem;
+}
+
+.dates-info {
+  .contact-options {
+    margin-top: 2rem;
+    
+    h3 {
+      font-weight: 700;
+      color: #0066b3;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .contact-option {
+      text-align: center;
+      background-color: white;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      height: 100%;
+      transition: transform 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-5px);
+      }
+      
+      i {
+        font-size: 2rem;
+        color: #0066b3;
+        margin-bottom: 1rem;
+      }
+      
+      h4 {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: #0066b3;
+      }
+      
+      p {
+        margin-bottom: 0;
+        color: #333333;
+      }
+    }
+  }
+}
+
+/* Enhanced course price card with date details */
+.course-price-card {
+  .date-selection {
+    .selected-date {
+      display: flex;
+      align-items: flex-start;
+      
+      i {
+        color: #0066b3;
+        margin-right: 0.5rem;
+        font-size: 1.2rem;
+        margin-top: 0.2rem;
+      }
+      
+      .date-details {
+        display: flex;
+        flex-direction: column;
+        
+        .date-label {
+          font-size: 0.8rem;
+          color: #666;
+        }
+        
+        .date-value {
+          font-weight: 500;
+          color: #0066b3;
+          margin-bottom: 0.3rem;
+        }
+        
+        .instructor-name, .seats-info {
+          font-size: 0.85rem;
+          display: flex;
+          align-items: center;
+          margin-top: 0.3rem;
+          
+          i {
+            font-size: 0.9rem;
+            margin-right: 0.3rem;
+            margin-top: 0;
+          }
+        }
+        
+        .seats-info {
+          color: #28a745;
+          
+          &.low-seats {
+            color: #dc3545;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Postponement policy badges */
+.postponement-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #ffc107;
+  color: #212529;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-left: 0.5rem;
+  
+  i {
+    margin-right: 0.3rem;
+  }
+}
+
+.confirmed-badge {
+  background-color: #28a745;
+  color: white;
+}
+
+
+
+
+
+
 // Responsive adjustments
 @media (max-width: 991.98px) {
   .course-detail-container {

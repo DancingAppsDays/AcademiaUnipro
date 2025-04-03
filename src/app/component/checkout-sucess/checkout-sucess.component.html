@@ -12,37 +12,68 @@
           <div class="order-badge">Pedido #{{ purchaseId }}</div>
         </div>
         
-        <div class="course-info mt-4" *ngIf="course">
-          <h2>{{ course.title }}</h2>
-          <p>{{ course.subtitle }}</p>
-          
-          <div class="course-details" *ngIf="selectedDate">
-            <div class="detail-item">
-              <i class="bi bi-calendar2-check"></i>
-              <div>
-                <strong>Fecha del curso</strong>
-                <p>{{ selectedDate | date:'fullDate':'':'es' }}</p>
-              </div>
-            </div>
-            
-            <div class="detail-item">
-              <i class="bi bi-clock"></i>
-              <div>
-                <strong>Duración</strong>
-                <p>{{ course.duration }}</p>
-              </div>
-            </div>
-            
-            <div class="detail-item">
-              <i class="bi bi-person-badge"></i>
-              <div>
-                <strong>Instructor</strong>
-                <p>{{ course.instructor.name }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
+      
+<div class="course-info mt-4" *ngIf="course">
+  <h2>{{ course.title }}</h2>
+  <p>{{ course.subtitle }}</p>
+  
+  <!-- Modified course-details section with instance information -->
+  <div class="course-details" *ngIf="selectedDate">
+    <div class="detail-item">
+      <i class="bi bi-calendar2-check"></i>
+      <div>
+        <strong>Fecha del curso</strong>
+        <p>{{ selectedDate | date:'fullDate':'':'es' }}</p>
         
+        <!-- Show status badges based on enrollment status -->
+        <div class="enrollment-status" *ngIf="courseInstance">
+          <span class="status-badge" [ngClass]="{'confirmed': enrollmentConfirmed}">
+            <i class="bi" [ngClass]="enrollmentConfirmed ? 'bi-check-circle' : 'bi-exclamation-triangle'"></i>
+            {{ enrollmentConfirmed ? 'Confirmado' : 'Pendiente de confirmación' }}
+          </span>
+          
+          <span class="seats-count" *ngIf="courseInstance.capacity && courseInstance.enrolledCount">
+            {{ courseInstance.enrolledCount }}/{{ courseInstance.capacity }} participantes inscritos
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="detail-item">
+      <i class="bi bi-clock"></i>
+      <div>
+        <strong>Duración</strong>
+        <p>{{ course.duration }}</p>
+      </div>
+    </div>
+    
+    <div class="detail-item">
+      <i class="bi bi-person-badge"></i>
+      <div>
+        <strong>Instructor</strong>
+        <p>{{ getInstructorName() }}</p>
+      </div>
+    </div>
+    
+    <!-- Add location if available in course instance -->
+    <div class="detail-item" *ngIf="courseInstance?.location">
+      <i class="bi bi-geo-alt"></i>
+      <div>
+        <strong>Ubicación</strong>
+        <p>{{ courseInstance?.location }}</p>
+      </div>
+    </div>
+    
+    <!-- Add meeting URL if available -->
+    <div class="detail-item" *ngIf="courseInstance?.meetingUrl">
+      <i class="bi bi-camera-video"></i>
+      <div>
+        <strong>Enlace de reunión</strong>
+        <p><a [href]="courseInstance?.meetingUrl" target="_blank">{{ courseInstance?.meetingUrl }}</a></p>
+      </div>
+    </div>
+  </div>
+</div>
         <div class="email-info mt-4" *ngIf="email">
           <div class="email-badge">
             <i class="bi bi-envelope-check"></i>

@@ -1,4 +1,6 @@
-// course.model.ts
+// src/app/core/models/course.model.ts
+import { CourseDate } from './course-date.model';
+
 export interface Course {
     id: string;
     title: string;
@@ -9,18 +11,29 @@ export interface Course {
     duration: string;
     isoStandards: string[];
     previewVideoUrl: string;
-    imageUrl?: string; // Optional field
-    featured?: boolean; // Optional field
-    nextDate?: Date; // Optional field
+    imageUrl?: string;
+    featured?: boolean;
     instructor: Instructor;
+    
+    // The following fields are for backward compatibility
+    nextDate?: Date;
     availableDates: Date[];
-  }
+    
+    // New field to reference specific course instances
+    courseInstances?: CourseDate[];
+    
+    // Course policy details
+    postponementPolicy?: {
+      minimumRequired: number;
+      deadlineDays: number;
+      message: string;
+    };
+}
   
-  // instructor.model.ts
-  export interface Instructor {
+export interface Instructor {
     id: string;
     name: string;
     photoUrl: string;
     bio: string;
     specialties: string[];
-  }
+}

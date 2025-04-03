@@ -1,0 +1,233 @@
+/* src/app/component/course/course-date-selector/course-date-selector.component.scss */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+
+// Uniprotec Theme Colors
+$uniprotec-blue: #0066b3;
+$uniprotec-yellow: #ffba00;
+$uniprotec-light-blue: #0095db;
+$uniprotec-dark-blue: #004c86;
+$uniprotec-white: #ffffff;
+$uniprotec-gray: #f5f5f5;
+$uniprotec-dark-gray: #333333;
+
+// Warning and error colors
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+$success-color: #28a745;
+
+.date-selector-container {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  
+  h3 {
+    font-weight: 700;
+    color: $uniprotec-blue;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.policy-alert {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  background-color: rgba($uniprotec-blue, 0.1);
+  border: none;
+  border-radius: 10px;
+  padding: 1.2rem;
+  
+  i {
+    font-size: 1.5rem;
+    color: $uniprotec-blue;
+    margin-top: 0.3rem;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+  
+  div {
+    strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+      color: $uniprotec-dark-blue;
+    }
+    
+    p {
+      margin-bottom: 0;
+      color: $uniprotec-dark-gray;
+    }
+  }
+}
+
+.date-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.date-card {
+  background-color: $uniprotec-white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid transparent;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+  
+  &.selected {
+    border: 2px solid $uniprotec-blue;
+    background-color: rgba($uniprotec-blue, 0.05);
+  }
+  
+  &.nearly-full {
+    border-left: 4px solid $warning-color;
+  }
+  
+  &.at-risk {
+    border-left: 4px solid $danger-color;
+  }
+}
+
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.date-info {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  color: $uniprotec-blue;
+  margin-bottom: 0.5rem;
+  
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+.seats-info {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: $uniprotec-dark-gray;
+  
+  i {
+    margin-right: 0.5rem;
+  }
+  
+  &.seats-warning {
+    color: $danger-color;
+    font-weight: 500;
+  }
+}
+
+.date-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  
+  i {
+    width: 20px;
+    margin-right: 0.5rem;
+    color: $uniprotec-blue;
+  }
+}
+
+.date-status {
+  margin-bottom: 1rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: $success-color;
+  color: white;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+  
+  i {
+    margin-right: 0.3rem;
+  }
+  
+  &.warning {
+    background-color: $danger-color;
+  }
+  
+  &.nearly-full {
+    background-color: $warning-color;
+    color: $uniprotec-dark-gray;
+  }
+}
+
+.select-date-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  background-color: $uniprotec-blue;
+  border-color: $uniprotec-blue;
+  
+  &:hover, &:focus {
+    background-color: $uniprotec-dark-blue;
+    border-color: $uniprotec-dark-blue;
+  }
+  
+  &.selected {
+    background-color: $uniprotec-dark-blue;
+  }
+  
+  &:disabled {
+    background-color: lighten($uniprotec-blue, 30%);
+    border-color: lighten($uniprotec-blue, 30%);
+    cursor: not-allowed;
+  }
+}
+
+.no-dates-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: $uniprotec-gray;
+  border-radius: 10px;
+  margin-top: 1rem;
+  
+  i {
+    font-size: 3rem;
+    color: lighten($uniprotec-dark-gray, 20%);
+    margin-bottom: 1rem;
+  }
+  
+  p {
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .date-list {
+    grid-template-columns: 1fr;
+  }
+}

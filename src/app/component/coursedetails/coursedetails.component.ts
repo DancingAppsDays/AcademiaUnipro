@@ -1,13 +1,16 @@
-// course-detail.component.ts
-import { Component, OnInit, ViewChild } from '@angular/core';
+// src/app/component/coursedetails/coursedetails.component.ts
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { NgbModal, NgbDateStruct, NgbCalendar, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbCalendar, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { CourseService } from '../../core/services/course.service';
+import { CourseDateService } from '../../core/services/course-date.service';
 import { Course } from '../../core/models/course.model';
+import { CourseDate } from '../../core/models/course-date.model';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CourseDatePickerComponent } from '../course-date-picker/course-date-picker.component';
+import { CourseDateSelectorComponent } from '../course/course-date-selector/course-date-selector.component';
 import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
 
 @Component({
@@ -18,7 +21,8 @@ import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
     RouterModule,
     NgbDatepickerModule,
     ReactiveFormsModule,
-    SafeUrlPipe
+    SafeUrlPipe,
+    CourseDateSelectorComponent
   ],
   templateUrl: './coursedetails.component.html',
   styleUrls: ['./coursedetails.component.scss'],
@@ -58,24 +62,32 @@ export class CourseDetailComponent implements OnInit {
   loadError = false;
   errorMessage: string | null = null;
   selectedDate: Date | null = null;
+  selectedCourseInstance: CourseDate | null = null;
   availableDates: NgbDateStruct[] = [];
-  activeSection: 'overview' | 'curriculum' | 'instructor' | 'reviews' = 'overview';
+  activeSection: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates' = 'overview';
   showDateAlert = false;
   alertTimeout: any;
   
+  // Added flags for displaying course date features
+  hasCourseDates = false;
+  loadingCourseDates = false;
+  minimumStudentsRequired = 6;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private courseService: CourseService,
-    private modalService: NgbModal,
+    private courseDateService: CourseDateService,
     private calendar: NgbCalendar
   ) { }
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('id');
     
-    // Check for date in query parameters
+    // Check for date or instance ID in query parameters
     const dateParam = this.route.snapshot.queryParamMap.get('date');
+    const instanceIdParam = this.route.snapshot.queryParamMap.get('instanceId');
+
     if (dateParam) {
       try {
         this.selectedDate = new Date(dateParam);
@@ -85,10 +97,10 @@ export class CourseDetailComponent implements OnInit {
       }
     }
 
-    this.loadCourseData(courseId);
+    this.loadCourseData(courseId, instanceIdParam);
   }
 
-  private loadCourseData(courseId: string | null): void {
+  private loadCourseData(courseId: string | null, instanceId: string | null = null): void {
     if (!courseId) {
       this.loading = false;
       this.loadError = true;
@@ -104,6 +116,15 @@ export class CourseDetailComponent implements OnInit {
         }
         
         this.processCourse(course);
+        
+        // If an instance ID was provided, load that specific course instance
+        if (instanceId) {
+          this.loadCourseInstance(instanceId);
+        } else {
+          // Otherwise, load all course dates for this course
+          this.loadingCourseDates = true;
+          this.loadCourseDates(courseId);
+        }
       },
       error: (error) => {
         console.error('Error loading course details', error);
@@ -120,6 +141,8 @@ export class CourseDetailComponent implements OnInit {
         const mockCourse = courses.find(c => c.id === courseId);
         if (mockCourse) {
           this.processCourse(mockCourse);
+          this.loadingCourseDates = true;
+          this.loadCourseDates(courseId);
         } else {
           this.loading = false;
           this.loadError = true;
@@ -138,7 +161,10 @@ export class CourseDetailComponent implements OnInit {
   private processCourse(course: Course): void {
     this.course = course;
     
-    // Convert available dates
+    // Set minimum students required from course policy or use default
+    this.minimumStudentsRequired = course.postponementPolicy?.minimumRequired || 6;
+    
+    // Convert available dates for legacy support
     if (course.availableDates && course.availableDates.length > 0) {
       this.availableDates = course.availableDates.map(date => {
         const dateObj = new Date(date);
@@ -177,56 +203,80 @@ export class CourseDetailComponent implements OnInit {
       this.selectedDate = null;
     }
   }
+  
+  private loadCourseDates(courseId: string): void {
+    this.courseDateService.getCourseInstancesForCourse(courseId).subscribe({
+      next: (instances) => {
+        this.hasCourseDates = instances.length > 0;
+        this.loadingCourseDates = false;
+        
+        // If we have a selected date but no instance, try to find one that matches
+        if (this.selectedDate && !this.selectedCourseInstance) {
+          this.tryMatchSelectedDateToInstance(instances);
+        }
+      },
+      error: (error) => {
+        console.error('Error loading course dates', error);
+        this.loadingCourseDates = false;
+        this.hasCourseDates = false;
+      }
+    });
+  }
+  
+  private loadCourseInstance(instanceId: string): void {
+    this.courseDateService.getCourseInstanceById(instanceId).subscribe({
+      next: (instance) => {
+        if (instance) {
+          this.selectedCourseInstance = instance;
+          this.selectedDate = new Date(instance.startDate);
+          this.hasCourseDates = true;
+        }
+        this.loadingCourseDates = false;
+      },
+      error: (error) => {
+        console.error('Error loading course instance', error);
+        this.loadingCourseDates = false;
+      }
+    });
+  }
+  
+  private tryMatchSelectedDateToInstance(instances: CourseDate[]): void {
+    if (!this.selectedDate) return;
+    
+    // Try to find an instance with a matching date
+    const matchingInstance = instances.find(instance => {
+      const instanceDate = new Date(instance.startDate);
+      return instanceDate.toDateString() === this.selectedDate?.toDateString();
+    });
+    
+    if (matchingInstance) {
+      this.selectedCourseInstance = matchingInstance;
+    }
+  }
 
-  openDatePicker(): void {
-    if (!this.course || !this.availableDates.length) {
-      console.warn('No available dates for this course');
-      return;
-    }
+  onCourseInstanceSelected(instance: CourseDate): void {
+    this.selectedCourseInstance = instance;
+    this.selectedDate = new Date(instance.startDate);
     
-    const modalRef = this.modalService.open(CourseDatePickerComponent, {
-      size: 'lg',
-      centered: true,
-      backdrop: 'static'
-    });
-    
-    // Pass available dates to the date picker
-    modalRef.componentInstance.availableDates = this.availableDates;
-    
-    // Pass initial date if one is already selected
-    if (this.selectedDate) {
-      modalRef.componentInstance.initialDate = {
-        year: this.selectedDate.getFullYear(),
-        month: this.selectedDate.getMonth() + 1,
-        day: this.selectedDate.getDate()
-      };
-    }
-    
-    // Handle date selection
-    modalRef.componentInstance.dateSelected.subscribe((date: Date) => {
-      this.selectedDate = date;
-      // Update URL with selected date (without navigation)
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { date: date.toISOString() },
-        queryParamsHandling: 'merge'
-      });
-      modalRef.close();
-    });
-    
-    // Handle cancel
-    modalRef.componentInstance.cancelled.subscribe(() => {
-      modalRef.close();
+    // Update URL with selected instance ID (without navigation)
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { 
+        instanceId: instance.id,
+        date: this.selectedDate.toISOString()
+      },
+      queryParamsHandling: 'merge'
     });
   }
 
-  changeSection(section: 'overview' | 'curriculum' | 'instructor' | 'reviews'): void {
+  changeSection(section: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates'): void {
     this.activeSection = section;
   }
 
   proceedToCheckout(): void {
-    if (!this.selectedDate) {
-      // If no date is selected, show alert and open date picker
+    // Use course instance ID if available, otherwise fall back to date
+    if (!this.selectedCourseInstance && !this.selectedDate) {
+      // If no date is selected, show alert and open dates section
       this.showDateAlert = true;
       
       // Clear previous timeout if exists
@@ -239,39 +289,53 @@ export class CourseDetailComponent implements OnInit {
         this.showDateAlert = false;
       }, 3000);
       
-      this.openDatePicker();
+      this.changeSection('dates');
       return;
     }
 
-    // Navigate to checkout with the selected date
-    this.router.navigate(['/checkout', this.course?.id], {
-      queryParams: { date: this.selectedDate.toISOString() }
-    });
+    // Navigate to checkout with the selected instance and date
+    const queryParams: any = {};
+    
+    if (this.selectedCourseInstance) {
+      queryParams.instanceId = this.selectedCourseInstance.id;
+    }
+    
+    if (this.selectedDate) {
+      queryParams.date = this.selectedDate.toISOString();
+    }
+
+    this.router.navigate(['/checkout', this.course?.id], { queryParams });
   }
 
   proceedToQuickCheckout(): void {
-    if (!this.selectedDate) {
-      // If no date is selected, show alert and open date picker
+    // Same validation as in proceedToCheckout
+    if (!this.selectedCourseInstance && !this.selectedDate) {
       this.showDateAlert = true;
       
-      // Clear previous timeout if exists
       if (this.alertTimeout) {
         clearTimeout(this.alertTimeout);
       }
       
-      // Hide alert after 3 seconds
       this.alertTimeout = setTimeout(() => {
         this.showDateAlert = false;
       }, 3000);
       
-      this.openDatePicker();
+      this.changeSection('dates');
       return;
     }
 
-    // Navigate to quick checkout with the selected date
-    this.router.navigate(['/quick-checkout', this.course?.id], {
-      queryParams: { date: this.selectedDate.toISOString() }
-    });
+    // Navigate to quick checkout with the selected date and instance
+    const queryParams: any = {};
+    
+    if (this.selectedCourseInstance) {
+      queryParams.instanceId = this.selectedCourseInstance.id;
+    }
+    
+    if (this.selectedDate) {
+      queryParams.date = this.selectedDate.toISOString();
+    }
+
+    this.router.navigate(['/quick-checkout', this.course?.id], { queryParams });
   }
   
   // Useful date formatting helpers
