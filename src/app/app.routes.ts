@@ -1,3 +1,4 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { HomeComponent } from './component/home/home.component';
 import { TestcompComponent } from './component/testcomp/testcomp.component';
@@ -9,17 +10,22 @@ import { CheckoutSuccessComponent } from './component/checkout-sucess/checkout-s
 import { CompanySuccessComponent } from './component/company-success/company-success.component';
 import { QuickCheckoutComponent } from './component/quick-checkout/quick-checkout.component';
 import { RedesignedHomeComponent } from './component/homere/homere.component';
+import { DashboardComponent } from './component/user/dashboard/dashboard.component';
+import { UserCoursesComponent } from './component/user/user-courses/user-courses.component';
 
 // Guards
-//import { AuthGuard } from './guards/auth.guard';
-
-
-
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    component: RedesignedHomeComponent,//HomeComponent,
+    component: RedesignedHomeComponent,
+    title: 'Academia Uniprotec - Capacitación Industrial',
+    data: { animation: 'HomePage' }
+  },
+  {
+    path: 'home',
+    component: RedesignedHomeComponent,
     title: 'Academia Uniprotec - Capacitación Industrial',
     data: { animation: 'HomePage' }
   },
@@ -28,6 +34,12 @@ export const routes: Routes = [
     component: LoginComponent,
     title: 'Iniciar Sesión',
     data: { animation: 'LoginPage' }
+  },
+  {
+    path: 'register',
+    component: LoginComponent, // Use the login component with register view
+    title: 'Crear Cuenta',
+    data: { animation: 'RegisterPage' }
   },
   {
     path: 'courses',
@@ -71,15 +83,37 @@ export const routes: Routes = [
     title: 'Proceso de Compra Rápido',
     data: { animation: 'QuickCheckoutPage' }
   },
-
-
-  /*
-   { 
-     path: 'dashboard', 
-     component: UserDashboardComponent,
-     canActivate: [AuthGuard],
-     title: 'Mi Panel',
-     data: { animation: 'DashboardPage' }
-   },*/
+  
+  // User Dashboard Routes
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
+    title: 'Mi Dashboard',
+    data: { animation: 'DashboardPage' }
+  },
+  {
+    path: 'dashboard/courses',
+    component: UserCoursesComponent,
+    canActivate: [AuthGuard],
+    title: 'Mis Cursos',
+    data: { animation: 'UserCoursesPage' }
+  },
+  {
+    path: 'dashboard/profile',
+    component: DashboardComponent, // Replace with actual profile component when created
+    canActivate: [AuthGuard],
+    title: 'Mi Perfil',
+    data: { animation: 'ProfilePage' }
+  },
+  {
+    path: 'dashboard/certificates',
+    component: DashboardComponent, // Replace with actual certificates component when created
+    canActivate: [AuthGuard],
+    title: 'Mis Certificados',
+    data: { animation: 'CertificatesPage' }
+  },
+  
+  // Other routes
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
