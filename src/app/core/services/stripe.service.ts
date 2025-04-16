@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { catchError, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, switchMap, tap, delay } from 'rxjs/operators';
 
 export interface StripeCheckoutSessionRequest {
   courseId: string;
@@ -47,6 +47,23 @@ export class StripeService {
    */
   public createCheckoutSession(checkoutData: StripeCheckoutSessionRequest): Observable<StripeCheckoutResponse> {
     this.loadingSubject.next(true);
+
+
+    if (environment.backendmockup) {//environment.mockBackend) {
+      console.log('Using mock checkout session (development mode)');
+      // Simulate API response delay
+      return of({
+        //sessionId: 'cs_test_mock_' + Math.random().toString(36).substring(2, 15)
+        sessionId: `pk_test_${Math.random().toString(36).substring(2, 15)}_secret_${Math.random().toString(36).substring(2, 15)}`
+      }).pipe(
+        delay(800),
+        tap(() => this.loadingSubject.next(false))
+      );
+    }
+
+
+
+
 
     // Endpoint to create a Stripe checkout session
     const endpoint = `${this.apiBaseUrl}/payments/create-checkout-session`;

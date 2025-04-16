@@ -1,24 +1,28 @@
+// src/app/app.component.ts
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Component, inject } from '@angular/core';
-import { slideInAnimation } from './route-animations';
+import { Component, OnInit, inject } from '@angular/core';
 import { UserNavComponent } from './component/shared/user-nav/user-nav.component';
 import { UserService } from './core/services/user.service';
-
+import { slideInAnimation } from './route-animations';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule,UserNavComponent],
+  imports: [
+    CommonModule, 
+    RouterOutlet, 
+    RouterLink, 
+    RouterLinkActive, 
+    UserNavComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
   animations: [
     slideInAnimation
   ]
 })
-export class AppComponent {
-  
-
+export class AppComponent implements OnInit {
   title = 'AcademiaUnipro';
   isMobileMenuOpen = false;
   isLoggedIn = false;
@@ -34,7 +38,7 @@ export class AppComponent {
     }
     
     // Subscribe to user changes to update the UI accordingly
-    this.userService.getCurrentUser().subscribe((user: { fullName?: string } | null) => {
+    this.userService.getCurrentUser().subscribe(user => {
       this.isLoggedIn = !!user;
       this.userName = user?.fullName || '';
     });
@@ -46,25 +50,10 @@ export class AppComponent {
       }
     });
   }
-
-
-
-
-
+  
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
-  constructor() {
-    this.router.navigate(['/home']);
-    /*this.router.navigate(['/checkout/company-success'], {
-      queryParams: {
-        // email: this.userForm.get('email')?.value,
-        // courseId: this.course?.id
-      }
-    });*/
-  }
-
-
   
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
@@ -86,5 +75,5 @@ export class AppComponent {
     this.userService.logout();
     this.closeMobileMenu();
     this.router.navigate(['/home']);
-}
+  }
 }

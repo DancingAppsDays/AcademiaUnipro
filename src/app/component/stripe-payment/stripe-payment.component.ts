@@ -222,7 +222,8 @@ export class StripePaymentComponent implements OnInit, OnDestroy {
           this.initializeElements();
         } else {
           // For demo purposes, generate a fake client secret
-          this.clientSecret = 'pi_demo_' + Math.random().toString(36).substring(2, 15);
+          //this.clientSecret = 'pi_demo_' + Math.random().toString(36).substring(2, 15);
+          this.clientSecret = `pk_test_${Math.random().toString(36).substring(2, 15)}_secret_${Math.random().toString(36).substring(2, 15)}`;
           this.initializeElements();
         }
       },

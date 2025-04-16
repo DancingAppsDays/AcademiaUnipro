@@ -85,7 +85,7 @@ export class CourseService {
 const MOCK_COURSES: Course[] = [
   // Normativas Clave category
   {
-    id: '1',
+    id: '1',//'67f978364f3874b5190db44c',
     title: 'NOM-004-STPS: Maquinaria y Equipo',
     subtitle: 'Cumplimiento normativo para equipos industriales',
     description: 'Este curso proporciona los conocimientos necesarios para cumplir con la NOM-004-STPS relacionada con los sistemas de protección y dispositivos de seguridad en maquinaria y equipo. Aprenderá a identificar los riesgos, implementar medidas preventivas y establecer procedimientos de seguridad adecuados.',

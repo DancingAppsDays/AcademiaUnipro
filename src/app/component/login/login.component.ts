@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private userService = inject(UserService);
-  private googleAuthService = inject(GoogleAuthService);
+  //private googleAuthService = inject(GoogleAuthService);
   
   constructor() {
     this.loginForm = this.fb.group({
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // Initialize Google Auth
-    this.googleAuthService.initialize();
+   // this.googleAuthService.initialize();
     
     // Check for redirect URL in query params
     this.redirectUrl = this.route.snapshot.queryParamMap.get('redirect');
@@ -182,6 +182,8 @@ login() {
       }
     });
   }
+
+  /*
   
   loginWithGoogle() {
     this.loading = true;
@@ -198,7 +200,7 @@ login() {
         this.errorMessage = 'No se pudo iniciar sesión con Google. Por favor, inténtelo más tarde.';
       }
     });
-  }
+  }*/
   
   private redirectAfterAuth() {
     if (this.redirectUrl) {

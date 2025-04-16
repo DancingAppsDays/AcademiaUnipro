@@ -1,12 +1,4 @@
-<!-- TODO: make a cool mobile menu 
-<nav>
-  <ul>
-    <li><a routerLink="/login" routerLinkActive="active" ariaCurrentWhenActive="page">Logint</a></li>
-    <li><a routerLink="/home" routerLinkActive="active" ariaCurrentWhenActive="page">First Component</a></li>
-    <li><a routerLink="/course" routerLinkActive="active" ariaCurrentWhenActive="page">Second Component</a></li>
-    <li><a routerLink="/courses" routerLinkActive="active" ariaCurrentWhenActive="page">SCourses</a></li>
-  </ul>
-</nav>-->
+<!-- app.component.html - Fixed version -->
 <section class="hero-section">
   <div class="logo-container text-center py-4">
     <a routerLink="/home">
@@ -143,7 +135,3 @@
     </div>
   </div>
 </footer>
-
-<div [@routeAnimations]="prepareRoute(outlet)">
-  <router-outlet #outlet="outlet"></router-outlet>
-</div>

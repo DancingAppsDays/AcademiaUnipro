@@ -25,6 +25,7 @@
   <!-- Overlay expanded details (shown on hover) -->
   <div class="course-expanded-overlay" [@expandAnimation]="isExpanded ? 'expanded' : 'collapsed'">
     <div class="overlay-content">
+      <!--
       <div class="instructor-info">
         <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name" class="instructor-avatar">
         <span>{{ course.instructor.name }}</span>
@@ -33,7 +34,7 @@
       <div class="next-date" *ngIf="course.nextDate">
         <i class="bi bi-calendar-event"></i>
         <span>Próximo: {{ course.nextDate | date:'mediumDate' }}</span>
-      </div>
+      </div>-->
       
       <div class="card-actions">
         <button type="button" class="btn btn-outline-primary btn-action"

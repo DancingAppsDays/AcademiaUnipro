@@ -11,16 +11,17 @@
             </div>
             
             <div class="card-body">
-              <!-- Social Login Options -->
+              <!-- Social Login Options
               <div class="social-auth mb-4">
-                <button type="button" class="btn btn-google w-100" (click)="loginWithGoogle()">
+                <div id="google-signin-button" class="google-btn-container"></div>
+                <button type="button" class="btn btn-google w-100 mt-2" (click)="loginWithGoogle()">
                   <i class="bi bi-google me-2"></i> Continuar con Google
                 </button>
               </div>
               
               <div class="divider">
                 <span>O</span>
-              </div>
+              </div> -->
               
               <!-- Login Form -->
               <form [formGroup]="loginForm" (ngSubmit)="login()" *ngIf="activeView === 'login'">

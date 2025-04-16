@@ -79,8 +79,18 @@ export class RedesignedHomeComponent implements OnInit {
   loadCourses(): void {
     this.loading = true;
     
+    this.courseService.getAllCourses().subscribe({
+      next: (courses) => {
+        this.processCourses(courses);
+        console.log(" courses from backend loaded successfully:", courses.length);
+      },
+      error: (error) => {
+        console.error("Error loading courses:", error);
+        this.loading = false;
+      }
+    });;
     // Load courses with minimal delay to improve performance
-    this.loadMockData();
+   // this.loadMockData();
   }
 
   loadMockData(): void {
