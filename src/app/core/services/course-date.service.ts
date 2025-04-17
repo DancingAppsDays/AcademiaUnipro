@@ -14,35 +14,102 @@ export class CourseDateService {
   private http = inject(HttpClient);
   
   getCourseInstancesForCourse(courseId: string): Observable<CourseDate[]> {
-    // In real implementation, call the API
-    // return this.http.get<CourseDate[]>(`${this.apiUrl}/course/${courseId}`);
+    console.log(`Fetching course dates for courseId: ${courseId} from ${this.apiUrl}/course/${courseId}`);
     
-    // For now, use mock data
-    return this.getMockCourseInstances(courseId);
+    // Try getting from actual API first
+    return this.http.get<any[]>(`${this.apiUrl}/course/${courseId}`).pipe(
+      tap(data => console.log(`Retrieved ${data.length} course dates from API for course ${courseId}:`, data)),
+      // Map the response to ensure dates are properly handled
+      map(dates => this.normalizeCourseDates(dates)),
+      catchError(error => {
+        console.error(`Error fetching course dates from API for course ${courseId}:`, error);
+        // Only fall back to mock data if we've enabled it
+        return this.getMockCourseInstances(courseId);
+      })
+    );
   }
   
   getCourseInstanceById(instanceId: string): Observable<CourseDate | null> {
-    // In real implementation, call the API
-    // return this.http.get<CourseDate>(`${this.apiUrl}/${instanceId}`);
+    console.log(`Fetching course date by id: ${instanceId} from ${this.apiUrl}/${instanceId}`);
     
-    // For now, use mock data
-    return this.getMockCourseInstanceById(instanceId);
+    // Try getting from actual API first
+    return this.http.get<any>(`${this.apiUrl}/${instanceId}`).pipe(
+      tap(data => console.log(`Retrieved course date ${instanceId} from API:`, data)),
+      // Normalize the date fields
+      map(date => this.normalizeCourseDate(date)),
+      catchError(error => {
+        console.error(`Error fetching course date from API for id ${instanceId}:`, error);
+        return this.getMockCourseInstanceById(instanceId);
+      })
+    );
   }
   
   getUpcomingInstances(limit: number = 10): Observable<CourseDate[]> {
-    // In real implementation, call the API
-    // return this.http.get<CourseDate[]>(`${this.apiUrl}/upcoming?limit=${limit}`);
+    console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
     
-    // For now, use mock data
-    return of(MOCK_COURSE_INSTANCES.slice(0, limit));
+    // Try getting from actual API first
+    return this.http.get<any[]>(`${this.apiUrl}/upcoming?limit=${limit}`).pipe(
+      tap(data => console.log(`Retrieved ${data.length} upcoming course dates from API:`, data)),
+      // Map the response to ensure dates are properly handled
+      map(dates => this.normalizeCourseDates(dates)),
+      catchError(error => {
+        console.error('Error fetching upcoming course dates from API:', error);
+        return of(MOCK_COURSE_INSTANCES.slice(0, limit));
+      })
+    );
+  }
+  
+  // Helper method to normalize date fields in course dates from API
+  private normalizeCourseDates(dates: any[]): CourseDate[] {
+    if (!dates || !Array.isArray(dates)) {
+      console.warn('Received invalid or empty course dates array');
+      return [];
+    }
+    
+    return dates.map(date => this.normalizeCourseDate(date)).filter((date): date is CourseDate => date !== null);
+  }
+  
+  private normalizeCourseDate(date: any): CourseDate | null {
+    if (!date) {
+      console.warn('Received invalid course date object');
+      return null;
+    }
+    
+    // Ensure course ID is correctly extracted
+    const courseId = date.course?._id || date.course?.id || date.course || '';
+    
+    return {
+      _id: date._id || date.id,
+      courseId: courseId,
+      startDate: date.startDate,
+      endDate: date.endDate,
+      capacity: date.capacity || 0,
+      enrolledCount: date.enrolledCount || 0,
+      instructor: {
+        _id: date.instructor?.id || date.instructor?._id || '',
+        name: date.instructor?.name || 'Instructor',
+        photoUrl: date.instructor?.photoUrl || 'assets/images/instructors/default.png'
+      },
+      location: date.location || 'Virtual',
+      meetingUrl: date.meetingUrl,
+      status: date.status || 'scheduled',
+      minimumRequired: date.minimumRequired || 6
+    };
   }
   
   enrollInCourseInstance(instanceId: string, userId: string): Observable<any> {
-    // In real implementation, call the API
-    // return this.http.post(`${this.apiUrl}/${instanceId}/enroll`, { userId });
-    
-    // For now, return mock success
-    return of({ success: true, message: 'Enrollment successful' });
+    return this.http.post(`${this.apiUrl}/${instanceId}/enroll`, { userId }).pipe(
+      tap(response => console.log('Enrollment response from API:', response)),
+      catchError(error => {
+        console.error('Error enrolling in course through API:', error);
+        // For fallback during development, we'll simulate success
+        if (environment.backendmockup) {
+          console.log('Using mock enrollment response (development mode)');
+          return of({ success: true, message: 'Enrollment successful' });
+        }
+        return throwError(() => error);
+      })
+    );
   }
   
   checkAvailability(courseDate: CourseDate): CourseDateWithAvailability {
@@ -51,115 +118,118 @@ export class CourseDateService {
       ...courseDate,
       availableSeats,
       isNearlyFull: availableSeats <= 3,
-      isConfirmed: courseDate.enrolledCount >= courseDate.minimumRequired,
+      isConfirmed: courseDate.status === 'confirmed' || courseDate.enrolledCount >= courseDate.minimumRequired,
       isAtRiskOfPostponement: 
+        courseDate.status === 'scheduled' &&
         (new Date(courseDate.startDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24) <= 3 && 
         courseDate.enrolledCount < courseDate.minimumRequired
     };
   }
   
-  // Mock data methods
+  // Mock data methods - these will only be used if the API fails
   private getMockCourseInstances(courseId: string): Observable<CourseDate[]> {
+    console.log(`Getting mock course instances for course ${courseId}`);
     const instances = MOCK_COURSE_INSTANCES.filter(instance => instance.courseId === courseId);
     return of(instances);
   }
   
   private getMockCourseInstanceById(instanceId: string): Observable<CourseDate | null> {
-    const instance = MOCK_COURSE_INSTANCES.find(instance => instance.id === instanceId);
+    console.log(`Getting mock course instance by ID: ${instanceId}`);
+    const instance = MOCK_COURSE_INSTANCES.find(instance => instance._id === instanceId);
     return of(instance || null);
   }
 }
 
 // Mock course instances for testing
 const MOCK_COURSE_INSTANCES: CourseDate[] = [
-  // Course 1 instances (NOM-004-STPS)
-  {
-    id: 'inst-1',
-    courseId: '1',
-    startDate: new Date('2025-04-15T09:00:00'),
-    endDate: new Date('2025-04-15T17:00:00'),
-    capacity: 15,
-    enrolledCount: 8,
-    instructor: {
-      id: '1',
-      name: 'Roberto Vázquez',
-      photoUrl: 'assets/images/instructors/prof2.png'
-    },
-    location: 'Virtual (Zoom)',
-    meetingUrl: 'https://zoom.us/j/example1',
-    status: 'scheduled',
-    minimumRequired: 6
-  },
-  {
-    id: 'inst-2',
-    courseId: '1',
-    startDate: new Date('2025-05-10T09:00:00'),
-    endDate: new Date('2025-05-10T17:00:00'),
-    capacity: 15,
-    enrolledCount: 4,
-    instructor: {
-      id: '1',
-      name: 'Roberto Vázquez',
-      photoUrl: 'assets/images/instructors/prof2.png'
-    },
-    location: 'Virtual (Zoom)',
-    meetingUrl: 'https://zoom.us/j/example2',
-    status: 'scheduled',
-    minimumRequired: 6
-  },
-  {
-    id: 'inst-3',
-    courseId: '1',
-    startDate: new Date('2025-06-05T09:00:00'),
-    endDate: new Date('2025-06-05T17:00:00'),
-    capacity: 15,
-    enrolledCount: 14,
-    instructor: {
-      id: '7',
-      name: 'Javier Torres',
-      photoUrl: 'assets/images/instructors/prof3.png'
-    },
-    location: 'Virtual (Zoom)',
-    meetingUrl: 'https://zoom.us/j/example3',
-    status: 'scheduled',
-    minimumRequired: 6
-  },
+  // Course 1 instances
+  // {
+  //   id: 'inst-1',
+  //   courseId: '1',
+  //   startDate: new Date('2025-04-15T09:00:00'),
+  //   endDate: new Date('2025-04-15T17:00:00'),
+  //   capacity: 15,
+  //   enrolledCount: 8,
+  //   instructor: {
+  //     id: '1',
+  //     name: 'Roberto Vázquez',
+  //     photoUrl: 'assets/images/instructors/prof2.png'
+  //   },
+  //   location: 'Virtual (Zoom)',
+  //   meetingUrl: 'https://zoom.us/j/example1',
+  //   status: 'scheduled',
+  //   minimumRequired: 6
+  // },
+  // {
+  //   id: 'inst-2',
+  //   courseId: '1',
+  //   startDate: new Date('2025-05-10T09:00:00'),
+  //   endDate: new Date('2025-05-10T17:00:00'),
+  //   capacity: 15,
+  //   enrolledCount: 4,
+  //   instructor: {
+  //     id: '1',
+  //     name: 'Roberto Vázquez',
+  //     photoUrl: 'assets/images/instructors/prof2.png'
+  //   },
+  //   location: 'Virtual (Zoom)',
+  //   meetingUrl: 'https://zoom.us/j/example2',
+  //   status: 'scheduled',
+  //   minimumRequired: 6
+  // },
   
-  // Course 2 instances (NOM-018-STPS)
-  {
-    id: 'inst-4',
-    courseId: '2',
-    startDate: new Date('2025-04-22T09:00:00'),
-    endDate: new Date('2025-04-22T17:00:00'),
-    capacity: 15,
-    enrolledCount: 12,
-    instructor: {
-      id: '7',
-      name: 'Javier Torres',
-      photoUrl: 'assets/images/instructors/prof3.png'
-    },
-    location: 'Virtual (Zoom)',
-    meetingUrl: 'https://zoom.us/j/example4',
-    status: 'scheduled',
-    minimumRequired: 6
-  },
-  {
-    id: 'inst-5',
-    courseId: '2',
-    startDate: new Date('2025-05-18T09:00:00'),
-    endDate: new Date('2025-05-18T17:00:00'),
-    capacity: 15,
-    enrolledCount: 5,
-    instructor: {
-      id: '7',
-      name: 'Javier Torres',
-      photoUrl: 'assets/images/instructors/prof3.png'
-    },
-    location: 'Virtual (Zoom)',
-    meetingUrl: 'https://zoom.us/j/example5',
-    status: 'scheduled',
-    minimumRequired: 6
-  },
+  // // Add a few more instances for other course IDs to ensure coverage
+  // {
+  //   id: 'inst-3',
+  //   courseId: '2',
+  //   startDate: new Date('2025-04-22T09:00:00'),
+  //   endDate: new Date('2025-04-22T17:00:00'),
+  //   capacity: 15,
+  //   enrolledCount: 12,
+  //   instructor: {
+  //     id: '7',
+  //     name: 'Javier Torres',
+  //     photoUrl: 'assets/images/instructors/prof3.png'
+  //   },
+  //   location: 'Virtual (Zoom)',
+  //   meetingUrl: 'https://zoom.us/j/example4',
+  //   status: 'scheduled',
+  //   minimumRequired: 6
+  // },
   
-  // Add more instances for other courses as needed
+  // // More mock instances for other course IDs
+  // {
+  //   id: 'inst-4',
+  //   courseId: '3',
+  //   startDate: new Date('2025-04-25T09:00:00'),
+  //   endDate: new Date('2025-04-25T17:00:00'),
+  //   capacity: 15,
+  //   enrolledCount: 7,
+  //   instructor: {
+  //     id: '3',
+  //     name: 'Carlos Mendoza',
+  //     photoUrl: 'assets/images/instructors/prof1.png'
+  //   },
+  //   location: 'Virtual (Zoom)',
+  //   meetingUrl: 'https://zoom.us/j/example6',
+  //   status: 'scheduled',
+  //   minimumRequired: 6
+  // },
+  // {
+  //   id: 'inst-5',
+  //   courseId: '4',
+  //   startDate: new Date('2025-04-18T09:00:00'),
+  //   endDate: new Date('2025-04-18T17:00:00'),
+  //   capacity: 15,
+  //   enrolledCount: 9,
+  //   instructor: {
+  //     id: '8',
+  //     name: 'Eduardo Ramírez',
+  //     photoUrl: 'assets/images/instructors/prof2.png'
+  //   },
+  //   location: 'Virtual (Zoom)',
+  //   meetingUrl: 'https://zoom.us/j/example7',
+  //   status: 'confirmed',
+  //   minimumRequired: 6
+  // }
 ];

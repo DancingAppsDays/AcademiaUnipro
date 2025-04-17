@@ -1,6 +1,6 @@
 // models/user.model.ts
 export interface User {
-    id: string;
+    _id: string;
     email: string;
     fullName: string;
     phone: string;
@@ -10,7 +10,7 @@ export interface User {
   }
   
   export interface PurchaseRecord {
-    id: string;
+    _id: string;
     courseId: string;
     userId: string;
     purchaseDate: Date;

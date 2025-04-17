@@ -83,7 +83,7 @@
 
       <div class="row" @staggerList *ngIf="!loading">
         <div class="col-lg-3 col-md-6 mb-4" *ngFor="let course of featuredCourses">
-          <div class="course-card" (click)="navigateToCourse(course.id)">
+          <div class="course-card" (click)="navigateToCourse(course._id)">
             <div class="card-img-container">
               <img [src]="course.imageUrl" [alt]="course.title">
               <div class="card-badge">{{ course.category }}</div>
@@ -141,7 +141,7 @@
 
       <div class="row" [class.flex-row-reverse]="even" @staggerList *ngIf="!loading">
         <div class="col-lg-3 col-md-6 mb-4" *ngFor="let course of categoryCourses[category]">
-          <div class="course-card" (click)="navigateToCourse(course.id)">
+          <div class="course-card" (click)="navigateToCourse(course._id)">
             <div class="card-img-container">
               <img [src]="course.imageUrl" [alt]="course.title">
               <div class="card-badge">{{ course.category }}</div>

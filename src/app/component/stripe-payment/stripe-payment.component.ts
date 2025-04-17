@@ -215,28 +215,52 @@ export class StripePaymentComponent implements OnInit, OnDestroy {
       cancelUrl: `${window.location.origin}/checkout/${this.courseId}`
     };
 
+
+    // Call the backend to create a checkout session
     this.stripeService.createCheckoutSession(checkoutData).subscribe({
       next: (response) => {
-        if (response.sessionId) {
-          this.clientSecret = response.sessionId;
-          this.initializeElements();
+        if (response.url) {
+          // Redirect to Stripe's checkout page
+          window.location.href = response.url;
         } else {
-          // For demo purposes, generate a fake client secret
-          //this.clientSecret = 'pi_demo_' + Math.random().toString(36).substring(2, 15);
-          this.clientSecret = `pk_test_${Math.random().toString(36).substring(2, 15)}_secret_${Math.random().toString(36).substring(2, 15)}`;
-          this.initializeElements();
+          console.error('No checkout URL provided');
+          this.errorMessage = 'Failed to initialize payment. Please try again.';
+          this.loading = false;
         }
       },
       error: (error) => {
-        console.error('Failed to create payment intent:', error);
+        console.error('Failed to create checkout session:', error);
         this.errorMessage = 'Failed to initialize payment. Please try again.';
         this.loading = false;
-        
-        // For demo purposes, generate a fake client secret
-        this.clientSecret = 'pi_demo_' + Math.random().toString(36).substring(2, 15);
-        this.initializeElements();
       }
     });
+
+    
+  
+    //This is for embeedded payment intent with client secret
+
+    // this.stripeService.createCheckoutSession(checkoutData).subscribe({
+    //   next: (response) => {
+    //     if (response.sessionId) {
+    //       this.clientSecret = response.sessionId;
+    //       this.initializeElements();
+    //     } else {
+    //       // For demo purposes, generate a fake client secret
+    //       //this.clientSecret = 'pi_demo_' + Math.random().toString(36).substring(2, 15);
+    //       this.clientSecret =  environment.stripePublishableKey;//`pk_test_${Math.random().toString(36).substring(2, 15)}_secret_${Math.random().toString(36).substring(2, 15)}`;
+    //       this.initializeElements();
+    //     }
+    //   },
+    //   error: (error) => {
+    //     console.error('Failed to create payment intent:', error);
+    //     this.errorMessage = 'Failed to initialize payment. Please try again.';
+    //     this.loading = false;
+    //   }
+    // });
+
+
+
+
   }
 
   private initializeElements() {

@@ -154,11 +154,11 @@ export class RedesignedHomeComponent implements OnInit {
 
   onDateSelected(event: {course: Course, date: Date}): void {
     // Store the selected date for this course
-    this.selectedDates[event.course.id] = event.date;
+    this.selectedDates[event.course._id] = event.date;
     console.log(`Date selected for course ${event.course.title}: ${event.date}`);
     
     // Navigate to course details with the selected date
-    this.router.navigate(['/course', event.course.id], {
+    this.router.navigate(['/course', event.course._id], {
       queryParams: { date: event.date.toISOString() }
     });
   }

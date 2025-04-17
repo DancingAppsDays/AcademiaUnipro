@@ -29,7 +29,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       
       <div class="date-list" *ngIf="instances.length > 0">
         <div class="date-card" *ngFor="let instance of instances"
-             [class.selected]="selectedInstanceId === instance.id"
+             [class.selected]="selectedInstanceId === instance._id"
              [class.nearly-full]="instance.isNearlyFull"
              [class.at-risk]="instance.isAtRiskOfPostponement"
              (click)="selectInstance(instance)">
@@ -77,8 +77,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
           
           <button class="btn btn-primary select-date-btn"
                  [disabled]="instance.availableSeats <= 0"
-                 [class.selected]="selectedInstanceId === instance.id">
-            {{ selectedInstanceId === instance.id ? 'Seleccionado' : 'Seleccionar' }}
+                 [class.selected]="selectedInstanceId === instance._id">
+            {{ selectedInstanceId === instance._id ? 'Seleccionado' : 'Seleccionar' }}
           </button>
         </div>
       </div>
@@ -337,7 +337,7 @@ export class CourseDateSelectorComponent implements OnInit, OnChanges {
   selectInstance(instance: CourseDateWithAvailability): void {
     if (instance.availableSeats <= 0) return;
     
-    this.selectedInstanceId = instance.id;
+    this.selectedInstanceId = instance._id;
     this.instanceSelected.emit(instance);
   }
 }

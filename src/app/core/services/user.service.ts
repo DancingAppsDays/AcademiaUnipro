@@ -128,7 +128,7 @@ export class UserService {
     // For demonstration and development only
     getMockUser(): Observable<User> {
       const mockUser: User = {
-        id: '123',
+        _id: '123',
         email: 'usuario@ejemplo.com',
         fullName: 'Usuario de Prueba',
         phone: '5512345678',

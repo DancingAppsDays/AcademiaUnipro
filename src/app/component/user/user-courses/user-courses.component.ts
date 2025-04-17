@@ -130,7 +130,7 @@ interface EnrolledCourse {
                 </button>
                 
                 <button *ngIf="!enrolled.instance.isAtRiskOfPostponement" class="btn btn-outline-primary"
-                        routerLink="/course/{{ enrolled.course.id }}">
+                        routerLink="/course/{{ enrolled.course._id }}">
                   <i class="bi bi-info-circle"></i> Ver detalles
                 </button>
               </div>
@@ -599,7 +599,7 @@ export class UserCoursesComponent implements OnInit {
               enrolledCount: upcomingInstances[0].minimumRequired - 2 // Make it 2 short of minimum
             };
             
-            const course = courses.find(c => c.id === riskInstance.courseId);
+            const course = courses.find(c => c._id === riskInstance.courseId);
             if (course) {
               const withAvailability = this.courseDateService.checkAvailability(riskInstance);
               
@@ -610,7 +610,7 @@ export class UserCoursesComponent implements OnInit {
               
               // Add to enrollments
               enrollments.push({
-                id: `mock-${riskInstance.id}`,
+                id: `mock-${riskInstance._id}`,
                 enrollmentId: `enroll-${Math.floor(Math.random() * 10000)}`,
                 course: course,
                 instance: withAvailability,
@@ -624,7 +624,7 @@ export class UserCoursesComponent implements OnInit {
             // Add 2 more upcoming courses that are not at risk
             for (let i = 1; i < Math.min(3, upcomingInstances.length); i++) {
               const instance = upcomingInstances[i];
-              const course = courses.find(c => c.id === instance.courseId);
+              const course = courses.find(c => c._id === instance.courseId);
               
               if (course) {
                 // Make sure this one has enough enrollments
@@ -642,7 +642,7 @@ export class UserCoursesComponent implements OnInit {
                 
                 // Add to enrollments
                 enrollments.push({
-                  id: `mock-${confirmedInstance.id}`,
+                  id: `mock-${confirmedInstance._id}`,
                   enrollmentId: `enroll-${Math.floor(Math.random() * 10000)}`,
                   course: course,
                   instance: withAvailability,
@@ -664,8 +664,8 @@ export class UserCoursesComponent implements OnInit {
             pastDate.setMonth(pastDate.getMonth() - (i + 1)); // 1-2 months ago
             
             const pastInstance: CourseDate = {
-              id: `past-${i}`,
-              courseId: course.id,
+              _id: `past-${i}`,
+              courseId: course._id,
               startDate: pastDate,
               endDate: new Date(pastDate.getTime() + 8 * 60 * 60 * 1000), // 8 hours later
               capacity: 15,

@@ -1,7 +1,6 @@
 // src/app/app.routes.ts
 import { Routes } from '@angular/router';
 import { HomeComponent } from './component/home/home.component';
-import { TestcompComponent } from './component/testcomp/testcomp.component';
 import { CourseDetailComponent } from './component/coursedetails/coursedetails.component';
 import { LoginComponent } from './component/login/login.component';
 import { CourseListComponent } from './component/course-list/course-list.component';

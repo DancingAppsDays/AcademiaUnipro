@@ -68,7 +68,24 @@ export class StripeService {
     // Endpoint to create a Stripe checkout session
     const endpoint = `${this.apiBaseUrl}/payments/create-checkout-session`;
 
-    return this.http.post<StripeCheckoutResponse>(endpoint, checkoutData).pipe(
+    const payload = {
+      courseId: checkoutData.courseId,
+      courseTitle: checkoutData.courseTitle,
+      price: checkoutData.price,
+      quantity: checkoutData.quantity || 1,
+      customerEmail: checkoutData.customerEmail,
+      selectedDate: checkoutData.selectedDate,
+      successUrl: checkoutData.successUrl,
+      cancelUrl: checkoutData.cancelUrl,
+      // Add any additional metadata you need for course identification
+      metadata: {
+        courseIdentifier: checkoutData.courseId
+      }
+    };
+
+    console.log('Creating Stripe checkout session with payload:', payload);
+  
+    return this.http.post<StripeCheckoutResponse>(endpoint, payload).pipe(
       tap(response => {
         console.log('Stripe checkout session created:', response);
       }),
@@ -80,7 +97,6 @@ export class StripeService {
       tap(() => this.loadingSubject.next(false))
     );
   }
-
   /**
    * Creates checkout session and redirects to Stripe Checkout
    * @param checkoutData Information about the course being purchased

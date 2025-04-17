@@ -12,14 +12,23 @@ import { animate, style, transition, trigger } from '@angular/animations';
   imports: [CommonModule, RouterModule],
   template: `
     <div class="user-nav-container">
+      <!-- Hamburger menu for mobile - always visible on mobile -->
+      <div class="hamburger-menu d-block d-md-none" (click)="toggleMobileMenu($event)">
+        <i class="bi bi-list"></i>
+      </div>
+      
       <!-- User avatar/icon that toggles the menu -->
       <div class="user-nav-trigger" (click)="toggleMenu($event)">
+        <!-- Show avatar with initials for logged in users -->
         <div *ngIf="currentUser" class="user-avatar">
           <div class="initials">{{ getUserInitials() }}</div>
         </div>
+        
+        <!-- Show a profile image for non-logged in users -->
         <div *ngIf="!currentUser" class="user-icon">
-          <i class="bi bi-person-circle"></i>
+          <img src="assets/images/profile-placeholder.png" alt="Guest Profile" class="profile-img">
         </div>
+        
         <i class="bi bi-chevron-down" [class.open]="isMenuOpen"></i>
       </div>
       
@@ -92,7 +101,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         <!-- Not Logged In -->
         <div *ngIf="!currentUser" class="dropdown-content logged-out">
           <div class="guest-header">
-            <i class="bi bi-person-circle"></i>
+            <img src="assets/images/profile-placeholder.png" alt="Guest Profile" class="guest-img">
             <span>Bienvenido, Invitado</span>
           </div>
           
@@ -129,12 +138,114 @@ import { animate, style, transition, trigger } from '@angular/animations';
           </ul>
         </div>
       </div>
+      
+      <!-- Mobile Menu -->
+      <div class="mobile-menu" [class.open]="isMobileMenuOpen" @slideIn>
+        <div class="mobile-menu-header">
+          <h3>Menú</h3>
+          <button class="close-btn" (click)="closeMobileMenu()">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        
+        <div class="dropdown-divider"></div>
+        
+        <!-- User profile section at top of mobile menu when logged in -->
+        <div *ngIf="currentUser" class="mobile-user-profile">
+          <div class="user-info mb-3">
+            <div class="user-avatar large">
+              <div class="initials">{{ getUserInitials() }}</div>
+            </div>
+            <div class="user-name-email">
+              <span class="user-name">{{ currentUser.fullName }}</span>
+              <span class="user-email">{{ currentUser.email }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- User-specific links when logged in -->
+        <ul *ngIf="currentUser" class="mobile-menu-items user-specific">
+          <li>
+            <a routerLink="/dashboard" (click)="closeMobileMenu()">
+              <i class="bi bi-speedometer2"></i>
+              <span>Mi Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/dashboard/courses" (click)="closeMobileMenu()">
+              <i class="bi bi-mortarboard"></i>
+              <span>Mis Cursos</span>
+              <span class="badge" *ngIf="upcomingCourseCount > 0">{{ upcomingCourseCount }}</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/dashboard/profile" (click)="closeMobileMenu()">
+              <i class="bi bi-person"></i>
+              <span>Mi Perfil</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/dashboard/certificates" (click)="closeMobileMenu()">
+              <i class="bi bi-award"></i>
+              <span>Certificados</span>
+            </a>
+          </li>
+        </ul>
+        
+        <div *ngIf="currentUser" class="dropdown-divider"></div>
+        
+        <!-- Common links for all users -->
+        <ul class="mobile-menu-items">
+          <li>
+            <a routerLink="/courses" (click)="closeMobileMenu()">
+              <i class="bi bi-grid"></i>
+              <span>{{ currentUser ? 'Catálogo de Cursos' : 'Explorar Cursos' }}</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/about" (click)="closeMobileMenu()">
+              <i class="bi bi-info-circle"></i>
+              <span>Acerca de Nosotros</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/contact" (click)="closeMobileMenu()">
+              <i class="bi bi-envelope"></i>
+              <span>Contacto</span>
+            </a>
+          </li>
+        </ul>
+        
+        <div class="dropdown-divider"></div>
+        
+        <!-- Auth buttons for non-logged in users -->
+        <div class="mobile-auth-buttons" *ngIf="!currentUser">
+          <a routerLink="/login" class="btn btn-primary btn-block" (click)="closeMobileMenu()">
+            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+          </a>
+          <a routerLink="/register" class="btn btn-outline-primary btn-block mt-2" (click)="closeMobileMenu()">
+            <i class="bi bi-person-plus"></i> Registrarse
+          </a>
+        </div>
+        
+        <!-- Logout button for logged in users -->
+        <div class="mobile-auth-buttons" *ngIf="currentUser">
+          <a href="javascript:void(0)" class="btn btn-outline-danger btn-block" (click)="logoutMobile()">
+            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+          </a>
+        </div>
+      </div>
+      
+      <!-- Backdrop for mobile menu -->
+      <div class="mobile-backdrop" *ngIf="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
     </div>
   `,
   styles: [`
     .user-nav-container {
       position: relative;
       font-family: 'Montserrat', sans-serif;
+      display: flex;
+      align-items: center;
     }
     
     .user-nav-trigger {
@@ -157,6 +268,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         align-items: center;
         justify-content: center;
         margin-right: 0.5rem;
+        overflow: hidden;
       }
       
       .user-avatar {
@@ -171,8 +283,13 @@ import { animate, style, transition, trigger } from '@angular/animations';
       }
       
       .user-icon {
-        color: #0066b3;
-        font-size: 1.5rem;
+        border: 1px solid #ddd;
+        
+        .profile-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
       }
       
       .bi-chevron-down {
@@ -182,6 +299,27 @@ import { animate, style, transition, trigger } from '@angular/animations';
         &.open {
           transform: rotate(180deg);
         }
+      }
+    }
+    
+    /* Hamburger menu styles */
+    .hamburger-menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
+      cursor: pointer;
+      
+      i {
+        font-size: 1.8rem;
+        color: #0066b3;
+      }
+      
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 50%;
       }
     }
     
@@ -250,10 +388,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
           align-items: center;
           margin-bottom: 1rem;
           
-          i {
-            font-size: 2rem;
-            color: #0066b3;
+          .guest-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
             margin-right: 1rem;
+            border: 1px solid #ddd;
           }
           
           span {
@@ -282,7 +422,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       margin: 0.5rem 0;
     }
     
-    .dropdown-menu-items {
+    .dropdown-menu-items, .mobile-menu-items {
       list-style-type: none;
       padding: 0;
       margin: 0;
@@ -322,6 +462,114 @@ import { animate, style, transition, trigger } from '@angular/animations';
       }
     }
     
+    /* Mobile menu styles */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 280px;
+      height: 100vh;
+      background-color: white;
+      z-index: 1001;
+      padding: 1rem;
+      box-shadow: 2px 0 15px rgba(0, 0, 0, 0.15);
+      overflow-y: auto;
+      transition: left 0.3s ease;
+      
+      &.open {
+        left: 0;
+      }
+      
+      .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        
+        h3 {
+          margin: 0;
+          color: #0066b3;
+          font-weight: 700;
+          font-size: 1.5rem;
+        }
+        
+        .close-btn {
+          background: none;
+          border: none;
+          color: #0066b3;
+          font-size: 1.5rem;
+          cursor: pointer;
+          
+          &:hover {
+            color: #004c86;
+          }
+        }
+      }
+      
+      .mobile-user-profile {
+        padding: 0.5rem;
+        
+        .user-info {
+          display: flex;
+          align-items: center;
+          
+          .user-avatar.large {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #0066b3;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            
+            .initials {
+              font-size: 1.2rem;
+              text-transform: uppercase;
+            }
+          }
+          
+          .user-name-email {
+            display: flex;
+            flex-direction: column;
+            
+            .user-name {
+              font-weight: 700;
+              color: #333;
+              font-size: 1.1rem;
+              margin-bottom: 0.2rem;
+            }
+            
+            .user-email {
+              color: #666;
+              font-size: 0.9rem;
+            }
+          }
+        }
+      }
+      
+      .mobile-auth-buttons {
+        padding: 1rem 0;
+        
+        .btn-block {
+          display: block;
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
+    
+    .mobile-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+    }
+    
     // Style for mobile
     @media (max-width: 767px) {
       .user-dropdown {
@@ -330,9 +578,10 @@ import { animate, style, transition, trigger } from '@angular/animations';
         right: 0;
         width: 250px;
         max-width: 80vw;
-        height: calc(100vh - 60px); // Full height minus header
+        height: auto;
+        max-height: calc(100vh - 60px);
         overflow-y: auto;
-        border-radius: 0;
+        border-radius: 8px 0 0 8px;
         box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
         
         &:before {
@@ -350,12 +599,22 @@ import { animate, style, transition, trigger } from '@angular/animations';
       transition(':leave', [
         animate('150ms ease-in', style({ transform: 'translateY(-10px)', opacity: 0 }))
       ])
+    ]),
+    trigger('slideIn', [
+      transition(':enter', [
+        style({ transform: 'translateX(-100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ transform: 'translateX(-100%)', opacity: 0 }))
+      ])
     ])
   ]
 })
 export class UserNavComponent implements OnInit {
   currentUser: User | null = null;
   isMenuOpen = false;
+  isMobileMenuOpen = false;
   upcomingCourseCount = 0;
   
   private userService = inject(UserService);
@@ -384,15 +643,37 @@ export class UserNavComponent implements OnInit {
   toggleMenu(event: Event): void {
     event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
+    // Close mobile menu if it's open
+    if (this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+    }
+  }
+  
+  toggleMobileMenu(event: Event): void {
+    event.stopPropagation();
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    // Close user dropdown if it's open
+    if (this.isMenuOpen) {
+      this.isMenuOpen = false;
+    }
   }
   
   closeMenu(): void {
     this.isMenuOpen = false;
   }
   
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+  
   logout(): void {
     this.userService.logout();
     this.closeMenu();
+  }
+  
+  logoutMobile(): void {
+    this.userService.logout();
+    this.closeMobileMenu();
   }
   
   getUserInitials(): string {
@@ -412,6 +693,7 @@ export class UserNavComponent implements OnInit {
     // Close the menu if the click is outside the component
     if (!this.elementRef.nativeElement.contains(event.target)) {
       this.closeMenu();
+      this.closeMobileMenu();
     }
   }
 }

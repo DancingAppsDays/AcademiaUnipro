@@ -1,5 +1,5 @@
 // src/app/component/coursedetails/coursedetails.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -57,6 +57,8 @@ import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
   ]
 })
 export class CourseDetailComponent implements OnInit {
+  @ViewChild('datesSection') datesSection!: ElementRef;
+  
   course: Course | null = null;
   loading = true;
   loadError = false;
@@ -138,7 +140,7 @@ export class CourseDetailComponent implements OnInit {
     
     this.courseService.getMockCourses().subscribe({
       next: (courses) => {
-        const mockCourse = courses.find(c => c.id === courseId);
+        const mockCourse = courses.find(c => c._id === courseId);
         if (mockCourse) {
           this.processCourse(mockCourse);
           this.loadingCourseDates = true;
@@ -262,7 +264,7 @@ export class CourseDetailComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { 
-        instanceId: instance.id,
+        instanceId: instance._id,
         date: this.selectedDate.toISOString()
       },
       queryParamsHandling: 'merge'
@@ -271,12 +273,21 @@ export class CourseDetailComponent implements OnInit {
 
   changeSection(section: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates'): void {
     this.activeSection = section;
+    
+    // If changing to dates section, scroll to it after a short delay
+    // to allow for component to render
+    if (section === 'dates') {
+      setTimeout(() => {
+        if (this.datesSection) {
+          this.datesSection.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 300);
+    }
   }
 
   proceedToCheckout(): void {
-    // Use course instance ID if available, otherwise fall back to date
+    // If no date is selected, show alert and open dates section
     if (!this.selectedCourseInstance && !this.selectedDate) {
-      // If no date is selected, show alert and open dates section
       this.showDateAlert = true;
       
       // Clear previous timeout if exists
@@ -297,46 +308,18 @@ export class CourseDetailComponent implements OnInit {
     const queryParams: any = {};
     
     if (this.selectedCourseInstance) {
-      queryParams.instanceId = this.selectedCourseInstance.id;
+      queryParams.instanceId = this.selectedCourseInstance._id;
     }
     
     if (this.selectedDate) {
       queryParams.date = this.selectedDate.toISOString();
     }
 
-    this.router.navigate(['/checkout', this.course?.id], { queryParams });
+    this.router.navigate(['/checkout', this.course?._id], { queryParams });
   }
 
-  proceedToQuickCheckout(): void {
-    // Same validation as in proceedToCheckout
-    if (!this.selectedCourseInstance && !this.selectedDate) {
-      this.showDateAlert = true;
-      
-      if (this.alertTimeout) {
-        clearTimeout(this.alertTimeout);
-      }
-      
-      this.alertTimeout = setTimeout(() => {
-        this.showDateAlert = false;
-      }, 3000);
-      
-      this.changeSection('dates');
-      return;
-    }
-
-    // Navigate to quick checkout with the selected date and instance
-    const queryParams: any = {};
-    
-    if (this.selectedCourseInstance) {
-      queryParams.instanceId = this.selectedCourseInstance.id;
-    }
-    
-    if (this.selectedDate) {
-      queryParams.date = this.selectedDate.toISOString();
-    }
-
-    this.router.navigate(['/quick-checkout', this.course?.id], { queryParams });
-  }
+  // We're removing this function as the button is being deprecated
+  // proceedToQuickCheckout(): void { ... }
   
   // Useful date formatting helpers
   formatDate(date: Date | string | undefined): string {

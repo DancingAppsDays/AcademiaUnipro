@@ -2,7 +2,7 @@
 import { CourseDate } from './course-date.model';
 
 export interface Course {
-    id: string;
+    _id: string;
     title: string;
     subtitle: string;
     description: string;
@@ -31,7 +31,7 @@ export interface Course {
 }
   
 export interface Instructor {
-    id: string;
+    _id: string;
     name: string;
     photoUrl: string;
     bio: string;

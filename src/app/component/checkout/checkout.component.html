@@ -120,7 +120,7 @@
           <div class="panel-body">
             <app-stripe-payment
               [amount]="calculateTotal()"
-              [courseId]="course?.id || ''"
+              [courseId]="course?._id || ''"
               [customerEmail]="userForm.get('email')?.value || ''"
               (paymentSuccess)="handlePaymentSuccess($event)"
               (paymentError)="handlePaymentError($event)">
