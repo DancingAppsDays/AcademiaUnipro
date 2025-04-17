@@ -174,7 +174,7 @@ export class CheckoutSuccessComponent implements OnInit {
   private loadFromMockData(courseId: string): void {
     this.courseService.getMockCourses().subscribe({
       next: (courses) => {
-        const mockCourse = courses.find(c => c.id === courseId);
+        const mockCourse = courses.find(c => c._id === courseId);
         if (mockCourse) {
           this.course = mockCourse;
         }

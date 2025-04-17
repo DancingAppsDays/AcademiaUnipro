@@ -20,13 +20,20 @@ export class UserService {
   
   private loadStoredUser(): void {
     const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
+    const storedToken = localStorage.getItem('token');
+    
+    if (storedUser && storedToken) {
       try {
         const user = JSON.parse(storedUser);
+       // console.log('UserService: Found stored user:', user);
         this.currentUserSubject.next(user);
       } catch (e) {
+        console.error('UserService: Error parsing stored user, removing invalid data', e);
         localStorage.removeItem('currentUser');
+        localStorage.removeItem('token');
       }
+    } else {
+      //console.log('UserService: No stored user found');
     }
   }
   
@@ -36,6 +43,7 @@ export class UserService {
 
     
   setCurrentUser(user: User): void {
+    //console.log('UserService: Setting current user:', user);
     this.currentUserSubject.next(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
@@ -58,6 +66,7 @@ export class UserService {
   }
   
   logout(): void {
+    console.log('UserService: Logging out user');
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
@@ -128,7 +137,7 @@ export class UserService {
     // For demonstration and development only
     getMockUser(): Observable<User> {
       const mockUser: User = {
-        id: '123',
+        _id: '123',
         email: 'usuario@ejemplo.com',
         fullName: 'Usuario de Prueba',
         phone: '5512345678',

@@ -1,13 +1,13 @@
 // src/app/core/models/course-date.model.ts
 export interface CourseDate {
-    id: string;
+    _id: string;
     courseId: string;
-    startDate: Date;
-    endDate: Date;
+    startDate: Date | string; // Accept both Date object and ISO string
+    endDate: Date | string;   // Accept both Date object and ISO string
     capacity: number;
     enrolledCount: number;
     instructor: {
-      id: string;
+      _id: string;
       name: string;
       photoUrl: string;
     };

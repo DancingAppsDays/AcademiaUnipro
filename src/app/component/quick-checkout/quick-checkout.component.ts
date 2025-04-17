@@ -138,7 +138,7 @@ export class QuickCheckoutComponent implements OnInit {
 
     this.courseService.getMockCourses().subscribe({
       next: (courses) => {
-        const mockCourse = courses.find(c => c.id === courseId);
+        const mockCourse = courses.find(c => c._id === courseId);
         if (mockCourse) {
           this.course = mockCourse;
           this.validateSelectedDate();
@@ -232,7 +232,7 @@ export class QuickCheckoutComponent implements OnInit {
     this.router.navigate(['/checkout/success'], {
       queryParams: {
         email: this.customerForm.get('email')?.value,
-        courseId: this.course?.id
+        courseId: this.course?._id
       }
     });
 
@@ -243,7 +243,7 @@ export class QuickCheckoutComponent implements OnInit {
   private prepareIndividualData(): any {
     return {
       type: 'individual',
-      courseId: this.course?.id,
+      courseId: this.course?._id,
       courseTitle: this.course?.title,
       coursePrice: this.course?.price,
       selectedDate: this.selectedDate,
@@ -258,7 +258,7 @@ export class QuickCheckoutComponent implements OnInit {
   private prepareCorporateData(): any {
     return {
       type: 'corporate',
-      courseId: this.course?.id,
+      courseId: this.course?._id,
       courseTitle: this.course?.title,
       coursePrice: this.course?.price,
       totalAmount: this.calculateTotal(),
@@ -346,7 +346,7 @@ export class QuickCheckoutComponent implements OnInit {
       this.router.navigate(['/checkout/success'], {
         queryParams: {
           email: data.email,
-          courseId: this.course?.id,
+          courseId: this.course?._id,
           date: this.selectedDate?.toISOString(),
           purchaseId: purchaseId || 'PENDING'
         }
@@ -356,7 +356,7 @@ export class QuickCheckoutComponent implements OnInit {
         queryParams: {
           companyName: data.companyName,
           contactEmail: data.contactEmail,
-          courseId: this.course?.id,
+          courseId: this.course?._id,
           date: this.selectedDate?.toISOString(),
           quantity: data.quantity,
           requestId: purchaseId || 'PENDING'
@@ -388,7 +388,7 @@ export class QuickCheckoutComponent implements OnInit {
   // Method to return to course details
   backToCourse(): void {
     if (this.course) {
-      this.router.navigate(['/course', this.course.id]);
+      this.router.navigate(['/course', this.course._id]);
     } else {
       this.router.navigate(['/courses']);
     }

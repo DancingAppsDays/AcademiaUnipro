@@ -1,11 +1,11 @@
-<!-- app.component.html - Fixed version -->
+<!-- app.component.html - Fixed version 
 <section class="hero-section">
   <div class="logo-container text-center py-4">
     <a routerLink="/home">
       <img src="assets/images/ACADEMIA_Web_logo.png" width="300px" alt="Academia Uniprotec" class="logo">
     </a>
   </div>
-</section>
+</section>-->
 
 <header class="main-header">
   <div class="container">
@@ -18,7 +18,7 @@
       
       <div class="nav-section">
         <!-- Main Navigation Links -->
-        <nav class="main-nav">
+        <nav class="main-nav d-none d-md-block">
           <ul class="nav-links">
             <li><a routerLink="/home" routerLinkActive="active">Inicio</a></li>
             <li><a routerLink="/courses" routerLinkActive="active">Cursos</a></li>
@@ -32,15 +32,18 @@
           <app-user-nav></app-user-nav>
         </div>
         
-        <!-- Mobile Menu Toggle -->
+        <!-- REMOVING THE REDUNDANT MOBILE MENU TOGGLE -->
+        <!-- 
         <button class="mobile-menu-toggle" (click)="toggleMobileMenu()">
           <i class="bi" [ngClass]="isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'"></i>
         </button>
+        -->
       </div>
     </div>
   </div>
   
-  <!-- Mobile Menu (slides in from right) -->
+  <!-- REMOVING THE REDUNDANT MOBILE MENU SLIDE-IN PANEL -->
+  <!-- 
   <div class="mobile-menu" [class.open]="isMobileMenuOpen">
     <div class="mobile-menu-content">
       <nav class="mobile-nav">
@@ -52,7 +55,6 @@
         </ul>
       </nav>
       
-      <!-- User Options for Mobile -->
       <div class="mobile-user-section">
         <ng-container *ngIf="isLoggedIn; else guestMobileMenu">
           <h3>{{ userName }}</h3>
@@ -74,6 +76,7 @@
       </div>
     </div>
   </div>
+  -->
 </header>
 
 <!-- Main Content Area -->

@@ -57,13 +57,13 @@ export class CourseListComponent implements OnInit {
   loadCourses(): void {
     this.loading = true;
 
-    //TODO: debug tool
-    this.courseService.getMockCourses().subscribe(courses => {
-      this.courses = courses;
-      this.applyFilters();
-      console.log('Mock courses loaded', courses);
-      this.loading = false;
-    });
+    // //TODO: debug tool
+    // this.courseService.getMockCourses().subscribe(courses => {
+    //   this.courses = courses;
+    //   this.applyFilters();
+    //   console.log('Mock courses loaded', courses);
+    //   this.loading = false;
+    // });
 
     this.courseService.getAllCourses().subscribe({
       next: (coursess) => {

@@ -9,6 +9,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { StripePaymentComponent } from '../stripe-payment/stripe-payment.component';
+import { StripeService } from '../../core/services/stripe.service';
 
 @Component({
   selector: 'app-checkout',
@@ -84,6 +85,7 @@ export class CheckoutComponent implements OnInit {
   private router = inject(Router);
   private courseService = inject(CourseService);
   private userService = inject(UserService);
+  private stripeService = inject(StripeService)
 
   constructor() {
     this.userForm = this.fb.group({
@@ -112,15 +114,35 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.loadCheckoutData();
     
-    // For demo purposes, skip user login check and add mock data
-    this.isExistingUser = true;
-    this.userForm.patchValue({
-      email: 'demo@example.com',
-      fullName: 'Demo User',
-      phone: '5512345678'
+    // Check for user login status
+    this.userService.getCurrentUser().subscribe(user => {
+      if (user) {
+        console.log('Checkout: Using logged in user:', user);
+        this.isExistingUser = true;
+        this.userForm.patchValue({
+          email: user.email,
+          fullName: user.fullName,
+          phone: user.phone || '',
+          companyName: user.companyName || ''
+        });
+        this.userForm.get('password')?.disable();
+        this.userForm.get('confirmPassword')?.disable();
+      } else {
+        console.log('Checkout: No logged in user, using demo data for testing');
+        // For demo purposes only - in production, this would redirect to login
+        this.isExistingUser = false;
+        
+         
+        // Redirect to login if not logged in
+        this.router.navigate(['/login'], {
+          queryParams: {
+            redirect: `/checkout/${this.route.snapshot.paramMap.get('courseId')}`,
+            date: this.route.snapshot.queryParamMap.get('date')
+          }
+        });
+        return;
+      }
     });
-    this.userForm.get('password')?.disable();
-    this.userForm.get('confirmPassword')?.disable();
   }
 
   private loadCheckoutData(): void {
@@ -173,7 +195,7 @@ export class CheckoutComponent implements OnInit {
 
     this.courseService.getMockCourses().subscribe({
       next: (courses) => {
-        const mockCourse = courses.find(c => c.id === courseId);
+        const mockCourse = courses.find(c => c._id === courseId);
         if (mockCourse) {
           this.course = mockCourse;
           this.validateSelectedDate();
@@ -222,7 +244,7 @@ export class CheckoutComponent implements OnInit {
         });
         
         // Add userId to the form for later use
-        this.userForm.addControl('userId', this.fb.control(user.id));
+        this.userForm.addControl('userId', this.fb.control(user._id));
         
         // Disable password fields for logged-in users
         this.userForm.get('password')?.disable();
@@ -238,14 +260,33 @@ export class CheckoutComponent implements OnInit {
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  switchToLogin() {
+  /*
+  switchToLoginOLD() {
     this.router.navigate(['/login'], {
       queryParams: {
-        redirect: `/checkout/${this.course?.id}`,
+        redirect: `/checkout/${this.course?._id}`,
         date: this.selectedDate?.toISOString()
       }
     });
-  }
+  }*/
+
+    switchToLogin() {
+      const courseId = this.route.snapshot.paramMap.get('courseId');
+      const redirectUrl = `/checkout/${courseId}`;
+      const queryParams: any = {};
+      if (this.selectedDate) {
+        queryParams.date = this.selectedDate.toISOString();
+      }
+      
+      console.log(`Redirecting to login with redirect=${redirectUrl} and params:`, queryParams);
+      
+      this.router.navigate(['/login'], {
+        queryParams: {
+          redirect: redirectUrl,
+          ...queryParams
+        }
+      });
+    }
 
   togglePurchaseType(type: 'individual' | 'company') {
     // Only proceed if changing to a different type
@@ -292,6 +333,7 @@ export class CheckoutComponent implements OnInit {
     }
   }
   
+  
   processPayment() {
     if (!this.selectedDate) {
       this.showDateAlert = true;
@@ -306,15 +348,41 @@ export class CheckoutComponent implements OnInit {
     this.processingPayment = true;
   
     if (this.purchaseType === 'individual') {
-      // The actual payment processing is now handled by the StripePaymentComponent
-      // We'll just simulate a success callback for demo purposes
-      setTimeout(() => {
-        this.handlePaymentSuccess({ paymentId: 'demo_' + Math.random().toString(36).substring(2, 15) });
-      }, 1000);
+      
+      this.processIndividualPayment();
+
     } else {
       // Process company purchase (likely needs direct contact)
       this.processCompanyRequest();
     }
+  }
+
+  private processIndividualPayment() {
+    const checkoutData = {
+      courseId: this.course?._id || '',
+      courseTitle: this.course?.title || 'Course Purchase',
+      price: this.course?.price || 0,
+      quantity: 1,
+      customerEmail: this.userForm.get('email')?.value || '',
+      selectedDate: this.selectedDate?.toISOString(),
+      successUrl: `${window.location.origin}/checkout/success`,
+      cancelUrl: `${window.location.origin}/courses/${this.course?._id}`
+    };
+    
+    this.stripeService.redirectToCheckout(checkoutData).subscribe({
+      next: (result) => {
+        if (result.success) {
+          console.log('Redirecting to Stripe checkout...');
+        } else {
+          console.error('Error redirecting to checkout:', result.error);
+          this.processingPayment = false;
+        }
+      },
+      error: (error) => {
+        console.error('Payment error:', error);
+        this.processingPayment = false;
+      }
+    });
   }
   
   handlePaymentSuccess(result: { paymentId: string }) {
@@ -323,10 +391,10 @@ export class CheckoutComponent implements OnInit {
     // Navigate to success page
     this.router.navigate(['/checkout/success'], {
       queryParams: {
+        courseId: this.course?._id,
         email: this.userForm.get('email')?.value,
-        courseId: this.course?.id,
         date: this.selectedDate?.toISOString(),
-        purchaseId: result.paymentId
+        paymentId: result.paymentId
       }
     });
   }
@@ -349,7 +417,7 @@ export class CheckoutComponent implements OnInit {
         queryParams: {
           companyName: this.companyForm.get('companyName')?.value,
           contactEmail: this.companyForm.get('contactEmail')?.value,
-          courseId: this.course?.id,
+          courseId: this.course?._id,
           date: this.selectedDate?.toISOString(),
           quantity: this.companyForm.get('quantity')?.value,
           requestId: 'DEMO-COMP-' + Math.floor(Math.random() * 10000)
@@ -361,7 +429,7 @@ export class CheckoutComponent implements OnInit {
   // Method to return to course details
   backToCourse() {
     if (this.course) {
-      this.router.navigate(['/course', this.course.id]);
+      this.router.navigate(['/course', this.course._id]);
     } else {
       this.router.navigate(['/courses']);
     }

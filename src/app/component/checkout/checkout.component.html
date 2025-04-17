@@ -119,9 +119,11 @@
           </div>
           <div class="panel-body">
             <app-stripe-payment
-              [amount]="calculateTotal()"
-              [courseId]="course?.id || ''"
+              [amount]="course.price || 0"
+              [courseId]="course._id || ''"
+              [courseTitle]="course.title || ''"
               [customerEmail]="userForm.get('email')?.value || ''"
+              [selectedDate]="selectedDate?.toISOString() || ''"
               (paymentSuccess)="handlePaymentSuccess($event)"
               (paymentError)="handlePaymentError($event)">
             </app-stripe-payment>

@@ -56,8 +56,14 @@ export class EnhancedCourseCardComponent {
     event.preventDefault();
     event.stopPropagation();
     
-    // Navigate to course details
-    this.router.navigate(['/course', this.course.id]);
+    // Check if course and course.id exist before navigating
+    if (this.course && this.course._id) {
+      // Navigate to course details
+      console.log('Navigating to course details for ID:', this.course._id);
+      this.router.navigate(['/course', this.course._id]);
+    } else {
+      console.error('Cannot navigate to course details: course ID is undefined', this.course);
+    }
   }
   
   consultDates(event: MouseEvent): void {
@@ -65,8 +71,14 @@ export class EnhancedCourseCardComponent {
     event.preventDefault();
     event.stopPropagation();
     
+    // Check if course exists and has available dates
+    if (!this.course) {
+      console.error('Cannot consult dates: course is undefined');
+      return;
+    }
+    
     // Get available dates from the course
-    if (!this.course || !this.course.availableDates || this.course.availableDates.length === 0) {
+    if (!this.course.availableDates || this.course.availableDates.length === 0) {
       console.warn('No available dates for this course');
       alert('No hay fechas disponibles para este curso.');
       return;

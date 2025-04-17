@@ -40,6 +40,34 @@ export class StripeService {
     this.stripePromise = loadStripe(environment.stripePublishableKey || 'pk_test_your_key');
   }
 
+
+  public createPaymentIntent(paymentData: any): Observable<{ clientSecret: string }> {
+    this.loadingSubject.next(true);
+    const endpoint = `${this.apiBaseUrl}/payments/create-payment-intent`;
+  
+    return this.http.post<{ clientSecret: string }>(endpoint, paymentData).pipe(
+      tap(response => {
+        console.log('Payment intent created:', response);
+      }),
+      catchError(error => {
+        console.error('Error creating payment intent:', error);
+        this.loadingSubject.next(false);
+        throw error;
+      }),
+      tap(() => this.loadingSubject.next(false))
+    );
+  }
+
+
+
+
+
+
+
+
+
+
+  //deperecated in favor of elements which embed
   /**
    * Creates a Stripe Checkout session and redirects to the Stripe Checkout page
    * @param checkoutData Information about the course being purchased
@@ -68,7 +96,24 @@ export class StripeService {
     // Endpoint to create a Stripe checkout session
     const endpoint = `${this.apiBaseUrl}/payments/create-checkout-session`;
 
-    return this.http.post<StripeCheckoutResponse>(endpoint, checkoutData).pipe(
+    const payload = {
+      courseId: checkoutData.courseId,
+      courseTitle: checkoutData.courseTitle,
+      price: checkoutData.price,
+      quantity: checkoutData.quantity || 1,
+      customerEmail: checkoutData.customerEmail,
+      selectedDate: checkoutData.selectedDate,
+      successUrl: checkoutData.successUrl,
+      cancelUrl: checkoutData.cancelUrl,
+      // Add any additional metadata you need for course identification
+      metadata: {
+        courseIdentifier: checkoutData.courseId
+      }
+    };
+
+    console.log('Creating Stripe checkout session with payload:', payload);
+  
+    return this.http.post<StripeCheckoutResponse>(endpoint, payload).pipe(
       tap(response => {
         console.log('Stripe checkout session created:', response);
       }),
@@ -80,7 +125,6 @@ export class StripeService {
       tap(() => this.loadingSubject.next(false))
     );
   }
-
   /**
    * Creates checkout session and redirects to Stripe Checkout
    * @param checkoutData Information about the course being purchased
