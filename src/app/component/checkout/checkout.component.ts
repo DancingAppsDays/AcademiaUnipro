@@ -352,10 +352,10 @@ export class CheckoutComponent implements OnInit {
     // Navigate to success page
     this.router.navigate(['/checkout/success'], {
       queryParams: {
-        email: this.userForm.get('email')?.value,
         courseId: this.course?._id,
+        email: this.userForm.get('email')?.value,
         date: this.selectedDate?.toISOString(),
-        purchaseId: result.paymentId
+        paymentId: result.paymentId
       }
     });
   }

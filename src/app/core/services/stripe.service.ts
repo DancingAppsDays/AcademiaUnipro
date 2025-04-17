@@ -40,6 +40,34 @@ export class StripeService {
     this.stripePromise = loadStripe(environment.stripePublishableKey || 'pk_test_your_key');
   }
 
+
+  public createPaymentIntent(paymentData: any): Observable<{ clientSecret: string }> {
+    this.loadingSubject.next(true);
+    const endpoint = `${this.apiBaseUrl}/payments/create-payment-intent`;
+  
+    return this.http.post<{ clientSecret: string }>(endpoint, paymentData).pipe(
+      tap(response => {
+        console.log('Payment intent created:', response);
+      }),
+      catchError(error => {
+        console.error('Error creating payment intent:', error);
+        this.loadingSubject.next(false);
+        throw error;
+      }),
+      tap(() => this.loadingSubject.next(false))
+    );
+  }
+
+
+
+
+
+
+
+
+
+
+  //deperecated in favor of elements which embed
   /**
    * Creates a Stripe Checkout session and redirects to the Stripe Checkout page
    * @param checkoutData Information about the course being purchased
