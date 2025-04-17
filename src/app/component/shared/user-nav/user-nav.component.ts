@@ -1,7 +1,7 @@
 // src/app/component/shared/user-nav/user-nav.component.ts
 import { Component, OnInit, HostListener, ElementRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { User } from '../../../core/models/user.model';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -109,7 +109,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
             <a routerLink="/login" class="btn btn-primary" (click)="closeMenu()">
               Iniciar Sesión
             </a>
-            <a routerLink="/register" class="btn btn-outline-primary" (click)="closeMenu()">
+            <a href="javascript:void(0)" class="btn btn-outline-primary" (click)="navigateToRegister()">
               Registrarse
             </a>
           </div>
@@ -223,7 +223,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
           <a routerLink="/login" class="btn btn-primary btn-block" (click)="closeMobileMenu()">
             <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
           </a>
-          <a routerLink="/register" class="btn btn-outline-primary btn-block mt-2" (click)="closeMobileMenu()">
+          <a href="javascript:void(0)" class="btn btn-outline-primary btn-block mt-2" (click)="navigateToRegister(); closeMobileMenu()">
             <i class="bi bi-person-plus"></i> Registrarse
           </a>
         </div>
@@ -619,13 +619,16 @@ export class UserNavComponent implements OnInit {
   
   private userService = inject(UserService);
   private elementRef = inject(ElementRef);
-  
+  private router = inject(Router);
+
   ngOnInit(): void {
     // Subscribe to user changes
     this.userService.getCurrentUser().subscribe(user => {
+      console.log('UserNavComponent received user:', user);
+
       this.currentUser = user;
       
-      // In a real app, you'd also fetch the user's upcoming course count
+      //TODO In a real app, you'd also fetch the user's upcoming course count
       if (user) {
         this.upcomingCourseCount = 2; // Mock count
       }
@@ -674,6 +677,11 @@ export class UserNavComponent implements OnInit {
   logoutMobile(): void {
     this.userService.logout();
     this.closeMobileMenu();
+  }
+
+  navigateToRegister(): void {
+    this.closeMenu();
+    this.router.navigate(['/register']);
   }
   
   getUserInitials(): string {

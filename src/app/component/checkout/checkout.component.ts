@@ -114,15 +114,35 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.loadCheckoutData();
     
-    // For demo purposes, skip user login check and add mock data
-    this.isExistingUser = true;
-    this.userForm.patchValue({
-      email: 'demo@example.com',
-      fullName: 'Demo User',
-      phone: '5512345678'
+    // Check for user login status
+    this.userService.getCurrentUser().subscribe(user => {
+      if (user) {
+        console.log('Checkout: Using logged in user:', user);
+        this.isExistingUser = true;
+        this.userForm.patchValue({
+          email: user.email,
+          fullName: user.fullName,
+          phone: user.phone || '',
+          companyName: user.companyName || ''
+        });
+        this.userForm.get('password')?.disable();
+        this.userForm.get('confirmPassword')?.disable();
+      } else {
+        console.log('Checkout: No logged in user, using demo data for testing');
+        // For demo purposes only - in production, this would redirect to login
+        this.isExistingUser = false;
+        
+         
+        // Redirect to login if not logged in
+        this.router.navigate(['/login'], {
+          queryParams: {
+            redirect: `/checkout/${this.route.snapshot.paramMap.get('courseId')}`,
+            date: this.route.snapshot.queryParamMap.get('date')
+          }
+        });
+        return;
+      }
     });
-    this.userForm.get('password')?.disable();
-    this.userForm.get('confirmPassword')?.disable();
   }
 
   private loadCheckoutData(): void {
@@ -240,14 +260,33 @@ export class CheckoutComponent implements OnInit {
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  switchToLogin() {
+  /*
+  switchToLoginOLD() {
     this.router.navigate(['/login'], {
       queryParams: {
         redirect: `/checkout/${this.course?._id}`,
         date: this.selectedDate?.toISOString()
       }
     });
-  }
+  }*/
+
+    switchToLogin() {
+      const courseId = this.route.snapshot.paramMap.get('courseId');
+      const redirectUrl = `/checkout/${courseId}`;
+      const queryParams: any = {};
+      if (this.selectedDate) {
+        queryParams.date = this.selectedDate.toISOString();
+      }
+      
+      console.log(`Redirecting to login with redirect=${redirectUrl} and params:`, queryParams);
+      
+      this.router.navigate(['/login'], {
+        queryParams: {
+          redirect: redirectUrl,
+          ...queryParams
+        }
+      });
+    }
 
   togglePurchaseType(type: 'individual' | 'company') {
     // Only proceed if changing to a different type

@@ -58,20 +58,42 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  //ngOnInit(): void {
     // Initialize Google Auth
    // this.googleAuthService.initialize();
     
+   ngOnInit(): void {
+    // Check current route to determine which view to show
+    const currentRoute = this.router.url;
+    console.log('Current route:', currentRoute);
+    
+    if (currentRoute.includes('/register')) {
+      this.activeView = 'register';
+      console.log('Showing register view based on route');
+    } else {
+      this.activeView = 'login';
+      console.log('Showing login view based on route');
+    }
+    
     // Check for redirect URL in query params
-    this.redirectUrl = this.route.snapshot.queryParamMap.get('redirect');
+    this.redirectUrl = this.route.snapshot.queryParamMap.get('redirect') || 
+                        this.route.snapshot.queryParamMap.get('returnUrl');
+    
+    console.log('Login component initialized with redirect URL:', this.redirectUrl);
     
     // Store any other query params for later redirect
     this.route.snapshot.queryParamMap.keys.forEach(key => {
-      if (key !== 'redirect') {
+      if (key !== 'redirect' && key !== 'returnUrl') {
         this.redirectParams[key] = this.route.snapshot.queryParamMap.get(key);
       }
     });
+    
+    console.log('Stored redirect params:', this.redirectParams);
   }
+
+
+
+
   
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('password')?.value;
@@ -111,7 +133,6 @@ export class LoginComponent implements OnInit {
 */
 
 
-  // Update login.component.ts
 login() {
   if (this.loginForm.invalid) {
     this.loginForm.markAllAsTouched();
@@ -126,24 +147,51 @@ login() {
     password: this.loginForm.get('password')?.value
   };
   
+  console.log('Submitting login data:', loginData);
+  
   this.http.post<any>(`${environment.apiUrl}/auth/login`, loginData)
     .subscribe({
       next: (response) => {
+        //console.log('Login successful, server response:', response);
+        
+        // Make sure we have a proper user object from the response
+        if (!response.user) {
+          console.error('Login response missing user object:', response);
+          this.loading = false;
+          this.errorMessage = 'Error en la respuesta del servidor. Por favor, inténtelo de nuevo.';
+          return;
+        }
+        
+        // Ensure the user object has an ID and email at minimum
+        const user = response.user;
+        if (!user._id) {
+          user._id = user.id 
+         console.log("ERROR NO ID", user)
+        }
+        
         // Store user and token
-        localStorage.setItem('currentUser', JSON.stringify(response.user));
+        localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('token', response.token);
         
         // Update user service
-        this.userService.setCurrentUser(response.user);
+        this.userService.setCurrentUser(user);
+        
+        //console.log('User stored in localStorage:', JSON.stringify(user));
+        //console.log('Token stored in localStorage:', response.token);
         
         // Redirect
         this.redirectAfterAuth();
         this.loading = false;
       },
       error: (error) => {
-        console.error('Login failed', error);
+        //console.error('Login failed', error);
         this.loading = false;
-        this.errorMessage = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+        
+        if (error.status === 401) {
+          this.errorMessage = 'Credenciales incorrectas. Por favor, inténtelo de nuevo.';
+        } else {
+          this.errorMessage = 'Error de conexión. Por favor, inténtelo más tarde.';
+        }
       }
     });
 }
@@ -202,17 +250,21 @@ login() {
     });
   }*/
   
-  private redirectAfterAuth() {
-    if (this.redirectUrl) {
-      // Convert params to query parameters
-      const queryParams: any = {};
-      Object.keys(this.redirectParams).forEach(key => {
-        queryParams[key] = this.redirectParams[key];
-      });
+    private redirectAfterAuth() {
+      console.log('Redirecting after auth. Redirect URL:', this.redirectUrl);
+      console.log('Redirect params:', this.redirectParams);
       
-      this.router.navigate([this.redirectUrl], { queryParams });
-    } else {
-      this.router.navigate(['/dashboard']);
+      if (this.redirectUrl) {
+        // Convert params to query parameters
+        const queryParams: any = {};
+        Object.keys(this.redirectParams).forEach(key => {
+          queryParams[key] = this.redirectParams[key];
+        });
+        
+        console.log('Navigating to', this.redirectUrl, 'with query params:', queryParams);
+        this.router.navigate([this.redirectUrl], { queryParams });
+      } else {
+        this.router.navigate(['/dashboard']);
+      }
     }
-  }
 }
