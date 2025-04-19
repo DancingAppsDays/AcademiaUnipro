@@ -109,6 +109,16 @@
           </div>
         </div>
 
+        <div *ngIf="showErrorAlert" class="alert alert-danger mb-4">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ errorMessage }}
+          <p class="mt-2 mb-0">
+            <a [routerLink]="['/course', course._id]" class="btn btn-outline-danger">
+              Volver al curso
+            </a>
+          </p>
+        </div>
+
         <!-- Stripe Payment Component -->
         <div class="checkout-panel payment-panel mb-4">
           <div class="panel-header">
@@ -118,8 +128,19 @@
             <h3>Método de pago</h3>
           </div>
           <div class="panel-body">
+            <!-- Loading indicator during validation    [amount]="course.price || 0"-->
+            <div *ngIf="validationInProgress" class="text-center py-4">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Validando...</span>
+              </div>
+              <p class="mt-2">Verificando disponibilidad del curso...</p>
+            </div>
+
+          <div class="panel-body">
             <app-stripe-payment
-              [amount]="course.price || 0"
+             *ngIf="isPaymentValid && !validationInProgress"
+            
+             [amount]="course.price || 0"
               [courseId]="course._id || ''"
               [courseTitle]="course.title || ''"
               [customerEmail]="userForm.get('email')?.value || ''"
@@ -133,7 +154,7 @@
       </div>
 
       <!-- Company Purchase Section -->
-      <div *ngIf="purchaseType === 'company'" @accordionAnimation>
+      <div *ngIf="purchaseType !== 'individual'" @accordionAnimation>
         <div class="section-header">
           <h3>Compra Empresarial</h3>
           <p>Complete la información para solicitar su factura</p>
@@ -241,7 +262,7 @@
             </span>
           </div>
           
-          <div class="summary-item" *ngIf="purchaseType === 'company'">
+          <div class="summary-item" *ngIf="purchaseType !== 'individual'">
             <span class="item-label">Participantes:</span>
             <span class="item-value">{{ companyForm.get('quantity')?.value || 1 }}</span>
           </div>
@@ -264,7 +285,7 @@
       </div>
 
       <!-- Action Buttons (only for corporate purchase since individual uses the payment component's button) -->
-      <div class="d-flex justify-content-between mt-4" *ngIf="purchaseType === 'company'">
+      <div class="d-flex justify-content-between mt-4" *ngIf="purchaseType !== 'individual'">
         <button type="button" class="btn btn-outline-secondary" (click)="backToCourse()">
           Regresar
         </button>

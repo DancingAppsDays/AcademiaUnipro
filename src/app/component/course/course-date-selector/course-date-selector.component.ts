@@ -16,17 +16,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         <h3>Fechas Disponibles</h3>
         <p class="text-muted">Selecciona una fecha para el curso</p>
       </div>
-      
-      <div class="alert alert-info policy-alert" *ngIf="showPostponementPolicy">
-        <i class="bi bi-info-circle me-2"></i>
-        <div>
-          <strong>Política de Aplazamiento</strong>
-          <p>Este curso requiere un mínimo de {{ minimumRequired }} participantes para realizarse. 
-             Si no se alcanza este mínimo 2 días antes de la fecha, el curso podría ser reprogramado. 
-             Los participantes inscritos serían reubicados a la siguiente fecha disponible o podrían solicitar un reembolso.</p>
-        </div>
-      </div>
-      
+
       <div class="date-list" *ngIf="instances.length > 0">
         <div class="date-card" *ngFor="let instance of instances"
              [class.selected]="selectedInstanceId === instance._id"
@@ -80,6 +70,16 @@ import { animate, style, transition, trigger } from '@angular/animations';
                  [class.selected]="selectedInstanceId === instance._id">
             {{ selectedInstanceId === instance._id ? 'Seleccionado' : 'Seleccionar' }}
           </button>
+        </div>
+      </div>
+
+      <div class="alert alert-info policy-alert" *ngIf="showPostponementPolicy">
+        <i class="bi bi-info-circle me-2"></i>
+        <div>
+          <strong>Política de Aplazamiento</strong>
+          <p>Este curso requiere un mínimo de {{ minimumRequired }} participantes para realizarse. 
+             Si no se alcanza este mínimo 2 días antes de la fecha, el curso podría ser reprogramado. 
+             Los participantes inscritos serían reubicados a la siguiente fecha disponible o podrían solicitar un reembolso.</p>
         </div>
       </div>
       

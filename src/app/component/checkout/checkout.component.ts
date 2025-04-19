@@ -79,6 +79,12 @@ export class CheckoutComponent implements OnInit {
   processingPayment = false;
   showDateAlert = false;
   currentUserId: string = '';
+
+  isPaymentValid = false;
+validationInProgress = true;
+errorMessage = '';
+showErrorAlert = false;
+
   
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
@@ -87,6 +93,7 @@ export class CheckoutComponent implements OnInit {
   private courseService = inject(CourseService);
   private userService = inject(UserService);
   private stripeService = inject(StripeService)
+ 
 
   constructor() {
     this.userForm = this.fb.group({
@@ -114,6 +121,11 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCheckoutData();
+
+    this.isPaymentValid = false;
+    this.validationInProgress = true; // Start with validation in progress
+    this.errorMessage = '';
+    this.showErrorAlert = false;
     
     //this.currentUser = this.userService.getCurrentUserSync();
     // Check for user login status
@@ -184,6 +196,8 @@ export class CheckoutComponent implements OnInit {
         this.course = course;
         this.validateSelectedDate();
         this.loading = false;
+
+        this.validatePaymentEligibility();
       },
       error: (error) => {
         console.error('Error loading course details', error);
@@ -338,11 +352,11 @@ export class CheckoutComponent implements OnInit {
   
   
   processPayment() {
+    console.log('About to processpayment...');
     if (!this.selectedDate) {
       this.showDateAlert = true;
       return;
     }
-  
     if (this.purchaseType === 'individual' && !this.userForm.valid) {
       this.userForm.markAllAsTouched();
       return;
@@ -351,16 +365,96 @@ export class CheckoutComponent implements OnInit {
     this.processingPayment = true;
   
     if (this.purchaseType === 'individual') {
-      
-      this.processIndividualPayment();
 
+      const courseDateId = this.getCourseDateIdForSelectedDate();
+    if (!courseDateId) {
+      this.handlePaymentError('Invalid course date selected');
+      return;
+    }
+      this.validatenotpreviousenrollment(); //TODO Disable to test payments and slots cacpcitys
+     
+      this.processIndividualPayment();
     } else {
       // Process company purchase (likely needs direct contact)
       this.processCompanyRequest();
     }
   }
+  private validatePaymentEligibility(): void {
+    if (!this.selectedDate || !this.course) {
+      this.validationInProgress = false;
+      this.showDateAlert = true;
+      return;
+    }
+    
+    // Get current user ID from your UserService
+    const userId = this.userService.getCurrentUserSync()?._id || '';
+    
+    this.stripeService.validatePayment({
+      courseId: this.course._id,
+      selectedDate: this.selectedDate?.toISOString(),
+      userId: userId,
+      quantity: this.purchaseType === 'company' ? this.companyForm.get('quantity')?.value || 1 : 1
+    }).subscribe({
+      next: (response) => {
+        this.validationInProgress = false;
+        
+        if (response.valid) {
+          this.isPaymentValid = true;
+        } else {
+          this.isPaymentValid = false;
+          this.errorMessage = response.message || 'No se puede proceder con el pago';
+          this.showErrorAlert = true;
+        }
+      },
+      error: (error) => {
+        this.validationInProgress = false;
+        this.isPaymentValid = false;
+        this.errorMessage = 'No se pudo validar la disponibilidad del curso';
+        this.showErrorAlert = true;
+        console.error('Payment validation error:', error);
+      }
+    });
+  }
+
+
+  private validatenotpreviousenrollment() {
+    console.log('Validating user purchase eligibility...');
+    this.http.post<{valid: boolean; message?: string}>(`${environment.apiUrl}/payments/validate-payment`, {
+      courseId: this.course?._id,
+      selectedDate: this.selectedDate?.toISOString(),
+      userId: this.currentUserId
+    }).subscribe({
+      next: (response) => {
+        if (response.valid) {
+          console.log('User is eligible for purchase:', response);
+          console.log('User is eligible for purchase:', response.message);
+          // Proceed with payment
+           //this.initiatePayment(courseDateId);
+
+        } else {
+          // Show error message
+          this.processingPayment = false;
+          this.handlePaymentError(response.message || 'Cannot purchase this course');
+        }
+      },
+      error: (error) => {
+        console.error('Validation error:', error);
+        this.processingPayment = false;
+        this.handlePaymentError('Failed to validate purchase eligibility');
+      }
+    });
+  }
+
+
+
+
+
+
+
+
 
   private processIndividualPayment() {
+    console.log('About to processpaymentiddividual...');
     const checkoutData = {
       courseId: this.course?._id || '',
       courseTitle: this.course?.title || 'Course Purchase',
@@ -402,10 +496,42 @@ export class CheckoutComponent implements OnInit {
     });
   }
   
-  handlePaymentError(error: string) {
+  handlePaymentErrorLEGACY(error: string) {
     console.error('Payment error:', error);
     this.processingPayment = false;
   }
+
+
+private getCourseDateIdForSelectedDate(): string | null {
+  if (!this.course?.courseInstances || !this.selectedDate) {
+    return null;
+  }
+
+  const selectedDateStr = this.selectedDate.toISOString().split('T')[0];
+  
+  const matchingInstance = this.course.courseInstances.find(instance => {
+    const instanceDate = new Date(instance.startDate);
+    return instanceDate.toISOString().split('T')[0] === selectedDateStr;
+  });
+  
+  return matchingInstance?._id || null;
+}
+
+handlePaymentError(error: string) {
+  this.processingPayment = false;
+  
+  // Display error message to user
+  this.errorMessage = error;
+  this.showErrorAlert = true;
+  
+  // Scroll to error message
+  setTimeout(() => {
+    const errorElement = document.getElementById('payment-error');
+    if (errorElement) {
+      errorElement.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, 100);
+}
 
   private processCompanyRequest() {
     if (!this.companyForm.valid) {

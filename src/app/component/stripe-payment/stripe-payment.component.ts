@@ -279,6 +279,8 @@ export class StripePaymentComponent implements OnInit, OnDestroy {
     this.loading = false;
   }
 
+  
+
   async processPayment() {
     if (!this.stripe || !this.elements || !this.card) {
       this.errorMessage = 'Payment system not initialized. Please try again.';

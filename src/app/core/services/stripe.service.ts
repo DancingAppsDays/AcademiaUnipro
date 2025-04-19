@@ -58,7 +58,21 @@ export class StripeService {
     );
   }
 
-
+  public validatePayment(paymentData: any): Observable<{valid: boolean; message?: string}> {
+    const endpoint = `${this.apiBaseUrl}/payments/validate-payment`;
+    return this.http.post<{valid: boolean; message?: string}>(endpoint, paymentData).pipe(
+      tap(response => {
+        console.log('Payment validation response:', response);
+        if (!response.valid) {
+          console.warn('Payment validation failed:', response.message);
+        }
+      }),
+      catchError(error => {
+        console.error('Error validating payment:', error);
+        return of({ valid: false, message: 'Error validating payment request' });
+      })
+    );
+  }
 
 
 

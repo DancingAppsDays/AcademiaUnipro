@@ -55,6 +55,8 @@ export class CourseService {
   private handleApiError(operation: string, error: HttpErrorResponse, param?: string): Observable<any> {
     console.error(`Error in ${operation}${param ? ` with param ${param}` : ''}:`, error);
     
+    return throwError(() => new Error('No mockdata available'));
+    
     // Only use mock data as fallback if enabled
     if (!this.mockDataEnabled) {
       return throwError(() => error);
