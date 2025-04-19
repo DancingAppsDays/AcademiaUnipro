@@ -140,7 +140,7 @@ export class GoogleAuthService {
             if (response.user && response.token) {
               localStorage.setItem('currentUser', JSON.stringify(response.user));
               localStorage.setItem('token', response.token);
-              this.userService.setCurrentUser(response.user);
+              this.userService.setCurrentUser(response.user,localStorage.getItem('token') || '');
             }
           }),
           catchError(error => {

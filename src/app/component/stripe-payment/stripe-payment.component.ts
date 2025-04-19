@@ -140,8 +140,11 @@ export class StripePaymentComponent implements OnInit, OnDestroy {
   @Input() courseTitle: string = '';
   @Input() customerEmail: string = '';
   @Input() selectedDate: string = '';
+  @Input() userId: string = ''; 
+
   @Output() paymentSuccess = new EventEmitter<{ paymentId: string }>();
   @Output() paymentError = new EventEmitter<string>();
+
 
   paymentForm: FormGroup;
   stripe: Stripe | null = null;
@@ -196,7 +199,8 @@ export class StripePaymentComponent implements OnInit, OnDestroy {
       quantity: 1,
       customerEmail: this.customerEmail,
       selectedDate: this.selectedDate || new Date().toISOString(),
-      userId: localStorage.getItem('userId') || ''
+      //userId: localStorage.getItem('userId') || ''
+      userId: this.userId
     };
 
     this.stripeService.createPaymentIntent(paymentData).subscribe({

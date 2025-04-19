@@ -42,13 +42,13 @@ export class LoginComponent implements OnInit {
   
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       password: ['', Validators.required],
       rememberMe: [false]
     });
     
     this.registerForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email,  Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
       fullName: ['', Validators.required],
@@ -174,7 +174,7 @@ login() {
         localStorage.setItem('token', response.token);
         
         // Update user service
-        this.userService.setCurrentUser(user);
+        this.userService.setCurrentUser(user, localStorage.getItem('token') || '');
         
         //console.log('User stored in localStorage:', JSON.stringify(user));
         //console.log('Token stored in localStorage:', response.token);

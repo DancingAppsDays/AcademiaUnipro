@@ -41,11 +41,16 @@ export class UserService {
     return this.currentUserSubject.asObservable();
   }
 
+  getCurrentUserSync(): User | null {
+    return this.currentUserSubject.getValue();
+  }
+
     
-  setCurrentUser(user: User): void {
+  setCurrentUser(user: User, token: string): void {
     //console.log('UserService: Setting current user:', user);
     this.currentUserSubject.next(user);
     localStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('token', token);
   }
   
   login(email: string, password: string): Observable<User> {
@@ -54,8 +59,10 @@ export class UserService {
         map(response => {
           // Store user and token
           const user = response.user;
-          localStorage.setItem('currentUser', JSON.stringify(user));
-          localStorage.setItem('token', response.token);
+          const token = response.token;
+         // localStorage.setItem('currentUser', JSON.stringify(user));
+         // localStorage.setItem('token', response.token);
+         this.setCurrentUser(user, token);
           this.currentUserSubject.next(user);
           return user;
         }),

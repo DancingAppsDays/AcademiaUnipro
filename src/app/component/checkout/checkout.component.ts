@@ -78,6 +78,7 @@ export class CheckoutComponent implements OnInit {
   loadError = false;
   processingPayment = false;
   showDateAlert = false;
+  currentUserId: string = '';
   
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
@@ -114,10 +115,12 @@ export class CheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.loadCheckoutData();
     
+    //this.currentUser = this.userService.getCurrentUserSync();
     // Check for user login status
     this.userService.getCurrentUser().subscribe(user => {
       if (user) {
-        console.log('Checkout: Using logged in user:', user);
+        //console.log('Checkout: Using logged in user:', user);
+        this.currentUserId = user._id;
         this.isExistingUser = true;
         this.userForm.patchValue({
           email: user.email,
@@ -128,7 +131,7 @@ export class CheckoutComponent implements OnInit {
         this.userForm.get('password')?.disable();
         this.userForm.get('confirmPassword')?.disable();
       } else {
-        console.log('Checkout: No logged in user, using demo data for testing');
+        
         // For demo purposes only - in production, this would redirect to login
         this.isExistingUser = false;
         

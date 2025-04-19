@@ -124,6 +124,7 @@
               [courseTitle]="course.title || ''"
               [customerEmail]="userForm.get('email')?.value || ''"
               [selectedDate]="selectedDate?.toISOString() || ''"
+              [userId]="currentUserId"
               (paymentSuccess)="handlePaymentSuccess($event)"
               (paymentError)="handlePaymentError($event)">
             </app-stripe-payment>
