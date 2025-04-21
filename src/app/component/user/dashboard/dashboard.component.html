@@ -1,1 +1,151 @@
-<p>dashboard works!</p>
+```html
+<!-- src/app/component/user/dashboard/dashboard.component.html -->
+<div class="dashboard-container" @fadeIn>
+  <div class="dashboard-header">
+    <div class="container">
+      <h1>Dashboard</h1>
+      <p class="welcome-message">Bienvenido, {{ userName }}</p>
+    </div>
+  </div>
+  
+  <div class="dashboard-content">
+    <div class="container">
+      <!-- Loading State -->
+      <div *ngIf="loading" class="loading-container">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cargando tu información...</p>
+      </div>
+      
+      <!-- Dashboard Overview -->
+      <div *ngIf="!loading" class="dashboard-overview">
+        <!-- User Stats Cards -->
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-mortarboard"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ upcomingCoursesCount }}</div>
+              <div class="stat-label">Cursos Próximos</div>
+            </div>
+            <a routerLink="/dashboard/courses" class="card-link">
+              <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-check-circle"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ completedCoursesCount }}</div>
+              <div class="stat-label">Cursos Completados</div>
+            </div>
+            <a routerLink="/dashboard/courses" class="card-link">
+              <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+          
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="bi bi-award"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-value">{{ certificatesCount }}</div>
+              <div class="stat-label">Certificados</div>
+            </div>
+            <a routerLink="/dashboard/certificates" class="card-link">
+              <i class="bi bi-arrow-right"></i>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Next Course Panel -->
+        <div class="upcoming-course-panel" *ngIf="nextCourse">
+          <div class="panel-header">
+            <h2>Tu Próximo Curso</h2>
+            <a routerLink="/dashboard/courses" class="view-all-link">Ver todos</a>
+          </div>
+          
+          <div class="next-course-card">
+            <div class="course-date-time">
+              <div class="date-badge">
+                <div class="month">{{ formatMonth(nextCourse.date) }}</div>
+                <div class="day">{{ formatDay(nextCourse.date) }}</div>
+              </div>
+              <div class="time-location">
+                <div class="time">{{ formatTime(nextCourse.date) }}</div>
+                <div class="location">{{ nextCourse.location }}</div>
+              </div>
+            </div>
+            
+            <div class="course-info">
+              <h3>{{ nextCourse.title }}</h3>
+              <p>{{ nextCourse.description }}</p>
+              
+              <div class="course-meta">
+                <span class="instructor">
+                  <i class="bi bi-person"></i> {{ nextCourse.instructor }}
+                </span>
+                <span class="duration">
+                  <i class="bi bi-clock"></i> {{ nextCourse.duration }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="course-actions">
+              <a [href]="nextCourse.meetingUrl" target="_blank" class="btn btn-primary">
+                <i class="bi bi-camera-video"></i> Acceder
+              </a>
+              <a [routerLink]="['/course', nextCourse.id]" class="btn btn-outline-primary">
+                <i class="bi bi-info-circle"></i> Detalles
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- No Upcoming Courses -->
+        <div class="upcoming-course-panel" *ngIf="!nextCourse && !loading">
+          <div class="panel-header">
+            <h2>Tu Próximo Curso</h2>
+          </div>
+          
+          <div class="no-courses-message">
+            <i class="bi bi-calendar-x"></i>
+            <p>No tienes cursos próximos programados.</p>
+            <a routerLink="/courses" class="btn btn-outline-primary">
+              Explorar cursos disponibles
+            </a>
+          </div>
+        </div>
+        
+        <!-- Recommended Courses -->
+        <div class="recommended-courses">
+          <div class="panel-header">
+            <h2>Cursos Recomendados</h2>
+            <a routerLink="/courses" class="view-all-link">Ver catálogo</a>
+          </div>
+          
+          <div class="recommended-grid">
+            <div class="recommendation-card" *ngFor="let course of recommendedCourses">
+              <div class="card-img">
+                <img [src]="course.imageUrl" [alt]="course.title">
+                <div class="card-category">{{ course.category }}</div>
+              </div>
+              <div class="card-body">
+                <h3>{{ course.title }}</h3>
+                <p>{{ course.subtitle }}</p>
+                <div class="card-footer">
+                  <span class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
+                  <a [routerLink]="['/course', course._id]" class="btn btn-sm btn-primary">Ver Curso</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
