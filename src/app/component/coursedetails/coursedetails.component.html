@@ -338,11 +338,12 @@
         
         <div *ngIf="!loadingCourseDates">
           <app-course-date-selector
-            *ngIf="course"
-            [courseId]="course._id"
-            [minimumRequired]="minimumStudentsRequired"
-            [preSelectedInstanceId]="selectedCourseInstance?._id"
-            (instanceSelected)="onCourseInstanceSelected($event)">
+          *ngIf="course"
+          [courseId]="course._id"
+          [minimumRequired]="minimumStudentsRequired"
+          [preSelectedInstanceId]="selectedCourseInstance?._id"
+          (instanceSelected)="onCourseInstanceSelected($event)"
+          (inscriptionRequested)="onInscriptionRequested($event)">
           </app-course-date-selector>
         </div>
 
