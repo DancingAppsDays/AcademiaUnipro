@@ -41,7 +41,10 @@
                 placeholder="Buscar cursos..." 
                 (input)="onSearch($event)">
             </div>
-            
+          </div>
+        </div>
+      </div>
+    </div>
  
   <!--sort Dropdown 
   <div class="dropdown sort-dropdown">
@@ -75,10 +78,7 @@
 </div>-->
 
 
-          </div>
-        </div>
-      </div>
-    </div>
+  
     
     <!-- Loading State -->
     <div class="text-center py-5" *ngIf="loading">
@@ -87,45 +87,44 @@
       </div>
       <p class="mt-3">Cargando cursos...</p>
     </div>
-    
+
     <!-- Courses Grid -->
     <div class="courses-grid mt-4" *ngIf="!loading">
       <div class="row" @staggerList *ngIf="filteredCourses.length > 0">
         <div class="col-lg-4 col-md-6 mb-4" *ngFor="let course of filteredCourses">
-        
-<div class="course-card">
-  <div class="card-img-container">
-    <img [src]="course.imageUrl" [alt]="course.title">
-    <div class="card-category-badge">{{ course.category }}</div>
-  </div>
-  
-  <div class="card-content">
-    <h3 class="card-title">{{ course.title }}</h3>
-    <p class="course-description">{{ course.subtitle }}</p>
-    
-    <div class="course-details">
-      <div class="detail-row">
-        <span class="duration">{{ course.duration }}</span>
-        <span class="date">{{ formatDate(course.nextDate) }}</span>
-      </div>
-      
-      <div class="instructor-row">
-        <div class="instructor">
-          <img [src]="course.instructor.photoUrl" [alt]="course.instructor.name" class="instructor-avatar">
-          <span>{{ course.instructor.name }}</span>
-        </div>
-        
-        <div class="price">
-          ${{ course.price.toLocaleString() }} MXN
-        </div>
-      </div>
-      
-      <button class="btn btn-details" (click)="viewCourseDetails(course._id)">
-        Ver detalles
-      </button>
-    </div>
-  </div>
-
+          <div class="course-card">
+            <div class="card-img-container">
+              <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
+              <div class="card-category-badge">{{ course.category }}</div>
+            </div>
+            
+            <div class="card-content">
+              <h3 class="card-title">{{ course.title }}</h3>
+              <p class="course-description">{{ course.subtitle }}</p>
+              
+              <div class="course-details">
+                <div class="detail-row">
+                  <span class="duration">{{ course.duration || 'Duración variable' }}</span>
+                  <span class="date" *ngIf="course.nextDate">{{ formatDate(course.nextDate) }}</span>
+                  <span class="date" *ngIf="!course.nextDate">Próximamente</span>
+                </div>
+                
+                <div class="instructor-row">
+                  <div class="instructor" *ngIf="course.instructor">
+                    <img [src]="course.instructor.photoUrl || 'assets/images/instructors/default.png'" [alt]="course.instructor.name" class="instructor-avatar">
+                    <span>{{ course.instructor.name }}</span>
+                  </div>
+                  
+                  <div class="price">
+                    ${{ course.price?.toLocaleString() || '0' }} MXN
+                  </div>
+                </div>
+                
+                <button class="btn btn-details" (click)="viewCourseDetails(course._id)">
+                  Ver detalles
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

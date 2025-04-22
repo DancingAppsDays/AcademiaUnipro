@@ -1,4 +1,3 @@
-// src/app/component/coursedetails/coursedetails.component.ts
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -271,6 +270,17 @@ export class CourseDetailComponent implements OnInit {
     });
   }
 
+  // New method to handle inscription requests from the date selector
+  onInscriptionRequested(instance: CourseDate): void {
+    console.log("Inscription requested for instance:", instance);
+    // Make sure we have selected this instance
+    this.selectedCourseInstance = instance;
+    this.selectedDate = new Date(instance.startDate);
+    
+    // Proceed to checkout
+    this.proceedToCheckout();
+  }
+
   changeSection(section: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates'): void {
     this.activeSection = section;
     
@@ -317,9 +327,6 @@ export class CourseDetailComponent implements OnInit {
 
     this.router.navigate(['/checkout', this.course?._id], { queryParams });
   }
-
-  // We're removing this function as the button is being deprecated
-  // proceedToQuickCheckout(): void { ... }
   
   // Useful date formatting helpers
   formatDate(date: Date | string | undefined): string {

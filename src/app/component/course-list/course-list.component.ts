@@ -66,22 +66,21 @@ export class CourseListComponent implements OnInit {
     // });
 
     this.courseService.getAllCourses().subscribe({
-      next: (coursess) => {
-        //this.courses = courses;
+      next: (courses) => {
+        this.courses = courses;
         this.applyFilters();
-        console.log('Courses loaded normal', coursess);
+       // console.log('Courses loaded normal', courses);
         this.loading = false;
       },
       error: (error) => {
         console.error('Error loading courses', error);
-
+        this.loading = false;
         // Fallback to mock data
-        this.courseService.getMockCourses().subscribe(courses => {
-          this.courses = courses;
-          this.applyFilters();
-          console.log('Mock courses loaded¨Fallback', courses);
-          this.loading = false;
-        });
+        // this.courseService.getMockCourses().subscribe(courses => {
+        //   this.courses = courses;
+        //   this.applyFilters();
+        //  // console.log('Mock courses loaded¨Fallback', courses);
+        // });
       }
     });
   }

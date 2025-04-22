@@ -2,6 +2,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { CourseDateService } from '../../../core/services/course-date.service';
 import { CourseDate, CourseDateWithAvailability } from '../../../core/models/course-date.model';
 import { animate, style, transition, trigger } from '@angular/animations';
@@ -9,7 +10,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 @Component({
   selector: 'app-course-date-selector',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div class="date-selector-container">
       <div class="section-header">
@@ -17,11 +18,20 @@ import { animate, style, transition, trigger } from '@angular/animations';
         <p class="text-muted">Selecciona una fecha para el curso</p>
       </div>
 
-      <div class="date-list" *ngIf="instances.length > 0">
+      <div class="loading-indicator" *ngIf="loading">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p>Cargando fechas disponibles...</p>
+      </div>
+
+      <div class="date-list" *ngIf="!loading && instances.length > 0">
         <div class="date-card" *ngFor="let instance of instances"
              [class.selected]="selectedInstanceId === instance._id"
              [class.nearly-full]="instance.isNearlyFull"
              [class.at-risk]="instance.isAtRiskOfPostponement"
+             [class.full]="instance.availableSeats <= 0"
+             [class.past]="isPastDate(instance.startDate)"
              (click)="selectInstance(instance)">
           
           <div class="date-header">
@@ -29,7 +39,9 @@ import { animate, style, transition, trigger } from '@angular/animations';
               <i class="bi bi-calendar-event"></i>
               <span>{{ instance.startDate | date:'EEEE, d MMMM, yyyy':'':'es' }}</span>
             </div>
-            <div class="seats-info" [class.seats-warning]="instance.isNearlyFull">
+            <div class="seats-info" 
+                 [class.seats-warning]="instance.isNearlyFull" 
+                 [class.seats-danger]="instance.availableSeats <= 0">
               <i class="bi" [ngClass]="instance.availableSeats > 0 ? 'bi-person-check' : 'bi-x-circle'"></i>
               <span>{{ instance.availableSeats }} / {{ instance.capacity }} plazas disponibles</span>
             </div>
@@ -51,29 +63,49 @@ import { animate, style, transition, trigger } from '@angular/animations';
           </div>
           
           <div class="date-status">
-            <div class="status-badge" *ngIf="instance.isConfirmed">
+            <div class="status-badge" *ngIf="instance.isConfirmed && !isPastDate(instance.startDate)">
               <i class="bi bi-check-circle"></i>
               <span>Confirmado</span>
             </div>
-            <div class="status-badge warning" *ngIf="instance.isAtRiskOfPostponement">
+            <div class="status-badge warning" *ngIf="instance.isAtRiskOfPostponement && !isPastDate(instance.startDate)">
               <i class="bi bi-exclamation-triangle"></i>
               <span>Riesgo de aplazamiento</span>
             </div>
-            <div class="status-badge nearly-full" *ngIf="instance.isNearlyFull && !instance.isAtRiskOfPostponement">
+            <div class="status-badge nearly-full" *ngIf="instance.isNearlyFull && !instance.isAtRiskOfPostponement && instance.availableSeats > 0 && !isPastDate(instance.startDate)">
               <i class="bi bi-exclamation-circle"></i>
               <span>¡Últimos lugares!</span>
             </div>
+            <div class="status-badge full" *ngIf="instance.availableSeats <= 0 && !isPastDate(instance.startDate)">
+              <i class="bi bi-x-circle"></i>
+              <span>Cupo lleno</span>
+            </div>
+            <div class="status-badge past" *ngIf="isPastDate(instance.startDate)">
+              <i class="bi bi-clock-history"></i>
+              <span>Fecha pasada</span>
+            </div>
           </div>
           
-          <button class="btn btn-primary select-date-btn"
-                 [disabled]="instance.availableSeats <= 0"
-                 [class.selected]="selectedInstanceId === instance._id">
-            {{ selectedInstanceId === instance._id ? 'Seleccionado' : 'Seleccionar' }}
-          </button>
+          <div class="card-actions">
+            <button class="btn btn-primary select-date-btn"
+                 [disabled]="instance.availableSeats <= 0 || isPastDate(instance.startDate)"
+                 [class.selected]="selectedInstanceId === instance._id"
+                 [class.btn-secondary]="instance.availableSeats <= 0 || isPastDate(instance.startDate)"
+                 (click)="selectInstance(instance)">
+              {{ isPastDate(instance.startDate) ? 'Fecha pasada' : 
+                instance.availableSeats <= 0 ? 'Sin disponibilidad' : 
+                selectedInstanceId === instance._id ? 'Seleccionado' : 'Seleccionar' }}
+            </button>
+            
+            <button *ngIf="selectedInstanceId === instance._id && !isPastDate(instance.startDate) && instance.availableSeats > 0"
+                   class="btn btn-success btn-inscription mt-2"
+                   (click)="inscribeNow($event, instance)">
+              <i class="bi bi-cart-check"></i> Inscribir Ahora
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="alert alert-info policy-alert" *ngIf="showPostponementPolicy">
+      <div class="alert alert-info policy-alert" *ngIf="showPostponementPolicy && !loading">
         <i class="bi bi-info-circle me-2"></i>
         <div>
           <strong>Política de Aplazamiento</strong>
@@ -83,7 +115,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
         </div>
       </div>
       
-      <div class="no-dates-message" *ngIf="instances.length === 0">
+      <div class="no-dates-message" *ngIf="!loading && instances.length === 0">
         <i class="bi bi-calendar-x"></i>
         <p>No hay fechas disponibles para este curso en este momento.</p>
         <p>Por favor, consulte más adelante o contáctenos para más información.</p>
@@ -104,6 +136,11 @@ import { animate, style, transition, trigger } from '@angular/animations';
       font-weight: 700;
       color: #0066b3;
       margin-bottom: 0.5rem;
+    }
+    
+    .loading-indicator {
+      text-align: center;
+      padding: 2rem 0;
     }
     
     .policy-alert {
@@ -142,7 +179,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
       overflow: hidden;
     }
     
-    .date-card:hover {
+    .date-card:hover:not(.full):not(.past) {
       transform: translateY(-5px);
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
     }
@@ -158,6 +195,18 @@ import { animate, style, transition, trigger } from '@angular/animations';
     
     .date-card.at-risk {
       border-left: 4px solid #dc3545;
+    }
+    
+    .date-card.full {
+      border-left: 4px solid #6c757d;
+      opacity: 0.75;
+      cursor: not-allowed;
+    }
+    
+    .date-card.past {
+      border-left: 4px solid #6c757d;
+      opacity: 0.6;
+      cursor: not-allowed;
     }
     
     .date-header {
@@ -192,8 +241,13 @@ import { animate, style, transition, trigger } from '@angular/animations';
     }
     
     .seats-info.seats-warning {
-      color: #dc3545;
+      color: #ffc107;
       font-weight: 500;
+    }
+    
+    .seats-info.seats-danger {
+      color: #dc3545;
+      font-weight: 700;
     }
     
     .date-details {
@@ -242,13 +296,44 @@ import { animate, style, transition, trigger } from '@angular/animations';
       color: #212529;
     }
     
+    .status-badge.full {
+      background-color: #6c757d;
+    }
+    
+    .status-badge.past {
+      background-color: #6c757d;
+    }
+    
+    .card-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
     .select-date-btn {
       width: 100%;
-      margin-top: 0.5rem;
     }
     
     .select-date-btn.selected {
       background-color: #004c86;
+    }
+    
+    .btn-inscription {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-inscription i {
+      margin-right: 8px;
+    }
+    
+    .btn-inscription:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     
     .no-dates-message {
@@ -287,6 +372,7 @@ export class CourseDateSelectorComponent implements OnInit, OnChanges {
   @Input() preSelectedInstanceId?: string;
   
   @Output() instanceSelected = new EventEmitter<CourseDate>();
+  @Output() inscriptionRequested = new EventEmitter<CourseDate>();
   
   instances: CourseDateWithAvailability[] = [];
   selectedInstanceId?: string;
@@ -319,12 +405,19 @@ export class CourseDateSelectorComponent implements OnInit, OnChanges {
           this.courseDateService.checkAvailability(instance)
         );
         
+        // Sort instances by date (closest first)
+        this.instances.sort((a, b) => {
+          return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+        });
+        
         this.loading = false;
         
         // Automatically select preselected instance if provided
         if (this.preSelectedInstanceId) {
           this.selectedInstanceId = this.preSelectedInstanceId;
         }
+        
+        console.log('Loaded course instances:', this.instances);
       },
       error: (error) => {
         console.error('Error loading course instances', error);
@@ -334,10 +427,40 @@ export class CourseDateSelectorComponent implements OnInit, OnChanges {
     });
   }
   
+  isPastDate(dateStr: string | Date): boolean {
+    const date = new Date(dateStr);
+    const now = new Date();
+    return date < now;
+  }
+  
   selectInstance(instance: CourseDateWithAvailability): void {
-    if (instance.availableSeats <= 0) return;
+    // Don't allow selection if no available seats or if date has already passed
+    if (instance.availableSeats <= 0 || this.isPastDate(instance.startDate)) {
+      console.log('Cannot select date - no available seats or date has passed');
+      return;
+    }
     
     this.selectedInstanceId = instance._id;
     this.instanceSelected.emit(instance);
+  }
+  
+  inscribeNow(event: Event, instance: CourseDateWithAvailability): void {
+    // Prevent event propagation to avoid triggering the card click
+    event.stopPropagation();
+    
+    // Don't allow inscription if no available seats or if date has already passed
+    if (instance.availableSeats <= 0 || this.isPastDate(instance.startDate)) {
+      console.log('Cannot inscribe - no available seats or date has passed');
+      return;
+    }
+    
+    // Make sure this instance is selected
+    if (this.selectedInstanceId !== instance._id) {
+      this.selectedInstanceId = instance._id;
+      this.instanceSelected.emit(instance);
+    }
+    
+    // Emit event for course detail component to handle the checkout process
+    this.inscriptionRequested.emit(instance);
   }
 }

@@ -1,126 +1,147 @@
-// enhanced-course-card.component.ts
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+// src/app/component/course/enhanced-course-card/enhanced-course-card.component.ts
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Course } from '../../../core/models/course.model';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { animate, style, transition, trigger, state } from '@angular/animations';
+
+import { Course } from '../../../core/models/course.model';
+import { CourseDate } from '../../../core/models/course-date.model';
+import { CourseDateService } from '../../../core/services/course-date.service';
+import { CourseDatePickerService } from '../../../core/services/course-date-picker.service';
+import { CourseDateSelectorComponent } from '../course-date-selector/course-date-selector.component';
 import { CourseDatePickerComponent } from '../../course-date-picker/course-date-picker.component';
 
 @Component({
   selector: 'app-enhanced-course-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, CourseDateSelectorComponent, CourseDatePickerComponent],
   templateUrl: './enhanced-course-card.component.html',
   styleUrls: ['./enhanced-course-card.component.scss'],
   animations: [
     trigger('expandAnimation', [
       state('collapsed', style({
         height: '0',
-        minHeight: '0',
-        padding: '0',
         opacity: '0',
-        transform: 'translateY(100%)'
+        overflow: 'hidden'
       })),
       state('expanded', style({
         height: '*',
-        opacity: '1',
-        transform: 'translateY(0)'
+        opacity: '1'
       })),
-      transition('collapsed => expanded', [
-        animate('200ms ease-out')
-      ]),
-      transition('expanded => collapsed', [
-        animate('200ms ease-in')
+      transition('collapsed <=> expanded', [
+        animate('250ms ease-in-out')
       ])
     ])
   ]
 })
-export class EnhancedCourseCardComponent {
+export class EnhancedCourseCardComponent implements OnInit {
   @Input() course!: Course;
   @Output() dateSelected = new EventEmitter<{course: Course, date: Date}>();
   
+  @ViewChild('dateSelectionModal') dateSelectionModal!: TemplateRef<any>;
+  
   isExpanded = false;
+  availableDates: CourseDate[] = [];
+  loadingDates = false;
   
   constructor(
+    private router: Router,
     private modalService: NgbModal,
-    private router: Router
+    private courseDateService: CourseDateService,
+    private courseDatePickerService: CourseDatePickerService
   ) {}
-
+  
+  ngOnInit(): void {
+    // You could pre-fetch available dates here if needed
+  }
+  
   toggleExpanded(expanded: boolean): void {
     this.isExpanded = expanded;
   }
   
-  viewCourseDetails(event: MouseEvent): void {
-    // Prevent event bubbling
-    event.preventDefault();
-    event.stopPropagation();
-    
-    // Check if course and course.id exist before navigating
-    if (this.course && this.course._id) {
-      // Navigate to course details
-      console.log('Navigating to course details for ID:', this.course._id);
-      this.router.navigate(['/course', this.course._id]);
-    } else {
-      console.error('Cannot navigate to course details: course ID is undefined', this.course);
+  cardClick(event: Event): void {
+    // Prevent default only if clicking on the card itself (not a button)
+    if (!(event.target as HTMLElement).closest('button')) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.viewCourseDetails(event);
     }
   }
   
-  consultDates(event: MouseEvent): void {
-    // Prevent event bubbling
+  viewCourseDetails(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.router.navigate(['/course', this.course._id]);
+  }
+  
+  async consultDates(event: Event): Promise<void> {
     event.preventDefault();
     event.stopPropagation();
     
-    // Check if course exists and has available dates
-    if (!this.course) {
-      console.error('Cannot consult dates: course is undefined');
-      return;
+    this.loadingDates = true;
+    
+    try {
+      // Use the enhanced service method that checks capacity
+      const modalRef = await this.courseDatePickerService.openDatePickerForCourse(
+        this.course._id,
+        null,
+        (selectedDate: Date) => this.onDateSelected(selectedDate)
+      );
+      
+      // If no modalRef is returned, it means no dates are available or all are at capacity
+      if (!modalRef) {
+        // Fetch the dates anyway to show in the "no dates available" modal
+        const dates = await this.courseDateService.getCourseInstancesForCourse(this.course._id).toPromise();
+        this.availableDates = dates || [];
+        
+        // Open the no dates available modal
+        this.modalService.open(this.dateSelectionModal, { centered: true });
+      }
+      
+      this.loadingDates = false;
+    } catch (error) {
+      console.error('Error consulting dates:', error);
+      this.loadingDates = false;
+      this.modalService.open(this.dateSelectionModal, { centered: true });
     }
-    
-    // Get available dates from the course
-    if (!this.course.availableDates || this.course.availableDates.length === 0) {
-      console.warn('No available dates for this course');
-      alert('No hay fechas disponibles para este curso.');
-      return;
-    }
-    
-    // Open date picker modal
-    console.log('Opening date picker with dates:', this.course.availableDates);
-    const modalRef = this.modalService.open(CourseDatePickerComponent, {
-      size: 'lg',
-      centered: true,
-      backdrop: 'static'
+  }
+  
+  onDateSelected(date: Date): void {
+    // Emit selected date to parent component
+    this.dateSelected.emit({
+      course: this.course,
+      date: date
     });
     
-    // Pass available dates to the date picker
-    modalRef.componentInstance.availableDates = this.course.availableDates.map(date => {
-      const dateObj = new Date(date);
-      return {
-        year: dateObj.getFullYear(),
-        month: dateObj.getMonth() + 1,
-        day: dateObj.getDate()
-      };
-    });
-    
-    // Handle date selection
-    modalRef.componentInstance.dateSelected.subscribe((date: Date) => {
-      // Emit date selected event with course and date
-      this.dateSelected.emit({ course: this.course, date: date });
-      modalRef.close();
-    });
-    
-    // Handle cancel 
-    modalRef.componentInstance.cancelled.subscribe(() => {
-      modalRef.close();
+    // Optionally, navigate to course details with selected date
+    this.router.navigate(['/course', this.course._id], {
+      queryParams: { date: date.toISOString() }
     });
   }
   
-  cardClick(event: MouseEvent): void {
-    // Prevent default behavior 
-    event.preventDefault();
-    event.stopPropagation();
-    
-    // Navigate to course details
-    this.viewCourseDetails(event);
+  // Helper methods for formatting dates
+  formatDate(date: Date | string): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('es-MX', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  }
+  
+  getMonth(date: Date | string): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('es-MX', { month: 'short' }).toUpperCase();
+  }
+  
+  getDay(date: Date | string): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.getDate().toString();
+  }
+  
+  formatTime(date: Date | string): string {
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
   }
 }
