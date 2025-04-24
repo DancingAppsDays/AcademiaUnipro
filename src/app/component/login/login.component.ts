@@ -251,10 +251,11 @@ login() {
   }*/
   
     private redirectAfterAuth() {
-      console.log('Redirecting after auth. Redirect URL:', this.redirectUrl);
-      console.log('Redirect params:', this.redirectParams);
+     // console.log('Redirecting after auth. Redirect URL:', this.redirectUrl);
+     // console.log('Redirect params:', this.redirectParams);
       
-      if (this.redirectUrl) {
+      // Only redirect to the checkout page if the user explicitly came from there
+      if (this.redirectUrl && this.redirectUrl.includes('/checkout')) {
         // Convert params to query parameters
         const queryParams: any = {};
         Object.keys(this.redirectParams).forEach(key => {
@@ -264,6 +265,7 @@ login() {
         console.log('Navigating to', this.redirectUrl, 'with query params:', queryParams);
         this.router.navigate([this.redirectUrl], { queryParams });
       } else {
+        // Default navigation to dashboard if no checkout redirect was requested
         this.router.navigate(['/dashboard']);
       }
     }

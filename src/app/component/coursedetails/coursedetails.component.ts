@@ -11,6 +11,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { CourseDatePickerComponent } from '../course-date-picker/course-date-picker.component';
 import { CourseDateSelectorComponent } from '../course/course-date-selector/course-date-selector.component';
 import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
+import { CourseFaqComponent } from '../course-faq/course-faq.component';
 
 @Component({
   selector: 'app-course-detail',
@@ -21,7 +22,8 @@ import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
     NgbDatepickerModule,
     ReactiveFormsModule,
     SafeUrlPipe,
-    CourseDateSelectorComponent
+    CourseDateSelectorComponent,
+    CourseFaqComponent,
   ],
   templateUrl: './coursedetails.component.html',
   styleUrls: ['./coursedetails.component.scss'],
@@ -65,7 +67,7 @@ export class CourseDetailComponent implements OnInit {
   selectedDate: Date | null = null;
   selectedCourseInstance: CourseDate | null = null;
   availableDates: NgbDateStruct[] = [];
-  activeSection: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates' = 'overview';
+  activeSection: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates' | 'faq' = 'overview';
   showDateAlert = false;
   alertTimeout: any;
   
@@ -281,7 +283,7 @@ export class CourseDetailComponent implements OnInit {
     this.proceedToCheckout();
   }
 
-  changeSection(section: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates'): void {
+  changeSection(section: 'overview' | 'curriculum' | 'instructor' | 'reviews' | 'dates' | 'faq'): void {
     this.activeSection = section;
     
     // If changing to dates section, scroll to it after a short delay

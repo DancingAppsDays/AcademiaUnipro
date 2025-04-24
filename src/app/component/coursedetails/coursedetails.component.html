@@ -178,6 +178,11 @@
             Testimonios
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" [class.active]="activeSection === 'faq'" (click)="changeSection('faq')">
+            FAQ
+          </a>
+        </li>
       </ul>
     </div>
 
@@ -473,61 +478,10 @@
       </div>
     </div>
 
-    <!-- Related Courses -->
-    <div class="related-courses mt-5" @slideInUp>
-      <h2>Cursos relacionados</h2>
-      <div class="row">
-        <div class="col-md-4 mb-4">
-          <div class="course-card">
-            <div class="card-img-container">
-              <img src="assets/images/courses/legos.png" alt="Curso relacionado">
-              <div class="card-badge">{{ course.category }}</div>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Implementación de Sistemas de Gestión</h3>
-              <p class="card-subtitle">Enfoque práctico para empresas</p>
-              <div class="card-price">
-                <span class="price-value">$3,800 MXN</span>
-                <button class="btn btn-sm btn-primary">Ver detalles</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-          <div class="course-card">
-            <div class="card-img-container">
-              <img src="assets/images/courses/montacargas.jpg" alt="Curso relacionado">
-              <div class="card-badge">{{ course.category }}</div>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Análisis de Riesgos Avanzado</h3>
-              <p class="card-subtitle">Métodos y herramientas efectivas</p>
-              <div class="card-price">
-                <span class="price-value">$4,200 MXN</span>
-                <button class="btn btn-sm btn-primary">Ver detalles</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-          <div class="course-card">
-            <div class="card-img-container">
-              <img src="assets/images/courses/lideres.jpg" alt="Curso relacionado">
-              <div class="card-badge">{{ course.category }}</div>
-            </div>
-            <div class="card-body">
-              <h3 class="card-title">Formación de Formadores</h3>
-              <p class="card-subtitle">Capacitación efectiva en seguridad</p>
-              <div class="card-price">
-                <span class="price-value">$3,500 MXN</span>
-                <button class="btn btn-sm btn-primary">Ver detalles</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="content-section" *ngIf="activeSection === 'faq'">
+      <app-course-faq [courseType]="course.category"></app-course-faq>
     </div>
+
+   
   </div>
 </div>
