@@ -41,7 +41,7 @@ export class RedesignedHomeComponent implements OnInit {
   
   // Hero slides data - ensure images don't have overlays built in
   heroSlides = [
-    {
+   /* {
       imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
       title: 'Normativas STPS',
       subtitle: 'Capacitación especializada en cumplimiento normativo',
@@ -64,12 +64,45 @@ export class RedesignedHomeComponent implements OnInit {
       badge: 'PREMIUM',
       action: 'benefits',
       actionText: 'Descubrir Beneficios'
+    },*/
+    {
+      imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
+      title: 'La capacitación industrial nunca había sido tan accesible',
+      subtitle: 'Conéctate y aprende en vivo con expertos en seguridad y calidad',
+      badge: 'NUEVO',
+      action: 'courses',
+      actionText: 'Ver Cursos'
+    },
+    {
+      imageUrl: 'assets/images/courses/brigadas.jpg',
+      title: 'La seguridad en el trabajo no es opcional',
+      subtitle: 'Es una inversión en vida. Capacítate con los mejores y lleva tu carrera al siguiente nivel',
+      badge: 'DESTACADO',
+      action: 'featured',
+      actionText: 'Cursos Destacados'
+    },
+    {
+      imageUrl: 'assets/images/courses/lideres.jpg',
+      title: 'Tu empresa necesita trabajadores mejor preparados',
+      subtitle: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato',
+      badge: 'PREMIUM',
+      action: 'benefits',
+      actionText: 'Descubrir Beneficios'
+    },
+    {
+      imageUrl: 'assets/images/courses/montacargas.jpg',
+      title: 'La capacitación correcta puede evitar accidentes y salvar vidas',
+      subtitle: 'Todos los martes, nuevos cursos para profesionales como tú',
+      badge: 'PRÓXIMO',
+      action: 'upcoming',
+      actionText: 'Próximos Cursos'
     }
   ];
 
   constructor(
     private courseService: CourseService,
-    private router: Router
+    private router: Router,
+    private courseDateService: CourseService 
   ) { }
 
   ngOnInit(): void {
@@ -92,6 +125,37 @@ export class RedesignedHomeComponent implements OnInit {
     // Load courses with minimal delay to improve performance
    // this.loadMockData();
   }
+
+  //this method is bad, coursedate service doest have getUpcomingInstances method
+  //we need to check all coursedate and grab the 4 closest ones to date now
+  /*
+  loadUpcomingCourses(): void {
+    // Get upcoming course dates
+    this.courseDateService.getUpcomingInstances(4).subscribe({
+      next: (instances) => {
+        // We need to get actual course objects
+        const courseIds = [...new Set(instances.map(instance => instance.courseId))];
+        
+        // Get all courses and filter the ones we need
+        this.courseService.getAllCourses().subscribe({
+          next: (courses) => {
+            this.upcomingCourses = courses.filter(course => 
+              courseIds.includes(course._id)
+            ).slice(0, 4);
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error("Error loading upcoming courses:", err);
+            this.loadMockUpcomingCourses();
+          }
+        });
+      },
+      error: (error) => {
+        console.error("Error loading upcoming instances:", error);
+        this.loadMockUpcomingCourses();
+      }
+    });
+  }*/
 
   loadMockData(): void {
     this.courseService.getMockCourses().subscribe({

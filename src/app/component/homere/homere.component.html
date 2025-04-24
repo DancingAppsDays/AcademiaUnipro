@@ -18,6 +18,7 @@
       </ng-template>
     </ngb-carousel>
   </section>
+  
 
   <section class="stats-section">
     <div class="container">
@@ -56,6 +57,17 @@
     </div>
     <p class="mt-2">Cargando cursos...</p>
   </div>
+
+  <!--
+  <section class="upcoming-courses-section" *ngIf="!loading && upcomingCourses.length > 0" id="upcoming">
+    <div class="container">
+      <app-course-carousel
+        [courses]="upcomingCourses"
+        subtitle="Próximos Cursos"
+        (dateSelected)="onDateSelected($event)">
+      </app-course-carousel>
+    </div>
+  </section>-->
 
   <section class="featured-courses-section" *ngIf="!loading && featuredCourses.length > 0" id="featured">
     <div class="container">
