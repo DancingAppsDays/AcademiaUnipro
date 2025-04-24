@@ -157,6 +157,9 @@ export class RedesignedHomeComponent implements OnInit {
     });
   }*/
 
+    
+ 
+
   loadMockData(): void {
     this.courseService.getMockCourses().subscribe({
       next: (courses) => {
