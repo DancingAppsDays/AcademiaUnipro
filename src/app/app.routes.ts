@@ -8,7 +8,7 @@ import { CheckoutComponent } from './component/checkout/checkout.component';
 import { CheckoutSuccessComponent } from './component/checkout-sucess/checkout-sucess.component';
 import { CompanySuccessComponent } from './component/company-success/company-success.component';
 import { QuickCheckoutComponent } from './component/quick-checkout/quick-checkout.component';
-import { RedesignedHomeComponent } from './component/homere/homere.component';
+import { RedesignedHomeComponent } from './component/redesigned-home/redesigned-home.component';
 import { DashboardComponent } from './component/user/dashboard/dashboard.component';
 import { UserCoursesComponent } from './component/user/user-courses/user-courses.component';
 

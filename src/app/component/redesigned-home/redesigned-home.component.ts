@@ -7,6 +7,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { CourseCarouselComponent } from '../course/course-carousel/course-carousel.component';
+import { UpcomingCoursesComponent } from '../upcoming-courses/upcoming-courses.component';
 
 @Component({
   selector: 'app-redesigned-home',
@@ -14,10 +15,11 @@ import { CourseCarouselComponent } from '../course/course-carousel/course-carous
   imports: [
     CommonModule, 
     NgbCarouselModule, 
-    CourseCarouselComponent
+    CourseCarouselComponent,
+    UpcomingCoursesComponent
   ],
-  templateUrl: './homere.component.html',
-  styleUrls: ['./homere.component.scss'],
+  templateUrl: './redesigned-home.component.html',
+  styleUrls: ['./redesigned-home.component.scss'],
   animations: [
     trigger('fadeInOut', [
       transition(':enter', [

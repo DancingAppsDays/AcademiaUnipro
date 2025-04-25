@@ -30,8 +30,10 @@ interface UpcomingCourse {
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
+ 
     <div class="upcoming-courses-section">
       <div class="section-header">
+     
         <h2>{{ title }}</h2>
         <p class="section-subtitle">{{ subtitle }}</p>
       </div>
@@ -71,7 +73,7 @@ interface UpcomingCourse {
               </div>
               <div class="info-item">
                 <i class="bi bi-person-badge"></i>
-                <span>{{ course.instructor.name }}</span>
+                <span>Capacitador: {{ course.instructor.name }}</span>
               </div>
             </div>
             
@@ -104,7 +106,8 @@ interface UpcomingCourse {
       }
       
       .section-subtitle {
-        color: #666;
+        font-weight: 700;
+        color: #0066b3;
       }
     }
     
@@ -414,7 +417,20 @@ export class UpcomingCoursesComponent implements OnInit {
     return date.getDate().toString();
   }
   
-  formatTime(date: Date): string {
+  formatHOUR(date: Date): string {
     return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  formatTime(date: Date): string {
+    // Apply timezone adjustment (-5 hours for database time)
+    const adjustedDate = new Date(date);
+    adjustedDate.setHours(adjustedDate.getHours() - 6); // Adjust for UTC-6 (Mexico City time)
+    
+    const timeString = adjustedDate.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    const endDate = new Date(adjustedDate);
+    endDate.setHours(adjustedDate.getHours() + 4); // Assuming 8-hour courses
+    const endTimeString = endDate.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    
+    return `${timeString} - ${endTimeString} hrs`;
   }
 }

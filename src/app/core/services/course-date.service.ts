@@ -44,7 +44,7 @@ export class CourseDateService {
     );
   }
   
-  getUpcomingInstances(limit: number = 10): Observable<CourseDate[]> {
+  getUpcomingInstancesLEGaSCY(limit: number = 10): Observable<CourseDate[]> {
     console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
     
     // Try getting from actual API first
@@ -126,6 +126,67 @@ export class CourseDateService {
     };
   }
   
+
+
+  getUpcomingInstances(limit: number = 10): Observable<CourseDate[]> {
+    console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
+    
+    // Try getting from actual API first
+    return this.http.get<any[]>(`${this.apiUrl}/upcoming?limit=${limit}`).pipe(
+      tap(data => console.log(`Retrieved ${data.length} upcoming course dates from API:`, data)),
+      // Map the response to ensure dates are properly handled
+      map(dates => this.normalizeCourseDates(dates)),
+      catchError(error => {
+        console.error('Error fetching upcoming course dates from API:', error);
+        // If API fails, fallback to manual approach
+        return this.getFallbackUpcomingInstances(limit);
+      })
+    );
+  }
+
+  /**
+   * Fallback method for getting upcoming instances when the API endpoint fails
+   * This manually filters and sorts all course dates to find upcoming ones
+   */
+  private getFallbackUpcomingInstances(limit: number = 10): Observable<CourseDate[]> {
+    console.log('Using fallback method to get upcoming course dates');
+    
+    // Get current date to filter out past dates
+    const now = new Date();
+    
+    // Get all course dates and filter manually
+    return this.http.get<any[]>(`${this.apiUrl}`).pipe(
+      map(allDates => {
+        // Filter to only include future dates with status scheduled or confirmed
+        const upcomingDates = this.normalizeCourseDates(allDates)
+          .filter(date => {
+            const startDate = new Date(date.startDate);
+            return startDate > now && 
+                  (date.status === 'scheduled' || date.status === 'confirmed');
+          })
+          // Sort by date (closest first)
+          .sort((a, b) => {
+            return new Date(a.startDate).getTime() - new Date(b.startDate).getTime();
+          })
+          // Limit to requested number
+          .slice(0, limit);
+        
+        return upcomingDates;
+      }),
+      catchError(error => {
+        console.error('Error in fallback method for upcoming course dates:', error);
+        // If all else fails, return mock data
+        return of(MOCK_COURSE_INSTANCES.slice(0, limit));
+      })
+    );
+  }
+
+
+
+
+
+
+
   // Mock data methods - these will only be used if the API fails
   private getMockCourseInstances(courseId: string): Observable<CourseDate[]> {
     console.log(`Getting mock course instances for course ${courseId}`);
@@ -140,8 +201,9 @@ export class CourseDateService {
   }
 }
 
+
 // Mock course instances for testing
-const MOCK_COURSE_INSTANCES: CourseDate[] = [
+const MOCK_COURSE_INSTANCES: CourseDate[] = []
   // Course 1 instances
   // {
   //   id: 'inst-1',
@@ -232,4 +294,4 @@ const MOCK_COURSE_INSTANCES: CourseDate[] = [
   //   status: 'confirmed',
   //   minimumRequired: 6
   // }
-];
+//];
