@@ -70,7 +70,7 @@ import { StripeService } from '../../core/services/stripe.service';
       </div>
       
       <div class="payment-cards">
-        <img src="assets/images/payment/visa-mastercard-logos.png" alt="Visa">
+        <img src="assets/images/visa-mastercard-logos.png" alt="Visa">
       
       </div>
     </div>

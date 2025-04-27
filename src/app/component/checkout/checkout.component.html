@@ -80,81 +80,9 @@
         </div>
       </div>
 
-      <!-- Individual Purchase Section -->
-      <div *ngIf="purchaseType === 'individual'" @accordionAnimation>
-        <div class="section-header">
-          <h3>Compra Individual</h3>
-          <p>Complete la información para procesar su compra</p>
-        </div>
-
-        <!-- User Profile Display -->
-        <div class="checkout-panel user-panel mb-4">
-          <div class="panel-header">
-            <div class="header-icon">
-              <i class="bi bi-person-check"></i>
-            </div>
-            <h3>Tu información</h3>
-          </div>
-          <div class="panel-body">
-            <div class="user-profile-summary">
-              <div class="user-avatar">
-                <i class="bi bi-person-circle"></i>
-              </div>
-              <div class="user-details">
-                <h4>{{ userForm.get('fullName')?.value }}</h4>
-                <p><i class="bi bi-envelope"></i> {{ userForm.get('email')?.value }}</p>
-                <p><i class="bi bi-phone"></i> {{ userForm.get('phone')?.value }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div *ngIf="showErrorAlert" class="alert alert-danger mb-4">
-          <i class="bi bi-exclamation-triangle-fill me-2"></i>
-          {{ errorMessage }}
-          <p class="mt-2 mb-0">
-            <a [routerLink]="['/course', course._id]" class="btn btn-outline-danger">
-              Volver al curso
-            </a>
-          </p>
-        </div>
-
-        <!-- Stripe Payment Component -->
-        <div class="checkout-panel payment-panel mb-4">
-          <div class="panel-header">
-            <div class="header-icon">
-              <i class="bi bi-credit-card"></i>
-            </div>
-            <h3>Método de pago</h3>
-          </div>
-          <div class="panel-body">
-            <!-- Loading indicator during validation    [amount]="course.price || 0"-->
-            <div *ngIf="validationInProgress" class="text-center py-4">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Validando...</span>
-              </div>
-              <p class="mt-2">Verificando disponibilidad del curso...</p>
-            </div>
-
-          <div class="panel-body">
-            <app-stripe-payment
-             *ngIf="isPaymentValid && !validationInProgress"
-            
-             [amount]="course.price || 0"
-              [courseId]="course._id || ''"
-              [courseTitle]="course.title || ''"
-              [customerEmail]="userForm.get('email')?.value || ''"
-              [selectedDate]="selectedDate?.toISOString() || ''"
-              [userId]="currentUserId"
-              (paymentSuccess)="handlePaymentSuccess($event)"
-              (paymentError)="handlePaymentError($event)">
-            </app-stripe-payment>
-          </div>
-        </div>
-      </div>
-
-      <!-- Company Purchase Section -->
-      <div *ngIf="purchaseType !== 'individual'" @accordionAnimation>
+      
+      <!-- Company Purchase Section-->
+      <div  *ngIf="showCompanyForm" @accordionAnimation>
         <div class="section-header">
           <h3>Compra Empresarial</h3>
           <p>Complete la información para solicitar su factura</p>
@@ -229,6 +157,15 @@
                   <textarea class="form-control" id="additionalInfo" formControlName="additionalInfo" rows="3"></textarea>
                 </div>
               </div>
+
+              <div class="mt-4">
+                <button type="button" class="btn btn-primary btn-lg w-100" 
+                        [disabled]="!companyForm.valid || processingPayment || !selectedDate"
+                        (click)="processCompanyRequest()">
+                  <span class="spinner-border spinner-border-sm me-2" *ngIf="processingPayment"></span>
+                  Solicitar información
+                </button>
+              </div>
             </form>
 
             <div class="alert alert-primary mt-4">
@@ -236,9 +173,84 @@
               Para compras empresariales, un representante se pondrá en contacto para coordinar los detalles del pago y
               la facturación en un plazo máximo de 24 horas hábiles.
             </div>
+
           </div>
         </div>
       </div>
+
+      <!-- Individual Purchase Section -->
+      <div *ngIf="purchaseType == 'individual'" @accordionAnimation>
+        <div class="section-header">
+          <h3>Compra Individual</h3>
+          <p>Complete la información para procesar su compra</p>
+        </div>
+
+        <!-- User Profile Display -->
+        <div class="checkout-panel user-panel mb-4">
+          <div class="panel-header">
+            <div class="header-icon">
+              <i class="bi bi-person-check"></i>
+            </div>
+            <h3>Tu información</h3>
+          </div>
+          <div class="panel-body">
+            <div class="user-profile-summary">
+              <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+              </div>
+              <div class="user-details">
+                <h4>{{ userForm.get('fullName')?.value }}</h4>
+                <p><i class="bi bi-envelope"></i> {{ userForm.get('email')?.value }}</p>
+                <p><i class="bi bi-phone"></i> {{ userForm.get('phone')?.value }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="showErrorAlert" class="alert alert-danger mb-4">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          {{ errorMessage }}
+          <p class="mt-2 mb-0">
+            <a [routerLink]="['/course', course._id]" class="btn btn-outline-danger">
+              Volver al curso
+            </a>
+          </p>
+        </div>
+
+        <!-- Stripe Payment Component -->
+        <div class="checkout-panel payment-panel mb-4">
+          <div class="panel-header">
+            <div class="header-icon">
+              <i class="bi bi-credit-card"></i>
+            </div>
+            <h3> Completa tu inscripción</h3>
+          </div>
+          <div class="panel-body">
+            <!-- Loading indicator during validation    [amount]="course.price || 0"-->
+            <div *ngIf="validationInProgress" class="text-center py-4">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Validando...</span>
+              </div>
+              <p class="mt-2">Verificando disponibilidad del curso...</p>
+            </div>
+
+          <div class="panel-body">
+            <app-stripe-payment
+             *ngIf="isPaymentValid && !validationInProgress"
+            
+             [amount]="course.price || 0"
+              [courseId]="course._id || ''"
+              [courseTitle]="course.title || ''"
+              [customerEmail]="userForm.get('email')?.value || ''"
+              [selectedDate]="selectedDate?.toISOString() || ''"
+              [userId]="currentUserId"
+              (paymentSuccess)="handlePaymentSuccess($event)"
+              (paymentError)="handlePaymentError($event)">
+            </app-stripe-payment>
+          </div>
+        </div>
+      </div>
+
 
       <!-- Order Summary Panel -->
       <div class="checkout-panel summary-panel mb-4">
@@ -292,7 +304,7 @@
         <button type="button" class="btn btn-primary btn-lg px-5" [disabled]="processingPayment || !selectedDate"
           (click)="processPayment()">
           <span class="spinner-border spinner-border-sm me-2" *ngIf="processingPayment"></span>
-          Solicitar información
+          Recibir cotización personalizada
         </button>
       </div>
       

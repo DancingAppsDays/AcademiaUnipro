@@ -16,6 +16,12 @@ import { UserCoursesComponent } from './component/user/user-courses/user-courses
 import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
+
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.routes').then(m => m.adminRoutes),
+    canActivate: [AuthGuard]
+  },
   {
     path: '',
     component: RedesignedHomeComponent,

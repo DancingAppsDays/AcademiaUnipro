@@ -1,4 +1,6 @@
 // src/app/core/models/course-date.model.ts
+export type CourseDateStatus = 'scheduled' | 'confirmed' | 'postponed' | 'canceled' | 'completed';
+
 export interface CourseDate {
     _id: string;
     courseId: string;

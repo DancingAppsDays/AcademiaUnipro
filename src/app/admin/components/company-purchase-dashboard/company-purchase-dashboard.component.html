@@ -1,0 +1,205 @@
+<!-- src/app/admin/components/company-purchase-dashboard/company-purchase-dashboard.component.html -->
+<div class="company-dashboard-container">
+    <div class="dashboard-header">
+      <h2>Gestión de Compras Empresariales</h2>
+      
+      <div class="status-filter">
+        <label for="statusFilter">Filtrar por Estado:</label>
+        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onStatusChange($event)" class="form-control">
+          <option value="all">Todos los estados</option>
+          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+        </select>
+      </div>
+    </div>
+  
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p>Cargando solicitudes de compra empresarial...</p>
+    </div>
+  
+    <!-- Error message -->
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="!loading && !error" class="dashboard-content">
+      <div class="row">
+        <!-- Purchase list column -->
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <h3>Solicitudes de Compra</h3>
+            </div>
+            <div class="card-body">
+              <div *ngIf="purchases.length === 0" class="no-records">
+                No se encontraron solicitudes de compra empresarial.
+              </div>
+              
+              <div *ngIf="purchases.length > 0" class="purchase-list">
+                <div *ngFor="let purchase of purchases" 
+                     class="purchase-item" 
+                     [class.active]="selectedPurchase?._id === purchase._id"
+                     (click)="selectPurchase(purchase)">
+                  <div class="purchase-header">
+                    <h4>{{ purchase.companyName }}</h4>
+                    <span class="badge" [ngClass]="{
+                      'bg-warning': purchase.status === 'pending',
+                      'bg-info': purchase.status === 'contacted' || purchase.status === 'payment_pending',
+                      'bg-success': purchase.status === 'paid' || purchase.status === 'completed',
+                      'bg-danger': purchase.status === 'canceled'
+                    }">{{ purchase.status }}</span>
+                  </div>
+                  <div class="purchase-details">
+                    <p><strong>ID:</strong> {{ purchase.requestId }}</p>
+                    <p><strong>Curso:</strong> {{ purchase.courseTitle }}</p>
+                    <p><strong>Fecha:</strong> {{ formatDate(purchase.selectedDate).split(' ')[0] }}</p>
+                    <p><strong>Cantidad:</strong> {{ purchase.quantity }}</p>
+                    <p class="text-muted">{{ formatDate(purchase.createdAt) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Details column -->
+        <div class="col-md-8">
+          <div *ngIf="!selectedPurchase" class="no-selection">
+            <p>Seleccione una solicitud de compra para ver los detalles</p>
+          </div>
+          
+          <div *ngIf="selectedPurchase" class="purchase-details-container">
+            <!-- Purchase details card -->
+            <div class="card mb-4">
+              <div class="card-header">
+                <h3>Detalles de la Solicitud</h3>
+              </div>
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <h4>Información de la Empresa</h4>
+                    <p><strong>Nombre:</strong> {{ selectedPurchase.companyName }}</p>
+                    <p><strong>RFC:</strong> {{ selectedPurchase.rfc }}</p>
+                    <p><strong>Contacto:</strong> {{ selectedPurchase.contactName }}</p>
+                    <p><strong>Email:</strong> {{ selectedPurchase.contactEmail }}</p>
+                    <p><strong>Teléfono:</strong> {{ selectedPurchase.contactPhone }}</p>
+                  </div>
+                  <div class="col-md-6">
+                    <h4>Información del Curso</h4>
+                    <p><strong>Curso:</strong> {{ selectedPurchase.courseTitle }}</p>
+                    <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.selectedDate) }}</p>
+                    <p><strong>Cantidad:</strong> {{ selectedPurchase.quantity }}</p>
+                    <p><strong>Estado:</strong> {{ selectedPurchase.status }}</p>
+                    <p><strong>ID de Solicitud:</strong> {{ selectedPurchase.requestId }}</p>
+                  </div>
+                </div>
+                
+                <div *ngIf="selectedPurchase.additionalInfo" class="mt-3">
+                  <h4>Información Adicional</h4>
+                  <p>{{ selectedPurchase.additionalInfo }}</p>
+                </div>
+                
+                <div *ngIf="selectedPurchase.adminNotes" class="mt-3">
+                  <h4>Notas del Administrador</h4>
+                  <p>{{ selectedPurchase.adminNotes }}</p>
+                </div>
+                
+                <div *ngIf="selectedPurchase.paymentMethod" class="mt-3">
+                  <h4>Información de Pago</h4>
+                  <p><strong>Método:</strong> {{ selectedPurchase.paymentMethod }}</p>
+                  <p><strong>Referencia:</strong> {{ selectedPurchase.paymentReference }}</p>
+                  <p><strong>Monto:</strong> {{ selectedPurchase.paymentAmount | currency:'MXN':'symbol':'1.0-2' }}</p>
+                  <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.paymentDate ? formatDate(selectedPurchase.paymentDate) : 'N/A' ) }}</p>
+                </div>
+                
+                <div class="mt-3">
+                  <h4>Inscripciones</h4>
+                  <p>Inscritos: {{ selectedPurchase.enrollmentIds?.length || 0 }} de {{ selectedPurchase.quantity }}</p>
+                  <button *ngIf="selectedPurchase.status === 'paid' && (selectedPurchase.enrollmentIds?.length || 0) < selectedPurchase.quantity" 
+                          class="btn btn-primary"
+                          (click)="manageEnrollments(selectedPurchase._id)">
+                    Gestionar Inscripciones
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Action Cards -->
+            <div class="row">
+              <!-- Status update form -->
+              <div class="col-md-6 mb-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>Actualizar Estado</h3>
+                  </div>
+                  <div class="card-body">
+                    <form [formGroup]="statusForm" (ngSubmit)="updateStatus()">
+                      <div class="mb-3">
+                        <label for="status" class="form-label">Estado</label>
+                        <select formControlName="status" id="status" class="form-control">
+                          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="notes" class="form-label">Notas</label>
+                        <textarea formControlName="notes" id="notes" class="form-control" rows="3"></textarea>
+                      </div>
+                      
+                      <button type="submit" class="btn btn-primary w-100" [disabled]="statusForm.invalid">
+                        Actualizar Estado
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Payment record form -->
+              <div class="col-md-6 mb-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>Registrar Pago</h3>
+                  </div>
+                  <div class="card-body">
+                    <form [formGroup]="paymentForm" (ngSubmit)="recordPayment()">
+                      <div class="mb-3">
+                        <label for="paymentMethod" class="form-label">Método de Pago</label>
+                        <select formControlName="paymentMethod" id="paymentMethod" class="form-control">
+                          <option value="">Seleccionar método</option>
+                          <option value="bank_transfer">Transferencia Bancaria</option>
+                          <option value="credit_card">Tarjeta de Crédito</option>
+                          <option value="cash">Efectivo</option>
+                          <option value="check">Cheque</option>
+                        </select>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="paymentReference" class="form-label">Referencia</label>
+                        <input type="text" formControlName="paymentReference" id="paymentReference" class="form-control">
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label for="paymentAmount" class="form-label">Monto</label>
+                        <div class="input-group">
+                          <span class="input-group-text">$</span>
+                          <input type="number" formControlName="paymentAmount" id="paymentAmount" class="form-control" step="0.01" min="0">
+                        </div>
+                      </div>
+                      
+                      <button type="submit" class="btn btn-success w-100" 
+                              [disabled]="paymentForm.invalid || selectedPurchase?.status === 'paid' || selectedPurchase?.status === 'completed'">
+                        Registrar Pago
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

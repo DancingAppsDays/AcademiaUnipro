@@ -53,6 +53,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
           <div class="dropdown-divider"></div>
           
           <ul class="dropdown-menu-items">
+                    <li *ngIf="currentUser?.roles?.includes('admin')">
+            <a routerLink="/admin/dashboard">
+              <i class="bi bi-gear"></i>
+              <span>Admin Dashboard</span>
+            </a>
+          </li>
             <li>
               <a routerLink="/dashboard" (click)="closeMenu()">
                 <i class="bi bi-speedometer2"></i>
@@ -165,6 +171,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
         
         <!-- User-specific links when logged in -->
         <ul *ngIf="currentUser" class="mobile-menu-items user-specific">
+                <li *ngIf="currentUser?.roles?.includes('admin')">
+          <a routerLink="/admin/dashboard">
+            <i class="bi bi-gear"></i>
+            <span>Admin Dashboard</span>
+          </a>
+        </li>
           <li>
             <a routerLink="/dashboard" (click)="closeMobileMenu()">
               <i class="bi bi-speedometer2"></i>

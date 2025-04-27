@@ -6,6 +6,7 @@ export interface User {
     phone: string;
     jobRole?: string;
     companyName?: string;
+    roles?: string[];
     // Additional fields can be added as needed
   }
   

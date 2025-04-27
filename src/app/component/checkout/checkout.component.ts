@@ -72,29 +72,28 @@ export class CheckoutComponent implements OnInit {
   selectedDate: Date | null = null;
   userForm: FormGroup;
   companyForm: FormGroup;
-  purchaseType: 'individual' | 'company' = 'individual';
+  purchaseType: string = 'individual';
   isExistingUser = false;
   loading = true;
   loadError = false;
   processingPayment = false;
   showDateAlert = false;
   currentUserId: string = '';
+  showCompanyForm = false;
 
-  isPaymentValid = false;
-validationInProgress = true;
-errorMessage = '';
-showErrorAlert = false;
+  isPaymentValid = true; // Always start with valid payment for company form
+  validationInProgress = false; // Don't show loading by default
+  errorMessage = '';
+  showErrorAlert = false;
 
-  
   private http = inject(HttpClient);
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private courseService = inject(CourseService);
   private userService = inject(UserService);
-  private stripeService = inject(StripeService)
+  private stripeService = inject(StripeService);
  
-
   constructor() {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -122,8 +121,9 @@ showErrorAlert = false;
   ngOnInit(): void {
     this.loadCheckoutData();
 
-    this.isPaymentValid = false;
-    this.validationInProgress = true; // Start with validation in progress
+    // For company forms, always allow payment
+    this.isPaymentValid = true;
+    this.validationInProgress = false;
     this.errorMessage = '';
     this.showErrorAlert = false;
     
@@ -197,7 +197,10 @@ showErrorAlert = false;
         this.validateSelectedDate();
         this.loading = false;
 
-        this.validatePaymentEligibility();
+        // Only validate payment for individual purchases
+        if (this.purchaseType == 'individual') {
+          this.validatePaymentEligibility();
+        }
       },
       error: (error) => {
         console.error('Error loading course details', error);
@@ -277,48 +280,41 @@ showErrorAlert = false;
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
-  /*
-  switchToLoginOLD() {
+  switchToLogin() {
+    const courseId = this.route.snapshot.paramMap.get('courseId');
+    const redirectUrl = `/checkout/${courseId}`;
+    const queryParams: any = {};
+    if (this.selectedDate) {
+      queryParams.date = this.selectedDate.toISOString();
+    }
+    
+    console.log(`Redirecting to login with redirect=${redirectUrl} and params:`, queryParams);
+    
     this.router.navigate(['/login'], {
       queryParams: {
-        redirect: `/checkout/${this.course?._id}`,
-        date: this.selectedDate?.toISOString()
+        redirect: redirectUrl,
+        ...queryParams
       }
     });
-  }*/
+  }
 
-    switchToLogin() {
-      const courseId = this.route.snapshot.paramMap.get('courseId');
-      const redirectUrl = `/checkout/${courseId}`;
-      const queryParams: any = {};
-      if (this.selectedDate) {
-        queryParams.date = this.selectedDate.toISOString();
-      }
-      
-      console.log(`Redirecting to login with redirect=${redirectUrl} and params:`, queryParams);
-      
-      this.router.navigate(['/login'], {
-        queryParams: {
-          redirect: redirectUrl,
-          ...queryParams
-        }
-      });
-    }
-
-  togglePurchaseType(type: 'individual' | 'company') {
+  togglePurchaseType(type: string) {
     // Only proceed if changing to a different type
-    if (this.purchaseType === type) {
-      return;
-    }
-
-    // Store previous type for animation
-    const previousType = this.purchaseType;
-
+    // if (this.purchaseType === type) {
+    //   return;
+    // }
+    console.log('Toggling purchase type:', type);
     // Update the purchase type
     this.purchaseType = type;
-
-    // If switching to company, adjust validation
+    this.showCompanyForm = (type === 'company');
+    // Important: Always make sure the company form is visible and valid
     if (type === 'company') {
+      // Make sure validation doesn't block company form
+      this.showCompanyForm = true;
+      this.isPaymentValid = true;
+      this.showErrorAlert = false;
+      this.validationInProgress = false;
+      
       // Ensure company form is properly validated
       this.companyForm.get('companyName')?.updateValueAndValidity();
       this.companyForm.get('rfc')?.updateValueAndValidity();
@@ -328,6 +324,9 @@ showErrorAlert = false;
 
       console.log('Switched to company purchase type');
     } else {
+      // Revalidate for individual purchases
+      this.validatePaymentEligibility();
+      
       // Ensure user form is properly validated
       if (!this.isExistingUser) {
         this.userForm.get('email')?.updateValueAndValidity();
@@ -342,7 +341,7 @@ showErrorAlert = false;
   calculateTotal(): number {
     if (!this.course) return 0;
 
-    if (this.purchaseType === 'individual') {
+    if (this.purchaseType == 'individual') {
       return this.course.price;
     } else {
       const quantity = this.companyForm.get('quantity')?.value || 1;
@@ -357,29 +356,41 @@ showErrorAlert = false;
       this.showDateAlert = true;
       return;
     }
-    if (this.purchaseType === 'individual' && !this.userForm.valid) {
+
+    if (this.purchaseType == 'individual' && !this.userForm.valid) {
       this.userForm.markAllAsTouched();
       return;
     }
     
     this.processingPayment = true;
-  
-    if (this.purchaseType === 'individual') {
 
+    if (this.purchaseType == 'company') {
+      // Skip ALL validation for company
+      this.processCompanyRequest();
+    } else {
+    //if (this.purchaseType === 'individual')
+       
       const courseDateId = this.getCourseDateIdForSelectedDate();
-    if (!courseDateId) {
-      this.handlePaymentError('Invalid course date selected');
-      return;
-    }
-      this.validatenotpreviousenrollment(); //TODO Disable to test payments and slots cacpcitys
+      if (!courseDateId) {
+        this.handlePaymentError('Invalid course date selected');
+        return;
+      }
+      
+      // Only validate for individual payments
+      this.validatenotpreviousenrollment();
      
       this.processIndividualPayment();
-    } else {
-      // Process company purchase (likely needs direct contact)
-      this.processCompanyRequest();
-    }
+    } 
   }
+  
   private validatePaymentEligibility(): void {
+    // Skip validation for company purchase type
+    if (this.purchaseType == 'company') {
+      this.isPaymentValid = true;
+      this.validationInProgress = false;
+      return;
+    }
+    
     if (!this.selectedDate || !this.course) {
       this.validationInProgress = false;
       this.showDateAlert = true;
@@ -389,17 +400,27 @@ showErrorAlert = false;
     // Get current user ID from your UserService
     const userId = this.userService.getCurrentUserSync()?._id || '';
     
+    this.validationInProgress = true;
+    
     this.stripeService.validatePayment({
       courseId: this.course._id,
       selectedDate: this.selectedDate?.toISOString(),
       userId: userId,
-      quantity: this.purchaseType === 'company' ? this.companyForm.get('quantity')?.value || 1 : 1
+      quantity: 1 // for now this.purchaseType === 'individual' ? this.companyForm.get('quantity')?.value || 1 : 1
     }).subscribe({
       next: (response) => {
         this.validationInProgress = false;
         
+        // For company purchases, always valid
+        if (this.purchaseType == 'company') {
+          this.isPaymentValid = true;
+          return;
+        }
+        
+        // For individual purchases, use validation result
         if (response.valid) {
           this.isPaymentValid = true;
+          this.showErrorAlert = false;
         } else {
           this.isPaymentValid = false;
           this.errorMessage = response.message || 'No se puede proceder con el pago';
@@ -408,6 +429,14 @@ showErrorAlert = false;
       },
       error: (error) => {
         this.validationInProgress = false;
+        
+        // For company purchases, always valid even on error
+        if (this.purchaseType == 'company') {
+          this.isPaymentValid = true;
+          return;
+        }
+        
+        // For individual, show error
         this.isPaymentValid = false;
         this.errorMessage = 'No se pudo validar la disponibilidad del curso';
         this.showErrorAlert = true;
@@ -418,6 +447,12 @@ showErrorAlert = false;
 
 
   private validatenotpreviousenrollment() {
+    // Skip for company purchases
+    if (this.purchaseType == 'company') {
+      this.processCompanyRequest();
+      return;
+    }
+    
     console.log('Validating user purchase eligibility...');
     this.http.post<{valid: boolean; message?: string}>(`${environment.apiUrl}/payments/validate-payment`, {
       courseId: this.course?._id,
@@ -429,8 +464,7 @@ showErrorAlert = false;
           console.log('User is eligible for purchase:', response);
           console.log('User is eligible for purchase:', response.message);
           // Proceed with payment
-           //this.initiatePayment(courseDateId);
-
+          this.processIndividualPayment();
         } else {
           // Show error message
           this.processingPayment = false;
@@ -444,14 +478,6 @@ showErrorAlert = false;
       }
     });
   }
-
-
-
-
-
-
-
-
 
   private processIndividualPayment() {
     console.log('About to processpaymentiddividual...');
@@ -495,64 +521,85 @@ showErrorAlert = false;
       }
     });
   }
-  
-  handlePaymentErrorLEGACY(error: string) {
-    console.error('Payment error:', error);
-    this.processingPayment = false;
-  }
 
-
-private getCourseDateIdForSelectedDate(): string | null {
-  if (!this.course?.courseInstances || !this.selectedDate) {
-    return null;
-  }
-
-  const selectedDateStr = this.selectedDate.toISOString().split('T')[0];
-  
-  const matchingInstance = this.course.courseInstances.find(instance => {
-    const instanceDate = new Date(instance.startDate);
-    return instanceDate.toISOString().split('T')[0] === selectedDateStr;
-  });
-  
-  return matchingInstance?._id || null;
-}
-
-handlePaymentError(error: string) {
-  this.processingPayment = false;
-  
-  // Display error message to user
-  this.errorMessage = error;
-  this.showErrorAlert = true;
-  
-  // Scroll to error message
-  setTimeout(() => {
-    const errorElement = document.getElementById('payment-error');
-    if (errorElement) {
-      errorElement.scrollIntoView({ behavior: 'smooth' });
+  private getCourseDateIdForSelectedDate(): string | null {
+    if (!this.course?.courseInstances || !this.selectedDate) {
+      return null;
     }
-  }, 100);
-}
 
-  private processCompanyRequest() {
+    const selectedDateStr = this.selectedDate.toISOString().split('T')[0];
+    
+    const matchingInstance = this.course.courseInstances.find(instance => {
+      const instanceDate = new Date(instance.startDate);
+      return instanceDate.toISOString().split('T')[0] === selectedDateStr;
+    });
+    
+    return matchingInstance?._id || null;
+  }
+
+  handlePaymentError(error: string) {
+    this.processingPayment = false;
+    
+    // Display error message to user
+    this.errorMessage = error;
+    this.showErrorAlert = true;
+    
+    // Scroll to error message
+    setTimeout(() => {
+      const errorElement = document.getElementById('payment-error');
+      if (errorElement) {
+        errorElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  }
+
+   processCompanyRequest() {
+    if (!this.selectedDate) {
+      this.showDateAlert = true;
+      return;
+    }
+
     if (!this.companyForm.valid) {
       this.companyForm.markAllAsTouched();
-      this.processingPayment = false;
       return;
     }
     
-    // For demo purposes, simply redirect to company success page
-    setTimeout(() => {
-      this.router.navigate(['/checkout/company-success'], {
-        queryParams: {
-          companyName: this.companyForm.get('companyName')?.value,
-          contactEmail: this.companyForm.get('contactEmail')?.value,
-          courseId: this.course?._id,
-          date: this.selectedDate?.toISOString(),
-          quantity: this.companyForm.get('quantity')?.value,
-          requestId: 'DEMO-COMP-' + Math.floor(Math.random() * 10000)
-        }
-      });
-    }, 1500);
+    this.processingPayment = true;
+
+    const requestData = {
+      companyName: this.companyForm.get('companyName')?.value,
+      rfc: this.companyForm.get('rfc')?.value,
+      contactName: this.companyForm.get('contactName')?.value,
+      contactEmail: this.companyForm.get('contactEmail')?.value,
+      contactPhone: this.companyForm.get('contactPhone')?.value,
+      quantity: this.companyForm.get('quantity')?.value || 1,
+      additionalInfo: this.companyForm.get('additionalInfo')?.value,
+      courseId: this.course?._id,
+      courseTitle: this.course?.title,
+      selectedDate: this.selectedDate?.toISOString()
+    };
+    
+    this.http.post(`${environment.apiUrl}/company-purchase`, requestData)
+    .subscribe({
+      next: (response) => {
+        this.router.navigate(['/checkout/company-success'], {
+          queryParams: {
+            companyName: this.companyForm.get('companyName')?.value,
+            contactEmail: this.companyForm.get('contactEmail')?.value,
+            courseId: this.course?._id,
+            date: this.selectedDate?.toISOString(),
+            quantity: this.companyForm.get('quantity')?.value,
+            requestId: 'COMP-' + Math.floor(Math.random() * 10000)
+          }
+        });
+        this.processingPayment = false;
+      },
+      error: (error) => {
+        console.error('Error submitting company request', error);
+        this.processingPayment = false;
+        // Show error message
+      }
+    });
   }
 
   // Method to return to course details

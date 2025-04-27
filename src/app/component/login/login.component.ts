@@ -147,7 +147,7 @@ login() {
     password: this.loginForm.get('password')?.value
   };
   
-  console.log('Submitting login data:', loginData);
+  //console.log('Submitting login data:', loginData);
   
   this.http.post<any>(`${environment.apiUrl}/auth/login`, loginData)
     .subscribe({
@@ -166,7 +166,7 @@ login() {
         const user = response.user;
         if (!user._id) {
           user._id = user.id 
-         console.log("ERROR NO ID", user)
+        // console.log("ERROR NO ID", user)
         }
         
         // Store user and token
@@ -176,6 +176,7 @@ login() {
         // Update user service
         this.userService.setCurrentUser(user, localStorage.getItem('token') || '');
         
+        //console.log("after setcurrentuser", user)
         //console.log('User stored in localStorage:', JSON.stringify(user));
         //console.log('Token stored in localStorage:', response.token);
         
