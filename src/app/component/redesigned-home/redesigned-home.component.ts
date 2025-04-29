@@ -42,7 +42,7 @@ export class RedesignedHomeComponent implements OnInit {
   selectedDates: { [courseId: string]: Date } = {};
   
   // Hero slides data - ensure images don't have overlays built in
-  heroSlides = [
+ // heroSlides = [
    /* {
       imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
       title: 'Normativas STPS',
@@ -66,7 +66,8 @@ export class RedesignedHomeComponent implements OnInit {
       badge: 'PREMIUM',
       action: 'benefits',
       actionText: 'Descubrir Beneficios'
-    },*/
+    },
+    //second version
     {
       imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
       title: 'La capacitación industrial nunca había sido tan accesible',
@@ -98,6 +99,33 @@ export class RedesignedHomeComponent implements OnInit {
       badge: 'PRÓXIMO',
       action: 'upcoming',
       actionText: 'Próximos Cursos'
+    }
+  ];*/
+
+  heroSlides = [
+    {
+      imageUrl: 'assets/images/SLIDE-01.jpg',
+      title: 'La seguridad en el trabajo no es opcional, es una inversión en vida.'
+    },
+    {
+      imageUrl: 'assets/images/SLIDE-02.jpg',
+      title: 'Capacítate con los mejores y lleva tu carrera al siguiente nivel.'
+    },
+    {
+      imageUrl: 'assets/images/SLIDE-03.jpg',
+      title: 'Tu empresa necesita trabajadores mejor preparados. ¿Estás listo?'
+    },
+    {
+      imageUrl: 'assets/images/SLIDE-04.jpg',
+      title: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato.'
+    },
+    {
+      imageUrl: 'assets/images/SLIDE-05.jpg',
+      title: 'La capacitación correcta puede evitar accidentes y salvar vidas.'
+    },
+    {
+      imageUrl: 'assets/images/SLIDE-06.jpg',
+      title: 'Todos los martes, nuevos cursos para profesionales como tú.'
     }
   ];
 

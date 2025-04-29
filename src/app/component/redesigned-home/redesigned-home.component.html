@@ -1,5 +1,5 @@
 <div class="redesigned-home-container" @fadeInOut>
-  <section class="hero-section">
+  <!-- //might use again//keep for reference <section class="hero-section">
     <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true" [wrap]="true">
       <ng-template ngbSlide *ngFor="let slide of heroSlides">
         <div class="carousel-container">
@@ -13,6 +13,18 @@
             <button class="btn btn-primary btn-lg" (click)="navigateToSection(slide.action)">
               {{ slide.actionText }}
             </button>
+          </div>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+  </section>-->
+  <section class="hero-section">
+    <ngb-carousel [interval]="5000" [pauseOnHover]="true" [showNavigationArrows]="true" [wrap]="true">
+      <ng-template ngbSlide *ngFor="let slide of heroSlides">
+        <div class="carousel-container">
+          <img [src]="slide.imageUrl" [alt]="slide.title">
+          <div class="carousel-caption">
+            <h1>{{ slide.title }}</h1>
           </div>
         </div>
       </ng-template>
@@ -111,54 +123,56 @@
   </section>
 
   <section class="benefits-section" id="benefits">
-    <div class="container">
-      <div class="section-header text-center">
-        <div class="section-badge">BENEFICIOS</div>
-        <h2>¿Por qué elegirnos?</h2>
-        <p>Formación de calidad con ventajas competitivas</p>
-      </div>
+  <div class="container">
+    <div class="section-header text-center">
+      <div class="section-badge">BENEFICIOS</div>
+      <h2>¿Por qué elegirnos?</h2>
+      <p>Formación de calidad con ventajas competitivas</p>
+    </div>
 
-      <div class="row">
-        <div class="col-md-4 mb-3">
-          <div class="benefit-card">
-            <div class="benefit-icon">
-              <i class="bi bi-award"></i>
-            </div>
-            <h3>Certificación Reconocida</h3>
-            <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más
-              exigentes.</p>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <!-- Imagen personalizada para certificación -->
+            <img src="assets/images/ACADEMIAi-icon-cert.png" alt="Certificación Reconocida">
           </div>
+          <h3>Certificación Reconocida</h3>
+          <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más
+            exigentes.</p>
         </div>
-        <div class="col-md-4 mb-3">
-          <div class="benefit-card">
-            <div class="benefit-icon">
-              <i class="bi bi-person-video3"></i>
-            </div>
-            <h3>Instructores Expertos</h3>
-            <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones
-              internacionales.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <!-- Imagen personalizada para instructores -->
+            <img src="assets/images/ACADEMIAi-icon-instruct.png" alt="Instructores Expertos">
           </div>
+          <h3>Instructores Expertos</h3>
+          <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones
+            internacionales.</p>
         </div>
-        <div class="col-md-4 mb-3">
-          <div class="benefit-card">
-            <div class="benefit-icon">
-              <i class="bi bi-laptop"></i>
-            </div>
-            <h3>Formato Flexible</h3>
-            <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="benefit-card">
+          <div class="benefit-icon">
+            <!-- Imagen personalizada para formato flexible -->
+            <img src="assets/images/ACADEMIAi-icon-formato.png" alt="Formato Flexible">
           </div>
+          <h3>Formato Flexible</h3>
+          <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="cta-section">
-    <div class="container text-center">
-      <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
-      <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
-      <button class="btn btn-primary mt-3" (click)="navigateToAllCourses()">
-        Explorar Cursos Disponibles
-      </button>
-    </div>
-  </section>
-</div>
+<section class="cta-section">
+  <div class="container text-center">
+    <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
+    <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
+    <button class="btn btn-primary mt-3" (click)="navigateToAllCourses()">
+      Explorar Cursos Disponibles
+    </button>
+  </div>
+</section>
