@@ -208,11 +208,11 @@ interface UpcomingCourse {
         .course-title {
           font-weight: 700;
           color: #0066b3;
-          font-size: 1.1rem;
+          font-size: .9rem;
           margin-bottom: 0.5rem;
-          min-height: 2.5rem;
+          min-height: 4.9rem;
           display: -webkit-box;
-          -webkit-line-clamp: 2;
+          -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
@@ -255,6 +255,7 @@ interface UpcomingCourse {
             font-weight: 700;
             color: #0066b3;
             font-size: 1.1rem;
+            padding: 0.45rem;
           }
           
           .actions {
@@ -262,9 +263,12 @@ interface UpcomingCourse {
             gap: 0.5rem;
             
             .btn {
-              padding: 0.25rem 0.5rem;
+              padding: 0.55rem 0.5rem;
               font-size: 0.8rem;
               border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
             }
           }
         }
