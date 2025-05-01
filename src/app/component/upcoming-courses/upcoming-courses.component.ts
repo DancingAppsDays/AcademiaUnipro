@@ -425,7 +425,7 @@ export class UpcomingCoursesComponent implements OnInit {
     return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
   }
 
-  formatTime(date: Date): string {
+  formatTimex(date: Date): string {
     // Apply timezone adjustment (-5 hours for database time)
     const adjustedDate = new Date(date);
     adjustedDate.setHours(adjustedDate.getHours() - 6); // Adjust for UTC-6 (Mexico City time)
@@ -437,4 +437,39 @@ export class UpcomingCoursesComponent implements OnInit {
     
     return `${timeString} - ${endTimeString} hrs`;
   }
+
+  formatTime(date: Date): string {
+    if (!date) return '';
+    
+    // Create a new date object to avoid mutating the original
+    const courseDatex = new Date(date); //utc date from backend
+    const courseDate = new Date(courseDatex.getTime() + courseDatex.getTimezoneOffset() * 60000); // Convert to UTC
+
+     // Apply the -6 hour Mexico City offset //didnt quite work
+  // const mexicoTime = new Date(courseDate);
+  //   mexicoTime.setHours(courseDate.getHours() - 6);
+    
+    // Format start time with AM/PM
+    const startTime = courseDate.toLocaleTimeString('es-MX', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true // Use 12-hour format with AM/PM
+    });
+    
+    // Create end time (assuming 4 hours duration)
+    const endDate = new Date(courseDate);
+    endDate.setHours(courseDate.getHours() + 4);
+    
+    // Format end time with AM/PM
+    const endTime = endDate.toLocaleTimeString('es-MX', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true // Use 12-hour format with AM/PM
+    });
+    
+    // Return formatted string
+    return `${startTime} - ${endTime} hrs`;
+  }
+
+
 }
