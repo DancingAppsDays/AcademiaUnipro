@@ -13,8 +13,8 @@ import { UpcomingCoursesComponent } from '../upcoming-courses/upcoming-courses.c
   selector: 'app-redesigned-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    NgbCarouselModule, 
+    CommonModule,
+    NgbCarouselModule,
     CourseCarouselComponent,
     UpcomingCoursesComponent
   ],
@@ -37,72 +37,80 @@ export class RedesignedHomeComponent implements OnInit {
   categoryCourses: { [key: string]: Course[] } = {};
   loading = true;
   categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención', 'Calidad', 'Desarrollo Profesional'];
-  
+
   // Store selected dates for courses
   selectedDates: { [courseId: string]: Date } = {};
-  
+
   // Hero slides data - ensure images don't have overlays built in
- // heroSlides = [
-   /* {
-      imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
-      title: 'Normativas STPS',
-      subtitle: 'Capacitación especializada en cumplimiento normativo',
-      badge: 'NUEVO',
-      action: 'courses',
-      actionText: 'Ver Cursos'
-    },
-    {
-      imageUrl: 'assets/images/courses/brigadas.jpg',
-      title: 'Seguridad Industrial',
-      subtitle: 'Cursos prácticos para entornos industriales seguros',
-      badge: 'DESTACADO',
-      action: 'featured',
-      actionText: 'Cursos Destacados'
-    },
-    {
-      imageUrl: 'assets/images/courses/lideres.jpg',
-      title: 'Desarrollo Profesional',
-      subtitle: 'Fortalezca sus habilidades y competencias',
-      badge: 'PREMIUM',
-      action: 'benefits',
-      actionText: 'Descubrir Beneficios'
-    },
-    //second version
-    {
-      imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
-      title: 'La capacitación industrial nunca había sido tan accesible',
-      subtitle: 'Conéctate y aprende en vivo con expertos en seguridad y calidad',
-      badge: 'NUEVO',
-      action: 'courses',
-      actionText: 'Ver Cursos'
-    },
-    {
-      imageUrl: 'assets/images/courses/brigadas.jpg',
-      title: 'La seguridad en el trabajo no es opcional',
-      subtitle: 'Es una inversión en vida. Capacítate con los mejores y lleva tu carrera al siguiente nivel',
-      badge: 'DESTACADO',
-      action: 'featured',
-      actionText: 'Cursos Destacados'
-    },
-    {
-      imageUrl: 'assets/images/courses/lideres.jpg',
-      title: 'Tu empresa necesita trabajadores mejor preparados',
-      subtitle: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato',
-      badge: 'PREMIUM',
-      action: 'benefits',
-      actionText: 'Descubrir Beneficios'
-    },
-    {
-      imageUrl: 'assets/images/courses/montacargas.jpg',
-      title: 'La capacitación correcta puede evitar accidentes y salvar vidas',
-      subtitle: 'Todos los martes, nuevos cursos para profesionales como tú',
-      badge: 'PRÓXIMO',
-      action: 'upcoming',
-      actionText: 'Próximos Cursos'
-    }
-  ];*/
+  // heroSlides = [
+  /* {
+     imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
+     title: 'Normativas STPS',
+     subtitle: 'Capacitación especializada en cumplimiento normativo',
+     badge: 'NUEVO',
+     action: 'courses',
+     actionText: 'Ver Cursos'
+   },
+   {
+     imageUrl: 'assets/images/courses/brigadas.jpg',
+     title: 'Seguridad Industrial',
+     subtitle: 'Cursos prácticos para entornos industriales seguros',
+     badge: 'DESTACADO',
+     action: 'featured',
+     actionText: 'Cursos Destacados'
+   },
+   {
+     imageUrl: 'assets/images/courses/lideres.jpg',
+     title: 'Desarrollo Profesional',
+     subtitle: 'Fortalezca sus habilidades y competencias',
+     badge: 'PREMIUM',
+     action: 'benefits',
+     actionText: 'Descubrir Beneficios'
+   },
+   //second version
+   {
+     imageUrl: 'assets/images/ACADEMIA_Web_portada_1.png',
+     title: 'La capacitación industrial nunca había sido tan accesible',
+     subtitle: 'Conéctate y aprende en vivo con expertos en seguridad y calidad',
+     badge: 'NUEVO',
+     action: 'courses',
+     actionText: 'Ver Cursos'
+   },
+   {
+     imageUrl: 'assets/images/courses/brigadas.jpg',
+     title: 'La seguridad en el trabajo no es opcional',
+     subtitle: 'Es una inversión en vida. Capacítate con los mejores y lleva tu carrera al siguiente nivel',
+     badge: 'DESTACADO',
+     action: 'featured',
+     actionText: 'Cursos Destacados'
+   },
+   {
+     imageUrl: 'assets/images/courses/lideres.jpg',
+     title: 'Tu empresa necesita trabajadores mejor preparados',
+     subtitle: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato',
+     badge: 'PREMIUM',
+     action: 'benefits',
+     actionText: 'Descubrir Beneficios'
+   },
+   {
+     imageUrl: 'assets/images/courses/montacargas.jpg',
+     title: 'La capacitación correcta puede evitar accidentes y salvar vidas',
+     subtitle: 'Todos los martes, nuevos cursos para profesionales como tú',
+     badge: 'PRÓXIMO',
+     action: 'upcoming',
+     actionText: 'Próximos Cursos'
+   }
+ ];*/
 
   heroSlides = [
+    {
+      imageUrl: 'assets/images/SLIDE-04.jpg',
+      title: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato.'
+    },
+    {
+      imageUrl: 'assets/images/SLIDE-06.jpg',
+      title: 'Todos los martes, nuevos cursos para profesionales como tú.'
+    },
     {
       imageUrl: 'assets/images/SLIDE-01.jpg',
       title: 'La seguridad en el trabajo no es opcional, es una inversión en vida.'
@@ -115,24 +123,18 @@ export class RedesignedHomeComponent implements OnInit {
       imageUrl: 'assets/images/SLIDE-03.jpg',
       title: 'Tu empresa necesita trabajadores mejor preparados. ¿Estás listo?'
     },
-    {
-      imageUrl: 'assets/images/SLIDE-04.jpg',
-      title: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato.'
-    },
+
     {
       imageUrl: 'assets/images/SLIDE-05.jpg',
       title: 'La capacitación correcta puede evitar accidentes y salvar vidas.'
     },
-    {
-      imageUrl: 'assets/images/SLIDE-06.jpg',
-      title: 'Todos los martes, nuevos cursos para profesionales como tú.'
-    }
+
   ];
 
   constructor(
     private courseService: CourseService,
     private router: Router,
-    private courseDateService: CourseService 
+    private courseDateService: CourseService
   ) { }
 
   ngOnInit(): void {
@@ -141,7 +143,7 @@ export class RedesignedHomeComponent implements OnInit {
 
   loadCourses(): void {
     this.loading = true;
-    
+
     this.courseService.getAllCourses().subscribe({
       next: (courses) => {
         this.processCourses(courses);
@@ -153,7 +155,7 @@ export class RedesignedHomeComponent implements OnInit {
       }
     });;
     // Load courses with minimal delay to improve performance
-   // this.loadMockData();
+    // this.loadMockData();
   }
 
   //this method is bad, coursedate service doest have getUpcomingInstances method
@@ -187,8 +189,8 @@ export class RedesignedHomeComponent implements OnInit {
     });
   }*/
 
-    
- 
+
+
 
   loadMockData(): void {
     this.courseService.getMockCourses().subscribe({
@@ -202,14 +204,14 @@ export class RedesignedHomeComponent implements OnInit {
       }
     });
   }
-  
+
   private processCourses(courses: Course[]): void {
     if (!courses || courses.length === 0) {
       console.warn("No courses received");
       this.loading = false;
       return;
     }
-    
+
     // Filter featured courses
     this.featuredCourses = courses.filter(course => course.featured);
     console.log("Featured courses:", this.featuredCourses.length);
@@ -235,13 +237,13 @@ export class RedesignedHomeComponent implements OnInit {
       this.navigateToAllCourses();
     }
   }
-  
+
   navigateToSection(sectionId: string): void {
     if (sectionId === 'courses') {
       this.navigateToAllCourses();
       return;
     }
-    
+
     // Scroll to section if it's on the current page
     const element = document.getElementById(sectionId);
     if (element) {
@@ -249,11 +251,11 @@ export class RedesignedHomeComponent implements OnInit {
     }
   }
 
-  onDateSelected(event: {course: Course, date: Date}): void {
+  onDateSelected(event: { course: Course, date: Date }): void {
     // Store the selected date for this course
     this.selectedDates[event.course._id] = event.date;
     console.log(`Date selected for course ${event.course.title}: ${event.date}`);
-    
+
     // Navigate to course details with the selected date
     this.router.navigate(['/course', event.course._id], {
       queryParams: { date: event.date.toISOString() }
