@@ -58,14 +58,41 @@ export class CourseCarouselComponent implements OnChanges {
       return []; // Return empty array if input is empty
     }
     
-    const chunked = [];
-    for (let i = 0; i < array.length; i += size) {
-      chunked.push(array.slice(i, i + size));
+    // Handle special cases for small arrays by repeating courses
+    if (array.length === 1) {
+      // For a single course, repeat it to fill the slide
+      return [[array[0], array[0], array[0]]];
     }
     
-    // Make sure we have at least one chunk
-    if (chunked.length === 0) {
-      chunked.push([]);
+    if (array.length === 2) {
+      // For two courses, repeat to fill a slide of 3
+      // [1,2,1]
+      return [[array[0], array[1], array[0]]];
+    }
+    
+    // If array length equals size, return as a single chunk
+    if (array.length === size) {
+      return [array];
+    }
+    
+    // For arrays with more than 'size' elements, create continuous looping slides
+    const chunked = [];
+    const totalItems = array.length;
+    
+    // Decide number of slides: for 4+ courses, always create at least 3 slides for better UX
+    const slidesNeeded = Math.max(3, Math.ceil(totalItems / size));
+    
+    for (let slideIndex = 0; slideIndex < slidesNeeded; slideIndex++) {
+      const chunk = [];
+      
+      // Fill each chunk with 'size' items, wrapping around when needed
+      for (let itemIndex = 0; itemIndex < size; itemIndex++) {
+        // Calculate position in original array, using modulo to wrap around
+        const arrayIndex = (slideIndex * size + itemIndex) % totalItems;
+        chunk.push(array[arrayIndex]);
+      }
+      
+      chunked.push(chunk);
     }
     
     return chunked;

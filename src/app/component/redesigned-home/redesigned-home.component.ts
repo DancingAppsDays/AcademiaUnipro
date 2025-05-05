@@ -36,7 +36,7 @@ export class RedesignedHomeComponent implements OnInit {
   featuredCourses: Course[] = [];
   categoryCourses: { [key: string]: Course[] } = {};
   loading = true;
-  categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención', 'Calidad', 'Desarrollo Profesional'];
+  categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención', 'Desarrollo Profesional']; // 'Calidad',
 
   // Store selected dates for courses
   selectedDates: { [courseId: string]: Date } = {};

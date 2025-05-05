@@ -61,16 +61,16 @@ $category-orange: #ffa400;
   }
   
   .card-content {
-    padding: 1.5rem;
+    padding: 1rem;
     
     .card-title {
       font-weight: 700;
-      font-size: 1.3rem;
+      font-size: 1rem;
       margin-bottom: 0.8rem;
       color: $uniprotec-blue;
-      min-height: 2.8rem;
+      min-height: 4.2rem;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
@@ -79,10 +79,10 @@ $category-orange: #ffa400;
       color: $uniprotec-dark-gray;
       font-size: 0.95rem;
       margin-bottom: 1.2rem;
-      min-height: 2.7rem;
+      min-height: 2.5rem;
       overflow: hidden;
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
     }
     
