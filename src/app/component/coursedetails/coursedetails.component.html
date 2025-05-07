@@ -55,11 +55,11 @@
               <span class="price-label">Precio</span>
               <span class="price-value">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</span>
             </div>
-          
+
             <!-- Inline date selection/display component -->
             <div class="inline-date-selection mt-3">
               <h5 class="select-date-title">Selecciona una fecha:</h5>
-              
+
               <div class="date-selection mt-2">
                 <!-- Selected date display -->
                 <div class="selected-date-card mb-2" *ngIf="selectedCourseInstance">
@@ -70,16 +70,17 @@
                   <div class="selected-date-content">
                     <div class="date-value">{{ formatDate(selectedCourseInstance.startDate) }}</div>
                     <div class="date-instructor">
-                      <i class="bi bi-person-badge"></i> 
+                      <i class="bi bi-person-badge"></i>
                       {{ selectedCourseInstance.instructor.name }}
                     </div>
-                    <div class="date-seats" [class.seats-warning]="selectedCourseInstance.capacity - selectedCourseInstance.enrolledCount <= 3">
-                      <i class="bi bi-people"></i> 
+                    <div class="date-seats"
+                      [class.seats-warning]="selectedCourseInstance.capacity - selectedCourseInstance.enrolledCount <= 3">
+                      <i class="bi bi-people"></i>
                       {{ selectedCourseInstance.capacity - selectedCourseInstance.enrolledCount }} plazas disponibles
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Selected date (legacy format) -->
                 <div class="selected-date-card mb-2" *ngIf="!selectedCourseInstance && selectedDate">
                   <div class="selected-date-header">
@@ -90,26 +91,26 @@
                     <div class="date-value">{{ formatDate(selectedDate) }}</div>
                   </div>
                 </div>
-                
+
                 <!-- No date selected message -->
                 <div class="no-date-selected mb-2" *ngIf="!selectedCourseInstance && !selectedDate">
                   <i class="bi bi-calendar-x"></i>
                   <span>Aún no has seleccionado una fecha</span>
                 </div>
-                
+
                 <!-- Choose date button -->
                 <button class="btn btn-outline-primary btn-sm w-100" (click)="changeSection('dates')">
                   {{ selectedDate || selectedCourseInstance ? 'Cambiar fecha' : 'Ver fechas disponibles' }}
                 </button>
               </div>
             </div>
-          
+
             <div class="checkout-options mt-3">
               <button class="btn btn-primary btn-lg w-100" (click)="proceedToCheckout()">
                 <i class="bi bi-cart-check me-2"></i> Aparta mi lugar
               </button>
             </div>
-            
+
             <!-- Date alert -->
             <div class="date-alert" [ngClass]="{'show-alert': showDateAlert}" @alertAnimation>
               <div class="alert-content">
@@ -117,7 +118,7 @@
                 <span>Por favor selecciona una fecha para continuar</span>
               </div>
             </div>
-          
+
             <div class="course-features mt-4">
               <div class="feature-item">
                 <i class="bi bi-patch-check"></i>
@@ -136,9 +137,9 @@
         </div>
       </div>
     </div>
-    
 
-    <!-- Course Video Preview -->
+
+    <!-- Course Video Preview 
     <div class="course-preview mt-5" @slideInUp *ngIf="course.previewVideoUrl">
       <div class="ratio ratio-16x9">
         <iframe [src]="course.previewVideoUrl | safeUrl" 
@@ -148,7 +149,7 @@
           allowfullscreen>
         </iframe>
       </div>
-    </div>
+    </div>-->
 
     <!-- Course Content Navigation -->
     <div class="course-nav mt-5" @slideInUp>
@@ -334,31 +335,28 @@
       <!-- Dates Section with ID to allow scrolling -->
       <div class="content-section" id="dates-section" *ngIf="activeSection === 'dates'" #datesSection>
         <h2>Fechas del Curso</h2>
-        
+
         <div class="loading-dates" *ngIf="loadingCourseDates">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
           </div>
           <p class="mt-3">Cargando fechas disponibles...</p>
         </div>
-        
+
         <div *ngIf="!loadingCourseDates">
-          <app-course-date-selector
-          *ngIf="course"
-          [courseId]="course._id"
-          [minimumRequired]="minimumStudentsRequired"
-          [preSelectedInstanceId]="selectedCourseInstance?._id"
-          (instanceSelected)="onCourseInstanceSelected($event)"
-          (inscriptionRequested)="onInscriptionRequested($event)">
+          <app-course-date-selector *ngIf="course" [courseId]="course._id" [minimumRequired]="minimumStudentsRequired"
+            [preSelectedInstanceId]="selectedCourseInstance?._id" (instanceSelected)="onCourseInstanceSelected($event)"
+            (inscriptionRequested)="onInscriptionRequested($event)">
           </app-course-date-selector>
         </div>
 
         <div class="dates-info mt-4" *ngIf="!loadingCourseDates && !hasCourseDates">
           <div class="alert alert-info">
             <i class="bi bi-info-circle me-2"></i>
-            No se han programado fechas para este curso actualmente. Por favor contáctenos para obtener información sobre próximas fechas o para solicitar una fecha específica para su organización.
+            No se han programado fechas para este curso actualmente. Por favor contáctenos para obtener información
+            sobre próximas fechas o para solicitar una fecha específica para su organización.
           </div>
-          
+
           <div class="contact-options mt-4">
             <h3>Contáctenos para más información</h3>
             <div class="row mt-3">
@@ -483,6 +481,6 @@
       <app-course-faq [courseType]="course.category"></app-course-faq>
     </div>
 
-   
+
   </div>
 </div>
