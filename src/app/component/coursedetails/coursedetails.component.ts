@@ -12,6 +12,8 @@ import { CourseDatePickerComponent } from '../course-date-picker/course-date-pic
 import { CourseDateSelectorComponent } from '../course/course-date-selector/course-date-selector.component';
 import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
 import { CourseFaqComponent } from '../course-faq/course-faq.component';
+import { CourseInfoDetailsComponent } from '../course-info-details/course-info-details.component';
+
 
 @Component({
   selector: 'app-course-detail',
@@ -24,6 +26,7 @@ import { CourseFaqComponent } from '../course-faq/course-faq.component';
     SafeUrlPipe,
     CourseDateSelectorComponent,
     CourseFaqComponent,
+    CourseInfoDetailsComponent,
   ],
   templateUrl: './coursedetails.component.html',
   styleUrls: ['./coursedetails.component.scss'],
@@ -351,5 +354,23 @@ export class CourseDetailComponent implements OnInit {
   isToday(date: NgbDateStruct): boolean {
     const today = this.calendar.getToday();
     return date.year === today.year && date.month === today.month && date.day === today.day;
+  }
+
+
+  //this extracts descipriont from the course object and returns it as a string
+  //vert dpendent on the format copied to database
+  getCleanDescription(): string {
+    if (!this.course || !this.course.description) return '';
+    
+    const fullDescription = this.course.description;
+    
+    // Look for the exact marker "Objetivos de Aprendizaje"
+    const markerIndex = fullDescription.indexOf('🎯 Objetivos de Aprendizaje');
+    
+    // If marker not found, return the full description
+    if (markerIndex === -1) return fullDescription;
+    
+    // Return everything before the marker
+    return fullDescription.substring(0, markerIndex).trim();
   }
 }

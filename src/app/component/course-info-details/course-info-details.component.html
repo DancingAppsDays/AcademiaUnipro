@@ -1,0 +1,25 @@
+<p>course-info-details works!</p>
+else {
+    // Otherwise, set default objectives
+    this.learningObjectives = [
+      'Comprender los principios y requisitos de la NOM-Mexicana.',
+      'Identificar y evaluar riesgos en el entorno laboral.',
+      'Implementar sistemas de protección y dispositivos de seguridad adecuados para prevenir accidentes.',
+      'Desarrollar y aplicar programas específicos de seguridad e higiene para las actividades.',
+      'Fomentar una cultura de seguridad y cumplimiento normativo.'
+    ];
+  }
+
+  // If audience is provided directly, use that
+  if (this.audience && this.audience.length > 0) {
+    this.targetAudience = this.audience;
+  } else {
+    // Otherwise, set default audience
+    this.targetAudience = [
+      'Supervisores y jefes de área.',
+      'Personal de mantenimiento y operación de maquinaria.',
+      'Responsables de seguridad e higiene industrial.',
+      'Integrantes de comisiones de seguridad y salud en el trabajo.',
+      'Cualquier profesional involucrado en actividades en entornos industriales.'
+    ];
+  }

@@ -192,10 +192,10 @@
       <div class="content-section" *ngIf="activeSection === 'overview'">
         <h2>Descripción del curso</h2>
         <div class="description">
-          <p>{{ course.description }}</p>
+          <p>{{ getCleanDescription() }}</p>
         </div>
 
-        <div class="learning-objectives mt-4">
+       <!-- <div class="learning-objectives mt-4">
           <h3>Objetivos del curso</h3>
           <ul>
             <li>Comprender los fundamentos de la norma {{ course.isoStandards.join(', ') }}</li>
@@ -213,8 +213,9 @@
             <li>Auditores internos y externos</li>
             <li>Consultores y asesores en normatividad</li>
           </ul>
-        </div>
+        </div>-->
       </div>
+      <app-course-info-details [course]="course"></app-course-info-details>
 
       <!-- Curriculum Section -->
       <div class="content-section" *ngIf="activeSection === 'curriculum'">

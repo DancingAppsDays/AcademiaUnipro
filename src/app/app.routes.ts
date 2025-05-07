@@ -14,6 +14,8 @@ import { UserCoursesComponent } from './component/user/user-courses/user-courses
 
 // Guards
 import { AuthGuard } from './core/guards/auth.guard';
+import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
 
 export const routes: Routes = [
 
@@ -117,6 +119,22 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     title: 'Mis Certificados',
     data: { animation: 'CertificatesPage' }
+  },
+
+
+
+
+  {
+    path: 'forgot-password',
+    component: ForgotPasswordComponent,
+    title: 'Recuperar Contraseña',
+    data: { animation: 'ForgotPasswordPage' }
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
+    title: 'Restablecer Contraseña',
+    data: { animation: 'ResetPasswordPage' }
   },
   
   // Other routes
