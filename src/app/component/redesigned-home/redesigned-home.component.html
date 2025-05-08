@@ -90,7 +90,9 @@
   <section class="upcoming-courses-section" id="upcoming">
     <div class="container">
       <app-upcoming-courses 
-        [limit]="4"
+        [limit]="16"
+        [useGrid]="false"
+        [coursesPerSlide]="4"
         title="Próximos Cursos"
         subtitle="Nuevos cursos en vivo cada martes — ¡No te los pierdas!">
       </app-upcoming-courses>

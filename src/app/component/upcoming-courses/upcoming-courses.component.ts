@@ -9,6 +9,7 @@ import { CourseDateService } from '../../core/services/course-date.service';
 import { CourseService } from '../../core/services/course.service';
 import { environment } from '../../../environments/environment';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 
 interface UpcomingCourse {
   _id: string;
@@ -28,12 +29,10 @@ interface UpcomingCourse {
 @Component({
   selector: 'app-upcoming-courses',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, NgbCarouselModule],
   template: `
- 
     <div class="upcoming-courses-section">
       <div class="section-header">
-     
         <h2>{{ title }}</h2>
         <p class="section-subtitle">{{ subtitle }}</p>
       </div>
@@ -50,7 +49,63 @@ interface UpcomingCourse {
         <p>No hay cursos programados para próximas fechas.</p>
       </div>
       
-      <div *ngIf="!loading && upcomingCourses.length > 0" class="upcoming-courses-grid" @staggerFade>
+      <!-- Modo de visualización en carrusel multi-item -->
+      <div *ngIf="!loading && upcomingCourses.length > 0 && !useGrid" class="upcoming-courses-carousel">
+        <ngb-carousel 
+          [interval]="15000" 
+          [pauseOnHover]="true" 
+          [showNavigationArrows]="true" 
+          [wrap]="true">
+          
+          <!-- Agrupar cursos en slides de hasta 4 cursos -->
+          <ng-template ngbSlide *ngFor="let courseGroup of groupedCourses">
+            <div class="multi-course-slide">
+              <div class="row">
+                <div *ngFor="let course of courseGroup" class="col-md-3 col-sm-6 mb-4">
+                  <div class="upcoming-course-card">
+                    <div class="course-date-badge">
+                      <div class="date-month">{{ formatMonth(course.date) }}</div>
+                      <div class="date-day">{{ formatDay(course.date) }}</div>
+                    </div>
+                    
+                    <div class="card-img-container">
+                      <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
+                      <div class="category-badge">{{ course.category }}</div>
+                    </div>
+                    
+                    <div class="card-content">
+                      <h3 class="course-title">{{ course.title }}</h3>
+                      <p class="course-subtitle">{{ course.subtitle }}</p>
+                      
+                      <div class="course-info">
+                        <div class="info-item">
+                          <i class="bi bi-clock"></i>
+                          <span>{{ formatTime(course.date) }}</span>
+                        </div>
+                        <div class="info-item">
+                          <i class="bi bi-person-badge"></i>
+                          <span>Capacitador: {{ course.instructor.name }}</span>
+                        </div>
+                      </div>
+                      
+                      <div class="card-footer">
+                        <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
+                        <div class="actions">
+                          <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
+                          <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </ngb-carousel>
+      </div>
+      
+      <!-- Modo de visualización en grid (original) -->
+      <div *ngIf="!loading && upcomingCourses.length > 0 && useGrid" class="upcoming-courses-grid" @staggerFade>
         <div *ngFor="let course of upcomingCourses" class="upcoming-course-card" @fadeIn>
           <div class="course-date-badge">
             <div class="date-month">{{ formatMonth(course.date) }}</div>
@@ -128,6 +183,41 @@ interface UpcomingCourse {
       }
     }
     
+    // Estilos para el carrusel multi-item
+    .upcoming-courses-carousel {
+      margin: 0 -15px;
+      
+      ::ng-deep .carousel-control-prev,
+      ::ng-deep .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        
+        &:hover {
+          background: rgba(0, 0, 0, 0.2);
+        }
+      }
+      
+      ::ng-deep .carousel-control-prev {
+        left: -20px;
+      }
+      
+      ::ng-deep .carousel-control-next {
+        right: -20px;
+      }
+      
+      ::ng-deep .carousel-indicators {
+        margin-bottom: -25px;
+      }
+      
+      .multi-course-slide {
+        padding: 15px 35px;
+      }
+    }
+    
     .upcoming-courses-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -141,9 +231,10 @@ interface UpcomingCourse {
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
+      height: 100%;
       
       &:hover {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
         box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
       }
       
@@ -210,7 +301,7 @@ interface UpcomingCourse {
           color: #0066b3;
           font-size: .9rem;
           margin-bottom: 0.5rem;
-          min-height: 4.9rem;
+          min-height: 4rem;
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
@@ -255,7 +346,7 @@ interface UpcomingCourse {
             font-weight: 700;
             color: #0066b3;
             font-size: 1.1rem;
-            padding: 0.45rem;
+            padding: 0.3rem;
           }
           
           .actions {
@@ -263,8 +354,8 @@ interface UpcomingCourse {
             gap: 0.5rem;
             
             .btn {
-              padding: 0.55rem 0.5rem;
-              font-size: 0.8rem;
+              padding: 0.45rem 0.4rem;
+              font-size: 0.75rem;
               border-radius: 4px;
               display: flex;
               align-items: center;
@@ -276,9 +367,19 @@ interface UpcomingCourse {
     }
     
     // Responsive adjustments
+    @media (max-width: 991px) {
+      .upcoming-course-card {
+        margin-bottom: 20px;
+      }
+    }
+    
     @media (max-width: 767px) {
       .upcoming-courses-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+      
+      .multi-course-slide .row > div {
+        margin-bottom: 20px;
       }
     }
   `],
@@ -300,9 +401,12 @@ interface UpcomingCourse {
 export class UpcomingCoursesComponent implements OnInit {
   @Input() title: string = 'Próximos Cursos';
   @Input() subtitle: string = 'Inscríbete a nuestros cursos con fechas próximas';
-  @Input() limit: number = 4;
+  @Input() limit: number = 8; // Aumentado para tener al menos 2 slides
+  @Input() useGrid: boolean = false;
+  @Input() coursesPerSlide: number = 4;
   
   upcomingCourses: UpcomingCourse[] = [];
+  groupedCourses: UpcomingCourse[][] = [];
   loading = true;
   
   private courseDateService = inject(CourseDateService);
@@ -334,7 +438,7 @@ export class UpcomingCoursesComponent implements OnInit {
           error: (fallbackError) => {
             console.error('Error loading upcoming courses from service:', fallbackError);
             this.loading = false;
-            this.generateMockData();
+           // this.generateMockData();
           }
         });
       }
@@ -369,7 +473,16 @@ export class UpcomingCoursesComponent implements OnInit {
       });
     
     this.upcomingCourses = processed;
+    this.groupCoursesIntoSlides();
     this.loading = false;
+  }
+  
+  private groupCoursesIntoSlides(): void {
+    // Agrupar cursos en slides de 'coursesPerSlide' elementos
+    this.groupedCourses = [];
+    for (let i = 0; i < this.upcomingCourses.length; i += this.coursesPerSlide) {
+      this.groupedCourses.push(this.upcomingCourses.slice(i, i + this.coursesPerSlide));
+    }
   }
   
   private generateMockData(): void {
@@ -407,6 +520,7 @@ export class UpcomingCoursesComponent implements OnInit {
         };
       });
       
+      this.groupCoursesIntoSlides();
       this.loading = false;
     });
   }
@@ -421,33 +535,12 @@ export class UpcomingCoursesComponent implements OnInit {
     return date.getDate().toString();
   }
   
-  formatHOUR(date: Date): string {
-    return date.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-  }
-
-  formatTimex(date: Date): string {
-    // Apply timezone adjustment (-5 hours for database time)
-    const adjustedDate = new Date(date);
-    adjustedDate.setHours(adjustedDate.getHours() - 6); // Adjust for UTC-6 (Mexico City time)
-    
-    const timeString = adjustedDate.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-    const endDate = new Date(adjustedDate);
-    endDate.setHours(adjustedDate.getHours() + 4); // Assuming 8-hour courses
-    const endTimeString = endDate.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
-    
-    return `${timeString} - ${endTimeString} hrs`;
-  }
-
   formatTime(date: Date): string {
     if (!date) return '';
     
     // Create a new date object to avoid mutating the original
     const courseDatex = new Date(date); //utc date from backend
-    const courseDate = new Date(courseDatex.getTime() + courseDatex.getTimezoneOffset() * 60000); // Convert to UTC
-
-     // Apply the -6 hour Mexico City offset //didnt quite work
-  // const mexicoTime = new Date(courseDate);
-  //   mexicoTime.setHours(courseDate.getHours() - 6);
+    const courseDate = new Date(courseDatex.getTime() + courseDatex.getTimezoneOffset() * 1); // Convert to UTC
     
     // Format start time with AM/PM
     const startTime = courseDate.toLocaleTimeString('es-MX', { 
@@ -470,6 +563,4 @@ export class UpcomingCoursesComponent implements OnInit {
     // Return formatted string
     return `${startTime} - ${endTime} hrs`;
   }
-
-
 }
