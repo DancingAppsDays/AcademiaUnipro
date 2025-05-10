@@ -165,6 +165,10 @@ export class CourseDetailComponent implements OnInit {
   }
 
   private processCourse(course: Course): void {
+
+    if (course.previewVideoUrl) {
+    course.previewVideoUrl = this.getYoutubeEmbedUrl(course.previewVideoUrl);
+  }
     this.course = course;
     
     // Set minimum students required from course policy or use default
@@ -372,5 +376,13 @@ export class CourseDetailComponent implements OnInit {
     
     // Return everything before the marker
     return fullDescription.substring(0, markerIndex).trim();
+  }
+
+    private getYoutubeEmbedUrl(url: string): string {
+    if (!url || url === '') return '';
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    if (!videoId) return '';
+    // Add parameters for enhanced embed
+    return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0`;
   }
 }

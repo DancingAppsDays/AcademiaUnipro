@@ -139,8 +139,8 @@
     </div>
 
 
-    <!-- Course Video Preview 
-    <div class="course-preview mt-5" @slideInUp *ngIf="course.previewVideoUrl">
+    <!-- Course Video Preview -->
+    <div class="course-preview mt-5" @slideInUp  *ngIf="course.previewVideoUrl && course.previewVideoUrl !== ''">
       <div class="ratio ratio-16x9">
         <iframe [src]="course.previewVideoUrl | safeUrl" 
           title="Curso Preview" 
@@ -149,7 +149,7 @@
           allowfullscreen>
         </iframe>
       </div>
-    </div>-->
+    </div>
 
     <!-- Course Content Navigation -->
     <div class="course-nav mt-5" @slideInUp>
@@ -218,7 +218,7 @@
       </div>
       <app-course-info-details [course]="course"></app-course-info-details>
 
-      <!-- Curriculum Section -->
+      <!-- Curriculum Section 
       <div class="content-section" *ngIf="activeSection === 'curriculum'">
         <h2>Temario del curso</h2>
 
@@ -302,7 +302,7 @@
             </div>
           </div>
         </div>
-      </div>
+      </div>-->
 
       <!-- Instructor Section -->
       <div class="content-section" *ngIf="activeSection === 'instructor'">
@@ -386,7 +386,7 @@
         </div>
       </div>
 
-      <!-- Reviews Section -->
+      <!-- Reviews Section 
       <div class="content-section" *ngIf="activeSection === 'reviews'">
         <h2>Lo que dicen nuestros alumnos</h2>
 
@@ -475,7 +475,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <div class="content-section" *ngIf="activeSection === 'faq'">
       <app-course-faq [courseType]="course.category"></app-course-faq>

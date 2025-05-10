@@ -35,7 +35,7 @@ import { animate, style, transition, trigger, query, stagger } from '@angular/an
 export class CourseListComponent implements OnInit {
   courses: Course[] = [];
   filteredCourses: Course[] = [];
-  categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención', 'Calidad', 'Desarrollo Profesional'];
+  categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención',  'Desarrollo Profesional']; //'Calidad',
 
   selectedCategory: string | null = null;
   searchTerm: string = '';
