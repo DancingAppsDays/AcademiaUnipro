@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -13,7 +13,7 @@ import { CourseDateSelectorComponent } from '../course/course-date-selector/cour
 import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
 import { CourseFaqComponent } from '../course-faq/course-faq.component';
 import { CourseInfoDetailsComponent } from '../course-info-details/course-info-details.component';
-
+import { ViewportScroller } from '@angular/common';
 
 @Component({
   selector: 'app-course-detail',
@@ -60,7 +60,7 @@ import { CourseInfoDetailsComponent } from '../course-info-details/course-info-d
     ])
   ]
 })
-export class CourseDetailComponent implements OnInit {
+export class CourseDetailComponent implements OnInit, AfterViewInit {
   @ViewChild('datesSection') datesSection!: ElementRef;
   
   course: Course | null = null;
@@ -84,8 +84,18 @@ export class CourseDetailComponent implements OnInit {
     private router: Router,
     private courseService: CourseService,
     private courseDateService: CourseDateService,
-    private calendar: NgbCalendar
+    private calendar: NgbCalendar,
+     private viewportScroller: ViewportScroller 
   ) { }
+
+   ngAfterViewInit(): void {
+    // Scroll to top after the component has been initialized
+    setTimeout(() => {
+     // window.scrollTo(0, 0);
+      // Alternative method with smooth scrolling
+       this.viewportScroller.scrollToPosition([0, 0]);
+    }, 100);
+  }
 
   ngOnInit(): void {
     const courseId = this.route.snapshot.paramMap.get('id');
