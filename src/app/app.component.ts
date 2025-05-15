@@ -1,7 +1,7 @@
 // src/app/app.component.ts
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { UserNavComponent } from './component/shared/user-nav/user-nav.component';
 import { UserService } from './core/services/user.service';
 import { slideInAnimation } from './route-animations';
@@ -23,6 +23,7 @@ import { slideInAnimation } from './route-animations';
   ]
 })
 export class AppComponent implements OnInit {
+   @ViewChild('footerElement') footerElement!: ElementRef;
   title = 'AcademiaUnipro';
   isMobileMenuOpen = false;
   isLoggedIn = false;
@@ -75,5 +76,18 @@ export class AppComponent implements OnInit {
     this.userService.logout();
     this.closeMobileMenu();
     this.router.navigate(['/home']);
+  }
+
+   scrollToFooter(event: Event) {
+    console.log('Scroll to footer triggered');
+    event.preventDefault();
+    
+    // Get the footer element
+    const footer = document.querySelector('.main-footer');
+    
+    if (footer) {
+      // Scroll to the footer with smooth behavior
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
 }

@@ -1,5 +1,5 @@
 // course-list.component.ts
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -32,7 +32,7 @@ import { animate, style, transition, trigger, query, stagger } from '@angular/an
     ])
   ]
 })
-export class CourseListComponent implements OnInit {
+export class CourseListComponent implements OnInit,  AfterViewInit {
   courses: Course[] = [];
   filteredCourses: Course[] = [];
   categories: string[] = ['Normativas Clave', 'Seguridad Especializada', 'Protección y Prevención',  'Desarrollo Profesional']; //'Calidad',
@@ -45,6 +45,14 @@ export class CourseListComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private courseService = inject(CourseService);
+
+
+   ngAfterViewInit(): void {
+    // Scroll to top after the component has been initialized
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+    }, 100);
+  }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

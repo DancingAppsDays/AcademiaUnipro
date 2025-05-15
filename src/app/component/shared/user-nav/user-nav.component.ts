@@ -66,12 +66,13 @@ import { animate, style, transition, trigger } from '@angular/animations';
               </a>
             </li>
             <li>
-              <a routerLink="/dashboard/courses" (click)="closeMenu()">
+              <!-- //TODO Review logic
+            <a routerLink="/dashboard/courses" (click)="closeMenu()">
                 <i class="bi bi-mortarboard"></i>
                 <span>Mis Cursos</span>
                 <span class="badge" *ngIf="upcomingCourseCount > 0">{{ upcomingCourseCount }}</span>
               </a>
-            </li>
+            </li>-->
             <li>
               <a routerLink="/dashboard/profile" (click)="closeMenu()">
                 <i class="bi bi-person"></i>
@@ -129,17 +130,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
                 <span>Explorar Cursos</span>
               </a>
             </li>
+           
             <li>
-              <a routerLink="/about" (click)="closeMenu()">
-                <i class="bi bi-info-circle"></i>
-                <span>Acerca de Nosotros</span>
-              </a>
-            </li>
-            <li>
-              <a routerLink="/contact" (click)="closeMenu()">
-                <i class="bi bi-envelope"></i>
-                <span>Contacto</span>
-              </a>
+                     <a href="#" (click)="scrollToFooter($event)">
+                    <i class="bi bi-envelope"></i>
+                    <span>Contacto</span>
+                  </a>
             </li>
           </ul>
         </div>
@@ -221,7 +217,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
             </a>
           </li>
           <li>
-            <a routerLink="/contact" (click)="closeMobileMenu()">
+          <a href="#" (click)="scrollToFooterMobile($event)">
               <i class="bi bi-envelope"></i>
               <span>Contacto</span>
             </a>
@@ -716,4 +712,37 @@ export class UserNavComponent implements OnInit {
       this.closeMobileMenu();
     }
   }
+
+  scrollToFooter(event: Event): void {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // Close the dropdown menu
+  this.closeMenu();
+  
+  // Get the footer element
+  const footer = document.querySelector('.main-footer');
+  
+  if (footer) {
+    // Scroll to the footer with smooth behavior
+    footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// Method to scroll to footer from mobile menu
+scrollToFooterMobile(event: Event): void {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // Close the mobile menu
+  this.closeMobileMenu();
+  
+  // Get the footer element
+  const footer = document.querySelector('.main-footer');
+  
+  if (footer) {
+    // Scroll to the footer with smooth behavior
+    footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
 }
