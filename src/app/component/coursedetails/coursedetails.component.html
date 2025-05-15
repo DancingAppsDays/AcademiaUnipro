@@ -1,6 +1,6 @@
-<!-- Modified course-detail.component.html with improved date selection experience -->
+<!-- Modified course-detail.component.html with fixes -->
 <div class="course-detail-container" @fadeIn>
-  <!-- Loading state -->
+  <!-- Loading State -->
   <div class="text-center py-5" *ngIf="loading">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
@@ -159,11 +159,14 @@
             Descripción
           </a>
         </li>
+        <!-- Commented out Temario tab as placeholder -->
+        <!--
         <li class="nav-item">
           <a class="nav-link" [class.active]="activeSection === 'curriculum'" (click)="changeSection('curriculum')">
             Temario
           </a>
         </li>
+        -->
         <li class="nav-item">
           <a class="nav-link" [class.active]="activeSection === 'instructor'" (click)="changeSection('instructor')">
             Instructor
@@ -174,11 +177,14 @@
             Fechas
           </a>
         </li>
+        <!-- Commented out Reviews tab as placeholder -->
+        <!--
         <li class="nav-item">
           <a class="nav-link" [class.active]="activeSection === 'reviews'" (click)="changeSection('reviews')">
             Testimonios
           </a>
         </li>
+        -->
         <li class="nav-item">
           <a class="nav-link" [class.active]="activeSection === 'faq'" (click)="changeSection('faq')">
             FAQ
@@ -196,29 +202,12 @@
           <p>{{ getCleanDescription() }}</p>
         </div>
 
-       <!-- <div class="learning-objectives mt-4">
-          <h3>Objetivos del curso</h3>
-          <ul>
-            <li>Comprender los fundamentos de la norma {{ course.isoStandards.join(', ') }}</li>
-            <li>Identificar los requisitos clave para implementación y auditoría</li>
-            <li>Desarrollar habilidades prácticas para aplicación en entornos reales</li>
-            <li>Obtener certificación reconocida en el sector industrial</li>
-          </ul>
-        </div>
-
-        <div class="target-audience mt-4">
-          <h3>Dirigido a</h3>
-          <ul>
-            <li>Profesionales del área de seguridad industrial</li>
-            <li>Responsables de sistemas de gestión</li>
-            <li>Auditores internos y externos</li>
-            <li>Consultores y asesores en normatividad</li>
-          </ul>
-        </div>-->
+        <!-- Show course info details only in Overview tab -->
+        <app-course-info-details [course]="course"></app-course-info-details>
       </div>
-      <app-course-info-details [course]="course"></app-course-info-details>
 
-      <!-- Curriculum Section 
+      <!-- Curriculum Section - Commented out as placeholder -->
+      <!--
       <div class="content-section" *ngIf="activeSection === 'curriculum'">
         <h2>Temario del curso</h2>
 
@@ -302,7 +291,8 @@
             </div>
           </div>
         </div>
-      </div>-->
+      </div>
+      -->
 
       <!-- Instructor Section -->
       <div class="content-section" *ngIf="activeSection === 'instructor'">
@@ -386,7 +376,8 @@
         </div>
       </div>
 
-      <!-- Reviews Section 
+      <!-- Reviews Section - Commented out as placeholder -->
+      <!--
       <div class="content-section" *ngIf="activeSection === 'reviews'">
         <h2>Lo que dicen nuestros alumnos</h2>
 
@@ -475,12 +466,12 @@
           </div>
         </div>
       </div>
-    </div>-->
+      -->
 
-    <div class="content-section" *ngIf="activeSection === 'faq'">
-      <app-course-faq [courseType]="course.category"></app-course-faq>
+      <!-- FAQ Section -->
+      <div class="content-section" *ngIf="activeSection === 'faq'">
+        <app-course-faq [courseType]="course.category"></app-course-faq>
+      </div>
     </div>
-
-
   </div>
 </div>
