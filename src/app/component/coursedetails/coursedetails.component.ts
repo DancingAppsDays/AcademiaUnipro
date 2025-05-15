@@ -14,6 +14,7 @@ import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
 import { CourseFaqComponent } from '../course-faq/course-faq.component';
 import { CourseInfoDetailsComponent } from '../course-info-details/course-info-details.component';
 import { ViewportScroller } from '@angular/common';
+import { InstructorService } from '../../core/services/instructor.service';
 
 @Component({
   selector: 'app-course-detail',
@@ -27,6 +28,7 @@ import { ViewportScroller } from '@angular/common';
     CourseDateSelectorComponent,
     CourseFaqComponent,
     CourseInfoDetailsComponent,
+    
   ],
   templateUrl: './coursedetails.component.html',
   styleUrls: ['./coursedetails.component.scss'],
@@ -85,7 +87,8 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
     private courseService: CourseService,
     private courseDateService: CourseDateService,
     private calendar: NgbCalendar,
-     private viewportScroller: ViewportScroller 
+     private viewportScroller: ViewportScroller ,
+      private instructorService: InstructorService
   ) { }
 
    ngAfterViewInit(): void {
@@ -180,6 +183,9 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
     course.previewVideoUrl = this.getYoutubeEmbedUrl(course.previewVideoUrl);
   }
     this.course = course;
+
+      this.enhanceCourseWithMockInstructor(course);
+
     
     // Set minimum students required from course policy or use default
     this.minimumStudentsRequired = course.postponementPolicy?.minimumRequired || 6;
@@ -395,4 +401,144 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
     // Add parameters for enhanced embed
     return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0`;
   }
+
+
+
+
+
+
+  
+private enhanceCourseWithMockInstructor(course: Course): void {
+
+  console.log("about to set mock isntrutor", course)
+  if (!course) return;
+  
+  // Replace with placeholder instructor if missing or has minimal data
+  const needsInstructorData = !course.instructor || 
+                              !course.instructor.bio || 
+                              course.instructor.bio.length < 50;
+  
+  if (needsInstructorData) {
+    // Import and inject the InstructorService in your constructor first
+    this.instructorService.getMockInstructorByCategory(course.category).subscribe(instructor => {
+      // Keep the original ID if it exists
+      const originalId = course.instructor?._id;
+      
+      // Replace the instructor data
+      course.instructor = instructor;
+      
+      // Restore original ID if it existed
+      if (originalId) {
+        course.instructor._id = originalId;
+      }
+      
+      console.log('Enhanced course with mock instructor data', course.instructor.name);
+    });
+  }
+}
+
+
+
+
+/*
+   private loadFromMockData(courseId: string): void {
+    console.log('Loading course from mock data');
+    
+    this.courseService.getMockCourses().subscribe({
+      next: (courses) => {
+        const mockCourse = courses.find(c => c._id === courseId);
+        if (mockCourse) {
+          // Enhance the course with more detailed instructor data if available
+          if (mockCourse.category) {
+            const categoryKey = this.getCategoryKey(mockCourse.category);
+            if (this.mockInstructorData[categoryKey]) {
+              mockCourse.instructor = this.mockInstructorData[categoryKey];
+            } else {
+              // Fallback to default instructor if no category match
+              mockCourse.instructor = this.mockInstructorData['default'];
+            }
+          } else {
+            // Use default instructor data if no category
+            mockCourse.instructor = this.mockInstructorData['default'];
+          }
+          
+          this.processCourse(mockCourse);
+          this.loadingCourseDates = true;
+          this.loadCourseDates(courseId);
+        } else {
+          this.loading = false;
+          this.loadError = true;
+          this.errorMessage = "No se encontró el curso especificado";
+        }
+      },
+      error: (fallbackError) => {
+        this.loading = false;
+        this.loadError = true;
+        this.errorMessage = "Error al cargar los datos del curso";
+        console.error('Failed to load mock course data', fallbackError);
+      }
+    });
+  }
+  
+  // Helper method to map course categories to instructor data keys
+  private getCategoryKey(category: string): string {
+    // Map category names to keys in the mockInstructorData object
+    const categoryMap = {
+      'Normativas Clave': 'normativas',
+      'Seguridad Especializada': 'seguridad',
+      'Protección y Prevención': 'brigadas',
+      'Desarrollo Profesional': 'default'
+    };
+    
+    return categoryMap[category] || 'default';
+  }
+
+
+   // Mock instructor data that will be used when loaded from API fails
+  private mockInstructorData = {
+    'default': {
+      _id: 'instr-1',
+      name: 'Ing. Joram Morales Cabrera',
+      photoUrl: 'assets/images/instructors/joram-morales.jpg',
+      bio: `Especialista en Seguridad Industrial, Brigadas de Emergencia y Gestión de Proyectos. Instructor Certificado por CONOCER EC0217 | Experto en ambientes de alto riesgo y formación didáctica aplicada.
+      
+      El Ing. Joram Morales es un profesional con sólida experiencia en seguridad industrial, salud ocupacional y respuesta ante emergencias, tanto en campo como en formación de talento técnico. Cuenta con certificación oficial EC0217 de CONOCER, además de una trayectoria destacada como supervisor de seguridad en industrias automotrices de alto nivel como BMW, Hutchinson y DURR México.
+      
+      Actualmente forma parte del equipo de instructores acreditados de UNIPROTEC, donde imparte cursos prácticos y actualizados en temas de NOM-STPS, brigadas de emergencia, medio ambiente y ergonomía industrial, integrando métodos gamificados y recursos de aprendizaje virtual.`,
+      specialties: ['Seguridad Industrial', 'Respuesta a Emergencias', 'Normativa STPS', 'Formación de Brigadas']
+    },
+    'normativas': {
+      _id: 'instr-2',
+      name: 'Ing. Roberto Vázquez Hernández',
+      photoUrl: 'assets/images/instructors/roberto-vazquez.jpg',
+      bio: `Especialista en Normatividad STPS y Sistemas de Gestión de Seguridad | Auditor certificado ISO 45001 | Consultor en cumplimiento normativo industrial.
+      
+      El Ing. Vázquez cuenta con más de 15 años de experiencia en implementación y auditoría de sistemas de gestión de seguridad y salud en el trabajo. Ha colaborado con empresas de diversos sectores para asegurar el cumplimiento de normativas federales e internacionales.
+      
+      Su enfoque práctico y orientado a resultados ha permitido a sus alumnos implementar exitosamente programas de seguridad que no solo cumplen con la normatividad, sino que reducen significativamente la incidencia de accidentes laborales.`,
+      specialties: ['Normatividad STPS', 'ISO 45001', 'Sistemas de Gestión SST', 'Auditorías de Cumplimiento']
+    },
+    'brigadas': {
+      _id: 'instr-3',
+      name: 'TUM Laura Sánchez Méndez',
+      photoUrl: 'assets/images/instructors/laura-sanchez.jpg',
+      bio: `Técnico en Urgencias Médicas | Especialista en Formación de Brigadas | Instructora certificada en PHTLS y BLS | Experta en simulacros de emergencia.
+      
+      La TUM Laura Sánchez combina su experiencia práctica como paramédico con su pasión por la formación de brigadistas, habiendo capacitado a más de 5,000 personas en los últimos 8 años.
+      
+      Su metodología única integra casos prácticos basados en escenarios reales, permitiendo a los participantes desarrollar habilidades críticas para la respuesta a emergencias bajo presión. Ha coordinado programas de brigadas para empresas multinacionales y plantas industriales de alto riesgo.`,
+      specialties: ['Primeros Auxilios', 'Brigadas de Emergencia', 'Evacuación', 'Rescate Industrial']
+    },
+    'seguridad': {
+      _id: 'instr-4',
+      name: 'Ing. Carlos Mendoza Fuentes',
+      photoUrl: 'assets/images/instructors/carlos-mendoza.jpg',
+      bio: `Ingeniero en Seguridad Industrial | Especialista en Análisis de Riesgos | Experto en Espacios Confinados y Trabajos en Altura | Certificado en Protección Contra Caídas.
+      
+      El Ing. Mendoza ha desarrollado su carrera profesional en la industria petrolera y petroquímica, donde ha implementado programas de seguridad para operaciones de alto riesgo.
+      
+      Su enfoque en la prevención basada en el comportamiento y el análisis sistemático de riesgos ha sido fundamental para elevar los estándares de seguridad en múltiples organizaciones. Cuenta con certificaciones internacionales en trabajos especializados de alto riesgo.`,
+      specialties: ['Espacios Confinados', 'Trabajos en Altura', 'Análisis de Riesgos', 'Bloqueo LOTO']
+    }
+  };*/
 }
