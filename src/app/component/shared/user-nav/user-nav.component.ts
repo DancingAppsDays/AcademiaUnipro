@@ -632,7 +632,7 @@ export class UserNavComponent implements OnInit {
   ngOnInit(): void {
     // Subscribe to user changes
     this.userService.getCurrentUser().subscribe(user => {
-      console.log('UserNavComponent received user:', user);
+      //console.log('UserNavComponent received user:', user);
 
       this.currentUser = user;
       

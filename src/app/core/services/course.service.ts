@@ -16,25 +16,25 @@ export class CourseService {
   constructor(private http: HttpClient) { }
 
   getAllCourses(): Observable<Course[]> {
-    console.log('Attempting to fetch courses from API:', this.apiUrl);
+    //console.log('Attempting to fetch courses from API:', this.apiUrl);
     
     return this.http.get<Course[]>(this.apiUrl).pipe(
-      tap(courses => console.log('Fetched courses from API:', courses)),
+      //tap(courses => console.log('Fetched courses from API:', courses)),
       catchError(error => this.handleApiError('getAllCourses', error))
     );
   }
 
   getCourseById(id: string): Observable<Course> {
-    console.log(`Attempting to fetch course ${id} from API`);
+    //console.log(`Attempting to fetch course ${id} from API`);
     
     return this.http.get<Course>(`${this.apiUrl}/${id}`).pipe(
-      tap(course => console.log(`Fetched course ${id} from API:`, course)),
+     // tap(course => console.log(`Fetched course ${id} from API:`, course)),
       catchError(error => this.handleApiError('getCourseById', error, id))
     );
   }
 
   getCoursesByCategory(category: string): Observable<Course[]> {
-    console.log(`Attempting to fetch courses in category ${category} from API`);
+    //console.log(`Attempting to fetch courses in category ${category} from API`);
     
     return this.http.get<Course[]>(`${this.apiUrl}/category/${category}`).pipe(
       tap(courses => console.log(`Fetched ${courses.length} courses in category ${category} from API`)),
@@ -43,7 +43,7 @@ export class CourseService {
   }
 
   getFeaturedCourses(): Observable<Course[]> {
-    console.log('Attempting to fetch featured courses from API');
+   // console.log('Attempting to fetch featured courses from API');
     
     return this.http.get<Course[]>(`${this.apiUrl}/featured`).pipe(
       tap(courses => console.log(`Fetched ${courses.length} featured courses from API`)),
