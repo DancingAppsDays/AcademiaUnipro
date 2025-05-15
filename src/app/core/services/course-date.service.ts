@@ -45,7 +45,7 @@ export class CourseDateService {
   }
   
   getUpcomingInstancesLEGaSCY(limit: number = 10): Observable<CourseDate[]> {
-    console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
+    //console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
     
     // Try getting from actual API first
     return this.http.get<any[]>(`${this.apiUrl}/upcoming?limit=${limit}`).pipe(
@@ -129,7 +129,7 @@ export class CourseDateService {
 
 
   getUpcomingInstances(limit: number = 10): Observable<CourseDate[]> {
-    console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
+    //console.log(`Fetching upcoming course dates with limit ${limit} from ${this.apiUrl}/upcoming?limit=${limit}`);
     
     // Try getting from actual API first
     return this.http.get<any[]>(`${this.apiUrl}/upcoming?limit=${limit}`).pipe(
