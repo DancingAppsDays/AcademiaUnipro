@@ -126,6 +126,7 @@ export class UserCoursesComponent implements OnInit {
         },
         location: courseDate.location || 'Virtual',
         meetingUrl: courseDate.meetingUrl,
+        whatsappGroup: courseDate.whatsappGroup || null ,
         status: courseDate.status || 'scheduled',
         minimumRequired: courseDate.minimumRequired || 6
       });

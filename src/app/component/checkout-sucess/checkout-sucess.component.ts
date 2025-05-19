@@ -30,6 +30,8 @@ export class CheckoutSuccessComponent implements OnInit {
   selectedDate: Date | null = null;
   courseInstance: CourseDate | null = null;
   purchaseId: string | null = null;
+  whatsappGroup: string | null = null;
+  meetingUrl: string | null = null;
   loading = true;
   enrollmentConfirmed = false; // Whether course enrollment is guaranteed
   showPostponementWarning = false; // Show warning about possible postponement
@@ -38,6 +40,7 @@ export class CheckoutSuccessComponent implements OnInit {
   private courseService = inject(CourseService);
   private courseDateService = inject(CourseDateService);
   private userService = inject(UserService);
+  
 
   ngOnInit(): void {
     // Get basic purchase info
@@ -96,7 +99,7 @@ export class CheckoutSuccessComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading course', error);
-        this.loadFromMockData(courseId);
+        //this.loadFromMockData(courseId);
       }
     });
   }
@@ -107,6 +110,9 @@ export class CheckoutSuccessComponent implements OnInit {
         if (instance) {
           this.courseInstance = instance;
           this.selectedDate = new Date(instance.startDate);
+
+            this.meetingUrl = instance.meetingUrl || null;
+        this.whatsappGroup = instance.whatsappGroup || null;
           
           // Check if we need to show a postponement warning
           // If enrolled count is less than minimum required and date is within 3 days

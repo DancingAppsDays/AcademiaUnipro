@@ -134,7 +134,8 @@ export class DashboardComponent implements OnInit {
           location: nextEnrollment.courseDate.location || 'Virtual',
           instructor: nextEnrollment.courseDate.instructor?.name || 'Instructor',
           duration: course.duration || '8 horas',
-          meetingUrl: nextEnrollment.courseDate.meetingUrl || null
+          meetingUrl: nextEnrollment.courseDate.meetingUrl || null,
+          whatsappGroup: nextEnrollment.whatsappGroup || null 
         };
       }
       

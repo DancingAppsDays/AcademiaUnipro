@@ -90,12 +90,12 @@ import { animate, style, transition, trigger } from '@angular/animations';
           <div class="dropdown-divider"></div>
           
           <ul class="dropdown-menu-items">
-            <li>
+           <!-- <li>
               <a routerLink="/courses" (click)="closeMenu()">
                 <i class="bi bi-grid"></i>
                 <span>Catálogo de Cursos</span>
               </a>
-            </li>
+            </li>-->
             <li>
               <a href="javascript:void(0)" (click)="logout()">
                 <i class="bi bi-box-arrow-right"></i>
@@ -125,7 +125,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
           
           <ul class="dropdown-menu-items">
             <li>
-              <a routerLink="/courses" (click)="closeMenu()">
+              <a routerLink="/" (click)="closeMenu()">
                 <i class="bi bi-grid"></i>
                 <span>Explorar Cursos</span>
               </a>
@@ -205,17 +205,17 @@ import { animate, style, transition, trigger } from '@angular/animations';
         <!-- Common links for all users -->
         <ul class="mobile-menu-items">
           <li>
-            <a routerLink="/courses" (click)="closeMobileMenu()">
+            <a routerLink="/" (click)="closeMobileMenu()">
               <i class="bi bi-grid"></i>
               <span>{{ currentUser ? 'Catálogo de Cursos' : 'Explorar Cursos' }}</span>
             </a>
           </li>
-          <li>
+          <!--<li>
             <a routerLink="/about" (click)="closeMobileMenu()">
               <i class="bi bi-info-circle"></i>
               <span>Acerca de Nosotros</span>
             </a>
-          </li>
+          </li>-->
           <li>
           <a href="#" (click)="scrollToFooterMobile($event)">
               <i class="bi bi-envelope"></i>

@@ -92,6 +92,7 @@ export class CourseDateService {
       },
       location: date.location || 'Virtual',
       meetingUrl: date.meetingUrl,
+      whatsappGroup: date.whatsappGroup, 
       status: date.status || 'scheduled',
       minimumRequired: date.minimumRequired || 6
     };

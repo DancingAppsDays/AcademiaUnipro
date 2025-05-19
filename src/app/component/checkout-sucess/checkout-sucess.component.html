@@ -60,7 +60,7 @@
       <i class="bi bi-geo-alt"></i>
       <div>
         <strong>Ubicación</strong>
-        <p>{{ courseInstance?.location }}</p>
+        <p>A través de Zoom</p>
       </div>
     </div>
     
@@ -72,6 +72,19 @@
         <p><a [href]="courseInstance?.meetingUrl" target="_blank">{{ courseInstance?.meetingUrl }}</a></p>
       </div>
     </div>
+
+
+      <!-- Add WhatsApp group link if available -->
+      <div class="detail-item" *ngIf="courseInstance?.whatsappGroup">
+        <i class="bi bi-whatsapp"></i>
+        <div>
+          <strong>Grupo de WhatsApp</strong>
+          <p><a [href]="courseInstance?.whatsappGroup" target="_blank" class="whatsapp-link">Unirse al grupo <i class="bi bi-box-arrow-up-right"></i></a></p>
+        </div>
+      </div>
+
+
+
   </div>
 </div>
         <div class="email-info mt-4" *ngIf="email">
@@ -100,6 +113,7 @@
               <div class="step-content">
                 <strong>Prepara los materiales necesarios</strong>
                 <p>Asegúrate de tener todo lo necesario para participar.</p>
+                <p>Es recomendable computadora o laptop con buena conexión a Internet.</p>
               </div>
             </li>
             <li>
@@ -132,7 +146,7 @@
         <div class="additional-courses mt-5">
           <h3>¿Busca capacitación complementaria?</h3>
           <p>Explore nuestra oferta completa de cursos para fortalecer sus conocimientos.</p>
-          <button class="btn btn-primary" routerLink="/courses">
+          <button class="btn btn-primary" routerLink="/">
             Ver más cursos
           </button>
         </div>

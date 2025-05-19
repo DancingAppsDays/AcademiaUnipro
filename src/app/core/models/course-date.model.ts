@@ -15,6 +15,7 @@ export interface CourseDate {
     };
     location: string;
     meetingUrl?: string; // Zoom link
+    whatsappGroup?: string;
     status: 'scheduled' | 'confirmed' | 'postponed' | 'canceled' | 'completed';
     minimumRequired: number; // Minimum students required (default: 6)
   }

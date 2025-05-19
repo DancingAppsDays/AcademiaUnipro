@@ -104,29 +104,24 @@ export class RedesignedHomeComponent implements OnInit {
 
   heroSlides = [
     {
-      imageUrl: 'assets/images/SLIDE-04.jpg',
+      imageUrl: 'assets/images/SLIDESaprende.jpg',
       title: 'Aprende en vivo con expertos y aplica el conocimiento de inmediato.'
     },
     {
-      imageUrl: 'assets/images/SLIDE-06.jpg',
+      imageUrl: 'assets/images/SLIDESestas.jpg',
       title: 'Todos los martes, nuevos cursos para profesionales como tú.'
     },
     {
-      imageUrl: 'assets/images/SLIDE-01.jpg',
+      imageUrl: 'assets/images/SLIDESseguri.jpg',
       title: 'La seguridad en el trabajo no es opcional, es una inversión en vida.'
     },
     {
-      imageUrl: 'assets/images/SLIDE-02.jpg',
+      imageUrl: 'assets/images/SLIDEScapaci.jpg',
       title: 'Capacítate con los mejores y lleva tu carrera al siguiente nivel.'
     },
     {
-      imageUrl: 'assets/images/SLIDE-03.jpg',
+      imageUrl: 'assets/images/SLIDEScorrecta.jpg',
       title: 'Tu empresa necesita trabajadores mejor preparados. ¿Estás listo?'
-    },
-
-    {
-      imageUrl: 'assets/images/SLIDE-05.jpg',
-      title: 'La capacitación correcta puede evitar accidentes y salvar vidas.'
     },
 
   ];

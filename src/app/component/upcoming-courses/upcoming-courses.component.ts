@@ -49,7 +49,7 @@ interface UpcomingCourse {
 export class UpcomingCoursesComponent implements OnInit {
   @Input() title: string = 'Próximos Cursos';
   @Input() subtitle: string = 'Inscríbete a nuestros cursos con fechas próximas';
-  @Input() limit: number = 16; // Increased to have enough courses for multiple slides
+  @Input() limit: number = 28; // Increased to have enough courses for multiple slides
   @Input() useGrid: boolean = false;
   @Input() coursesPerSlide: number = 4;
   
