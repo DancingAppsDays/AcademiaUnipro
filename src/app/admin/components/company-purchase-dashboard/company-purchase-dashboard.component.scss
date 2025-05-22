@@ -1,148 +1,279 @@
-/* src/app/admin/components/company-purchase-dashboard/company-purchase-dashboard.component.scss */
+/* Enhanced company-purchase-dashboard.component.scss */
 .company-dashboard-container {
-    padding: 1.5rem;
+  padding: 1.5rem;
+  
+  .dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
     
-    .dashboard-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      
-      h2 {
-        margin: 0;
-        color: #0066b3;
-        font-weight: 600;
-      }
-      
-      .status-filter {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        
-        label {
-          margin-bottom: 0;
-          white-space: nowrap;
-        }
-        
-        select {
-          min-width: 200px;
-        }
-      }
+    h2 {
+      margin: 0;
+      color: #0066b3;
+      font-weight: 600;
     }
     
-    .loading-container {
+    .status-filter {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 3rem;
+      gap: 0.5rem;
       
-      p {
-        margin-top: 1rem;
-        color: #666;
+      label {
+        margin-bottom: 0;
+        white-space: nowrap;
+      }
+      
+      select {
+        min-width: 200px;
       }
     }
+  }
+  
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
     
-    .no-records, .no-selection {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 3rem;
-      background-color: #f9f9f9;
-      border-radius: 5px;
+    p {
+      margin-top: 1rem;
       color: #666;
-      text-align: center;
     }
+  }
+  
+  .no-records, .no-selection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    color: #666;
+    text-align: center;
+  }
+  
+  .status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     
-    .purchase-list {
-      max-height: 600px;
-      overflow-y: auto;
+    .status-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 3px;
+      color: white;
+    }
+  }
+  
+  .purchase-list {
+    max-height: 600px;
+    overflow-y: auto;
+    
+    .purchase-item {
+      padding: 1rem;
+      border-bottom: 1px solid #eee;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
       
-      .purchase-item {
-        padding: 1rem;
-        border-bottom: 1px solid #eee;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-        
-        &:hover {
-          background-color: #f5f9ff;
-        }
-        
-        &.active {
-          background-color: #e9f2ff;
-          border-left: 4px solid #0066b3;
-        }
-        
-        .purchase-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 0.5rem;
-          
-          h4 {
-            margin: 0;
-            font-size: 1rem;
-            font-weight: 600;
-          }
-        }
-        
-        .purchase-details {
-          p {
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
-            
-            &:last-child {
-              margin-top: 0.5rem;
-              font-size: 0.8rem;
-            }
-          }
-        }
-      }
-    }
-    
-    .purchase-details-container {
-      .card {
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        
-        .card-header {
-          background-color: #f5f9ff;
-          
-          h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #0066b3;
-          }
-        }
-        
-        .card-body {
-          h4 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 1rem;
-          }
-          
-          p {
-            margin-bottom: 0.5rem;
-          }
-        }
-      }
-    }
-    
-    @media (max-width: 767px) {
-      .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+      &:hover {
+        background-color: #f5f9ff;
       }
       
-      .status-filter {
-        width: 100%;
+      &.active {
+        background-color: #e9f2ff;
+        border-left: 4px solid #0066b3;
+      }
+      
+      .purchase-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
         
-        select {
-          width: 100%;
+        h4 {
+          margin: 0;
+          font-size: 1rem;
+          font-weight: 600;
+        }
+      }
+      
+      .purchase-details {
+        p {
+          margin-bottom: 0.3rem;
+          font-size: 0.9rem;
+          
+          &:last-child {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+          }
         }
       }
     }
   }
+  
+  .purchase-details-container {
+    .card {
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      
+      .card-header {
+        background-color: #f5f9ff;
+        
+        h3 {
+          margin: 0;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #0066b3;
+        }
+      }
+      
+      .card-body {
+        h4 {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 1rem;
+        }
+        
+        p {
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+    
+    .current-status-info {
+      margin-bottom: 1.5rem;
+      
+      p {
+        margin-bottom: 0.25rem;
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+    
+    .alert-pending {
+      background-color: #fff3cd;
+      border-color: #ffecb5;
+    }
+    
+    .alert-contacted {
+      background-color: #d1ecf1;
+      border-color: #bee5eb;
+    }
+    
+    .alert-payment_pending {
+      background-color: #cce5ff;
+      border-color: #b8daff;
+    }
+    
+    .alert-paid {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    
+    .alert-completed {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    
+    .alert-canceled {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+    
+    .quantity-section {
+      margin-bottom: 1rem;
+      
+      .enrollment-info {
+        display: flex;
+        align-items: center;
+        margin-top: 0.5rem;
+        
+        .enrollment-counter {
+          margin-right: 1rem;
+        }
+      }
+    }
+    
+    .enrollment-list {
+      .badge {
+        font-size: 0.75rem;
+        font-weight: 500;
+      }
+      
+      .enrollment-progress {
+        margin-top: 1rem;
+        
+        .progress {
+          height: 1.5rem;
+          
+          .progress-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+  
+  @media (max-width: 767px) {
+    .dashboard-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    
+    .status-filter {
+      width: 100%;
+      
+      select {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Modal styles
+.modal-body {
+  .form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+}
+
+// Status badge colors
+.bg-pending, .bg-warning {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.bg-contacted, .bg-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.bg-payment_pending, .bg-primary {
+  background-color: #0066b3;
+  color: white;
+}
+
+.bg-paid, .bg-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.bg-completed {
+  background-color: #28a745;
+  color: white;
+}
+
+.bg-canceled, .bg-danger {
+  background-color: #dc3545;
+  color: white;
+}

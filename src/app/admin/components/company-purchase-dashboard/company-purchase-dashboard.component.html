@@ -1,205 +1,363 @@
-<!-- src/app/admin/components/company-purchase-dashboard/company-purchase-dashboard.component.html -->
+<!-- Enhanced company-purchase-dashboard.component.html -->
 <div class="company-dashboard-container">
-    <div class="dashboard-header">
-      <h2>Gestión de Compras Empresariales</h2>
-      
-      <div class="status-filter">
-        <label for="statusFilter">Filtrar por Estado:</label>
-        <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onStatusChange($event)" class="form-control">
-          <option value="all">Todos los estados</option>
-          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
-        </select>
-      </div>
+  <div class="dashboard-header">
+    <h2>Gestión de Compras Empresariales</h2>
+    
+    <div class="status-filter">
+      <label for="statusFilter">Filtrar por Estado:</label>
+      <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onStatusChange($event)" class="form-control">
+        <option value="all">Todos los estados</option>
+        <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
+      </select>
     </div>
-  
-    <!-- Loading indicator -->
-    <div *ngIf="loading" class="loading-container">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Cargando...</span>
-      </div>
-      <p>Cargando solicitudes de compra empresarial...</p>
+  </div>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
     </div>
-  
-    <!-- Error message -->
-    <div *ngIf="error" class="alert alert-danger">
-      {{ error }}
-    </div>
-  
-    <div *ngIf="!loading && !error" class="dashboard-content">
-      <div class="row">
-        <!-- Purchase list column -->
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-header">
-              <h3>Solicitudes de Compra</h3>
+    <p>Cargando solicitudes de compra empresarial...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="dashboard-content">
+    <div class="row">
+      <!-- Purchase list column -->
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h3>Solicitudes de Compra</h3>
+            <div class="status-legend mt-2">
+              <span *ngFor="let option of statusOptions" class="status-badge" [ngClass]="getStatusClass(option.value)">
+                {{ option.label }}
+              </span>
             </div>
-            <div class="card-body">
-              <div *ngIf="purchases.length === 0" class="no-records">
-                No se encontraron solicitudes de compra empresarial.
-              </div>
-              
-              <div *ngIf="purchases.length > 0" class="purchase-list">
-                <div *ngFor="let purchase of purchases" 
-                     class="purchase-item" 
-                     [class.active]="selectedPurchase?._id === purchase._id"
-                     (click)="selectPurchase(purchase)">
-                  <div class="purchase-header">
-                    <h4>{{ purchase.companyName }}</h4>
-                    <span class="badge" [ngClass]="{
-                      'bg-warning': purchase.status === 'pending',
-                      'bg-info': purchase.status === 'contacted' || purchase.status === 'payment_pending',
-                      'bg-success': purchase.status === 'paid' || purchase.status === 'completed',
-                      'bg-danger': purchase.status === 'canceled'
-                    }">{{ purchase.status }}</span>
-                  </div>
-                  <div class="purchase-details">
-                    <p><strong>ID:</strong> {{ purchase.requestId }}</p>
-                    <p><strong>Curso:</strong> {{ purchase.courseTitle }}</p>
-                    <p><strong>Fecha:</strong> {{ formatDate(purchase.selectedDate).split(' ')[0] }}</p>
-                    <p><strong>Cantidad:</strong> {{ purchase.quantity }}</p>
-                    <p class="text-muted">{{ formatDate(purchase.createdAt) }}</p>
-                  </div>
+          </div>
+          <div class="card-body">
+            <div *ngIf="purchases.length === 0" class="no-records">
+              No se encontraron solicitudes de compra empresarial.
+            </div>
+            
+            <div *ngIf="purchases.length > 0" class="purchase-list">
+              <div *ngFor="let purchase of purchases" 
+                   class="purchase-item" 
+                   [class.active]="selectedPurchase?._id === purchase._id"
+                   (click)="selectPurchase(purchase)">
+                <div class="purchase-header">
+                  <h4>{{ purchase.companyName }}</h4>
+                  <span class="badge" [ngClass]="getStatusClass(purchase.status)">
+                    {{ getStatusLabel(purchase.status) }}
+                  </span>
+                </div>
+                <div class="purchase-details">
+                  <p><strong>ID:</strong> {{ purchase.requestId }}</p>
+                  <p><strong>Curso:</strong> {{ purchase.courseTitle }}</p>
+                  <p><strong>Fecha:</strong> {{ formatDate(purchase.selectedDate).split(' ')[0] }}</p>
+                  <p><strong>Cantidad:</strong> {{ purchase.quantity }}</p>
+                  <p class="text-muted">{{ formatDate(purchase.createdAt) }}</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+      
+      <!-- Details column -->
+      <div class="col-md-8">
+        <div *ngIf="!selectedPurchase" class="no-selection">
+          <p>Seleccione una solicitud de compra para ver los detalles</p>
+        </div>
         
-        <!-- Details column -->
-        <div class="col-md-8">
-          <div *ngIf="!selectedPurchase" class="no-selection">
-            <p>Seleccione una solicitud de compra para ver los detalles</p>
+        <div *ngIf="selectedPurchase" class="purchase-details-container">
+          <!-- Purchase details card -->
+          <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h3>Detalles de la Solicitud</h3>
+              <span class="badge fs-6" [ngClass]="getStatusClass(selectedPurchase.status)">
+                {{ getStatusLabel(selectedPurchase.status) }}
+              </span>
+            </div>
+            <div class="card-body">
+              <div class="current-status-info alert" [ngClass]="'alert-' + selectedPurchase.status">
+                <p><strong>Estado actual:</strong> {{ getStatusLabel(selectedPurchase.status) }}</p>
+                <p>{{ getStatusDescription(selectedPurchase.status) }}</p>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <h4>Información de la Empresa</h4>
+                  <p><strong>Nombre:</strong> {{ selectedPurchase.companyName }}</p>
+                  <p><strong>RFC:</strong> {{ selectedPurchase.rfc }}</p>
+                  <p><strong>Contacto:</strong> {{ selectedPurchase.contactName }}</p>
+                  <p><strong>Email:</strong> {{ selectedPurchase.contactEmail }}</p>
+                  <p><strong>Teléfono:</strong> {{ selectedPurchase.contactPhone }}</p>
+                </div>
+                <div class="col-md-6">
+                  <h4>Información del Curso</h4>
+                  <p><strong>Curso:</strong> {{ selectedPurchase.courseTitle }}</p>
+                  <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.selectedDate) }}</p>
+                  
+                  <!-- Quantity Form - Editable field -->
+                  <div class="quantity-section">
+                    <form [formGroup]="quantityForm" (ngSubmit)="updateQuantity()">
+                      <div class="input-group mb-2">
+                        <span class="input-group-text">Cantidad:</span>
+                        <input type="number" formControlName="quantity" class="form-control" min="1" 
+                               [disabled]="selectedPurchase.status === 'canceled'">
+                        <button class="btn btn-outline-primary" type="submit" 
+                                [disabled]="!quantityForm.valid || quantityForm.pristine || selectedPurchase.status === 'canceled'">
+                          <i class="bi bi-check"></i>
+                        </button>
+                      </div>
+                    </form>
+                    
+                    <div class="enrollment-info">
+                      <p>
+                        <span class="enrollment-counter">
+                          <strong>Inscripciones:</strong> {{ enrolledCount }} de {{ selectedPurchase.quantity }}
+                        </span>
+                        <span class="spots-remaining">
+                          <span class="badge bg-info">{{ availableSlots }} lugares disponibles</span>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <p><strong>Estado:</strong> {{ getStatusLabel(selectedPurchase.status) }}</p>
+                  <p><strong>ID de Solicitud:</strong> {{ selectedPurchase.requestId }}</p>
+                </div>
+              </div>
+              
+              <div *ngIf="selectedPurchase.additionalInfo" class="mt-3">
+                <h4>Información Adicional</h4>
+                <p>{{ selectedPurchase.additionalInfo }}</p>
+              </div>
+              
+              <div *ngIf="selectedPurchase.adminNotes" class="mt-3">
+                <h4>Notas del Administrador</h4>
+                <p>{{ selectedPurchase.adminNotes }}</p>
+              </div>
+              
+              <div *ngIf="selectedPurchase.paymentMethod" class="mt-3">
+                <h4>Información de Pago</h4>
+                <p><strong>Método:</strong> {{ selectedPurchase.paymentMethod }}</p>
+                <p><strong>Referencia:</strong> {{ selectedPurchase.paymentReference }}</p>
+                <p><strong>Monto:</strong> {{ selectedPurchase.paymentAmount | currency:'MXN':'symbol':'1.0-2' }}</p>
+                <p><strong>Fecha:</strong> {{ selectedPurchase.paymentDate ? formatDate(selectedPurchase.paymentDate) : 'N/A' }}</p>
+              </div>
+            </div>
           </div>
           
-          <div *ngIf="selectedPurchase" class="purchase-details-container">
-            <!-- Purchase details card -->
-            <div class="card mb-4">
-              <div class="card-header">
-                <h3>Detalles de la Solicitud</h3>
+          <!-- Enrollments Management -->
+          <div *ngIf="selectedPurchase.status === 'paid' || selectedPurchase.status === 'completed'" class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h3>Gestión de Inscripciones</h3>
+              <button 
+                *ngIf="availableSlots > 0" 
+                class="btn btn-primary" 
+                (click)="openEnrollmentModal(enrollmentModal)">
+                <i class="bi bi-plus-circle"></i> Agregar Inscripción
+              </button>
+            </div>
+            <div class="card-body">
+              <div *ngIf="enrollmentLoading" class="text-center py-3">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+                <span class="ms-2">Cargando inscripciones...</span>
               </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-6">
-                    <h4>Información de la Empresa</h4>
-                    <p><strong>Nombre:</strong> {{ selectedPurchase.companyName }}</p>
-                    <p><strong>RFC:</strong> {{ selectedPurchase.rfc }}</p>
-                    <p><strong>Contacto:</strong> {{ selectedPurchase.contactName }}</p>
-                    <p><strong>Email:</strong> {{ selectedPurchase.contactEmail }}</p>
-                    <p><strong>Teléfono:</strong> {{ selectedPurchase.contactPhone }}</p>
+              
+              <div *ngIf="!enrollmentLoading && enrollments.length === 0" class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                No hay inscripciones registradas. Utilice el botón "Agregar Inscripción" para crear nuevas inscripciones.
+              </div>
+              
+              <div *ngIf="!enrollmentLoading && enrollments.length > 0" class="enrollment-list">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Usuario</th>
+                      <th>Email</th>
+                      <th>Estado</th>
+                      <th>Fecha de Creación</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let enrollment of enrollments">
+                      <td>{{ enrollment.userName }}</td>
+                      <td>{{ enrollment.email }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'bg-success': enrollment.status === 'confirmed',
+                          'bg-warning': enrollment.status === 'pending',
+                          'bg-danger': enrollment.status === 'canceled'
+                        }">
+                          {{ enrollment.status }}
+                        </span>
+                      </td>
+                      <td>{{ enrollment.createdAt ? formatDate(enrollment.createdAt) : 'N/A' }}</td>
+                      <td>
+                        <div class="btn-group btn-group-sm">
+                          <button class="btn btn-outline-primary" title="Ver detalles">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                          <button class="btn btn-outline-danger" title="Cancelar inscripción">
+                            <i class="bi bi-x-circle"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                
+                <div class="enrollment-progress mt-3">
+                  <p><strong>Progreso de inscripciones:</strong></p>
+                  <div class="progress">
+                    <div class="progress-bar bg-success" 
+                         [style.width.%]="(enrolledCount / selectedPurchase.quantity) * 100">
+                      {{ enrolledCount }} / {{ selectedPurchase.quantity }}
+                    </div>
                   </div>
-                  <div class="col-md-6">
-                    <h4>Información del Curso</h4>
-                    <p><strong>Curso:</strong> {{ selectedPurchase.courseTitle }}</p>
-                    <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.selectedDate) }}</p>
-                    <p><strong>Cantidad:</strong> {{ selectedPurchase.quantity }}</p>
-                    <p><strong>Estado:</strong> {{ selectedPurchase.status }}</p>
-                    <p><strong>ID de Solicitud:</strong> {{ selectedPurchase.requestId }}</p>
-                  </div>
                 </div>
-                
-                <div *ngIf="selectedPurchase.additionalInfo" class="mt-3">
-                  <h4>Información Adicional</h4>
-                  <p>{{ selectedPurchase.additionalInfo }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Cards -->
+          <div class="row">
+            <!-- Status update form -->
+            <div class="col-md-6 mb-4">
+              <div class="card">
+                <div class="card-header">
+                  <h3>Actualizar Estado</h3>
                 </div>
-                
-                <div *ngIf="selectedPurchase.adminNotes" class="mt-3">
-                  <h4>Notas del Administrador</h4>
-                  <p>{{ selectedPurchase.adminNotes }}</p>
-                </div>
-                
-                <div *ngIf="selectedPurchase.paymentMethod" class="mt-3">
-                  <h4>Información de Pago</h4>
-                  <p><strong>Método:</strong> {{ selectedPurchase.paymentMethod }}</p>
-                  <p><strong>Referencia:</strong> {{ selectedPurchase.paymentReference }}</p>
-                  <p><strong>Monto:</strong> {{ selectedPurchase.paymentAmount | currency:'MXN':'symbol':'1.0-2' }}</p>
-                  <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.paymentDate ? formatDate(selectedPurchase.paymentDate) : 'N/A' ) }}</p>
-                </div>
-                
-                <div class="mt-3">
-                  <h4>Inscripciones</h4>
-                  <p>Inscritos: {{ selectedPurchase.enrollmentIds?.length || 0 }} de {{ selectedPurchase.quantity }}</p>
-                  <button *ngIf="selectedPurchase.status === 'paid' && (selectedPurchase.enrollmentIds?.length || 0) < selectedPurchase.quantity" 
-                          class="btn btn-primary"
-                          (click)="manageEnrollments(selectedPurchase._id)">
-                    Gestionar Inscripciones
-                  </button>
+                <div class="card-body">
+                  <form [formGroup]="statusForm" (ngSubmit)="updateStatus()">
+                    <div class="mb-3">
+                      <label for="status" class="form-label">Estado</label>
+                      <select formControlName="status" id="status" class="form-control">
+                        <option *ngFor="let option of statusOptions" [value]="option.value">
+                          {{ option.label }} - {{ option.description }}
+                        </option>
+                      </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="notes" class="form-label">Notas</label>
+                      <textarea formControlName="notes" id="notes" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100" [disabled]="statusForm.invalid">
+                      Actualizar Estado
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
             
-            <!-- Action Cards -->
-            <div class="row">
-              <!-- Status update form -->
-              <div class="col-md-6 mb-4">
-                <div class="card">
-                  <div class="card-header">
-                    <h3>Actualizar Estado</h3>
-                  </div>
-                  <div class="card-body">
-                    <form [formGroup]="statusForm" (ngSubmit)="updateStatus()">
-                      <div class="mb-3">
-                        <label for="status" class="form-label">Estado</label>
-                        <select formControlName="status" id="status" class="form-control">
-                          <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
-                        </select>
-                      </div>
-                      
-                      <div class="mb-3">
-                        <label for="notes" class="form-label">Notas</label>
-                        <textarea formControlName="notes" id="notes" class="form-control" rows="3"></textarea>
-                      </div>
-                      
-                      <button type="submit" class="btn btn-primary w-100" [disabled]="statusForm.invalid">
-                        Actualizar Estado
-                      </button>
-                    </form>
-                  </div>
+            <!-- Payment record form -->
+            <div class="col-md-6 mb-4">
+              <div class="card">
+                <div class="card-header">
+                  <h3>Registrar Pago</h3>
                 </div>
-              </div>
-              
-              <!-- Payment record form -->
-              <div class="col-md-6 mb-4">
-                <div class="card">
-                  <div class="card-header">
-                    <h3>Registrar Pago</h3>
-                  </div>
-                  <div class="card-body">
-                    <form [formGroup]="paymentForm" (ngSubmit)="recordPayment()">
-                      <div class="mb-3">
-                        <label for="paymentMethod" class="form-label">Método de Pago</label>
-                        <select formControlName="paymentMethod" id="paymentMethod" class="form-control">
-                          <option value="">Seleccionar método</option>
-                          <option value="bank_transfer">Transferencia Bancaria</option>
-                          <option value="credit_card">Tarjeta de Crédito</option>
-                          <option value="cash">Efectivo</option>
-                          <option value="check">Cheque</option>
-                        </select>
+                <div class="card-body">
+                  <form [formGroup]="paymentForm" (ngSubmit)="recordPayment()">
+                    <div class="mb-3">
+                      <label for="paymentMethod" class="form-label">Método de Pago</label>
+                      <select formControlName="paymentMethod" id="paymentMethod" class="form-control">
+                        <option value="">Seleccionar método</option>
+                        <option value="bank_transfer">Transferencia Bancaria</option>
+                        <option value="credit_card">Tarjeta de Crédito</option>
+                        <option value="cash">Efectivo</option>
+                        <option value="check">Cheque</option>
+                      </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="paymentReference" class="form-label">Referencia</label>
+                      <input type="text" formControlName="paymentReference" id="paymentReference" class="form-control">
+                    </div>
+                    
+                    <div class="mb-3">
+                      <label for="paymentAmount" class="form-label">Monto</label>
+                      <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" formControlName="paymentAmount" id="paymentAmount" class="form-control" step="0.01" min="0">
                       </div>
-                      
-                      <div class="mb-3">
-                        <label for="paymentReference" class="form-label">Referencia</label>
-                        <input type="text" formControlName="paymentReference" id="paymentReference" class="form-control">
-                      </div>
-                      
-                      <div class="mb-3">
-                        <label for="paymentAmount" class="form-label">Monto</label>
-                        <div class="input-group">
-                          <span class="input-group-text">$</span>
-                          <input type="number" formControlName="paymentAmount" id="paymentAmount" class="form-control" step="0.01" min="0">
-                        </div>
-                      </div>
-                      
-                      <button type="submit" class="btn btn-success w-100" 
-                              [disabled]="paymentForm.invalid || selectedPurchase?.status === 'paid' || selectedPurchase?.status === 'completed'">
-                        Registrar Pago
-                      </button>
-                    </form>
-                  </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100" 
+                            [disabled]="paymentForm.invalid || selectedPurchase?.status === 'paid' || selectedPurchase?.status === 'completed'">
+                      Registrar Pago
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
+          </div>
+          
+          <!-- Cancel Button -->
+          <div class="text-end mb-4">
+            <button class="btn btn-danger" 
+                   [disabled]="selectedPurchase?.status === 'canceled'"
+                   (click)="cancelPurchase(selectedPurchase._id)">
+              <i class="bi bi-x-circle me-1"></i> Cancelar Solicitud
+            </button>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Enrollment Modal -->
+<ng-template #enrollmentModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Crear Nueva Inscripción</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="enrollmentForm">
+      <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i>
+        Puede buscar un usuario existente o crear uno nuevo para esta inscripción.
+      </div>
+      
+      <div class="mb-3">
+        <label for="userSearch" class="form-label">Buscar Usuario Existente</label>
+        <div class="input-group">
+          <input type="text" id="userSearch" class="form-control" placeholder="Nombre o email">
+          <button class="btn btn-outline-secondary" type="button" (click)="searchUsers('userSearch')">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+        <small class="form-text text-muted">Ingrese al menos 3 caracteres para buscar</small>
+      </div>
+      
+      <div class="mb-3">
+        <label for="userName" class="form-label">Nombre Completo</label>
+        <input type="text" formControlName="userName" id="userName" class="form-control" required>
+      </div>
+      
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" formControlName="email" id="email" class="form-control" required>
+      </div>
+      
+      <input type="hidden" formControlName="userId">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancelar</button>
+    <button type="button" class="btn btn-primary" (click)="createEnrollment()" [disabled]="!enrollmentForm.valid">
+      Crear Inscripción
+    </button>
+  </div>
+</ng-template>
