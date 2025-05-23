@@ -102,7 +102,7 @@
                   <p><strong>Curso:</strong> {{ selectedPurchase.courseTitle }}</p>
                   <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.selectedDate) }}</p>
                   
-                  <!-- Quantity Form - Editable field -->
+                  <!-- Enhanced Quantity Section with Editing -->
                   <div class="quantity-section">
                     <form [formGroup]="quantityForm" (ngSubmit)="updateQuantity()">
                       <div class="input-group mb-2">
@@ -125,6 +125,27 @@
                           <span class="badge bg-info">{{ availableSlots }} lugares disponibles</span>
                         </span>
                       </p>
+                    </div>
+                  </div>
+                  
+                  <!-- Course Capacity Information -->
+                  <div *ngIf="courseDateInfo" class="course-capacity-info alert alert-info">
+                    <h5><i class="bi bi-info-circle"></i> Información de Capacidad</h5>
+                    <p><strong>Capacidad total del curso:</strong> {{ courseDateInfo.capacity }}</p>
+                    <p><strong>Lugares ocupados:</strong> {{ courseDateInfo.enrolledCount }}</p>
+                    <p><strong>Lugares disponibles:</strong> {{ courseDateInfo.availableSeats }}</p>
+                    
+                    <div *ngIf="selectedPurchase.status !== 'paid' && selectedPurchase.quantity > courseDateInfo.availableSeats" 
+                         class="alert alert-warning mt-2">
+                      <i class="bi bi-exclamation-triangle"></i>
+                      <strong>¡Atención!</strong> La cantidad solicitada ({{ selectedPurchase.quantity }}) 
+                      excede los lugares disponibles ({{ courseDateInfo.availableSeats }}).
+                    </div>
+                    
+                    <div *ngIf="selectedPurchase.status === 'paid'" class="alert alert-success mt-2">
+                      <i class="bi bi-check-circle"></i>
+                      <strong>Asientos reservados:</strong> Se han reservado {{ selectedPurchase.quantity }} 
+                      asientos para esta compra empresarial.
                     </div>
                   </div>
                   

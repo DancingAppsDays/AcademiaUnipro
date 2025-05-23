@@ -31,218 +31,27 @@ interface CompanyPurchase {
   metadata?: any;
 }
 
+interface CourseDate {
+  _id: string;
+  startDate: Date;
+  capacity: number;
+  enrolledCount: number;
+  availableSeats: number;
+}
+
+interface EnrollmentInfo {
+  _id: string;
+  userName: string;
+  email: string;
+  status: string;
+  createdAt: Date;
+}
+
 @Component({
   selector: 'app-company-purchase-dashboard',
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
-  template: `
-    <div class="company-dashboard-container">
-      <div class="dashboard-header">
-        <h2>Gestión de Compras Empresariales</h2>
-        
-        <div class="status-filter">
-          <label for="statusFilter">Filtrar por Estado:</label>
-          <select id="statusFilter" [(ngModel)]="selectedStatus" (change)="onStatusChange($event)" class="form-control">
-            <option value="all">Todos los estados</option>
-            <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Loading indicator -->
-      <div *ngIf="loading" class="loading-container">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Cargando...</span>
-        </div>
-        <p>Cargando solicitudes de compra empresarial...</p>
-      </div>
-
-      <!-- Error message -->
-      <div *ngIf="error" class="alert alert-danger">
-        {{ error }}
-      </div>
-
-      <div *ngIf="!loading && !error" class="dashboard-content">
-        <div class="row">
-          <!-- Purchase list column -->
-          <div class="col-md-4">
-            <div class="card">
-              <div class="card-header">
-                <h3>Solicitudes de Compra</h3>
-              </div>
-              <div class="card-body">
-                <div *ngIf="purchases.length === 0" class="no-records">
-                  No se encontraron solicitudes de compra empresarial.
-                </div>
-                
-                <div *ngIf="purchases.length > 0" class="purchase-list">
-                  <div *ngFor="let purchase of purchases" 
-                       class="purchase-item" 
-                       [class.active]="selectedPurchase?._id === purchase._id"
-                       (click)="selectPurchase(purchase)">
-                    <div class="purchase-header">
-                      <h4>{{ purchase.companyName }}</h4>
-                      <span class="badge" [ngClass]="{
-                        'bg-warning': purchase.status === 'pending',
-                        'bg-info': purchase.status === 'contacted' || purchase.status === 'payment_pending',
-                        'bg-success': purchase.status === 'paid' || purchase.status === 'completed',
-                        'bg-danger': purchase.status === 'canceled'
-                      }">{{ purchase.status }}</span>
-                    </div>
-                    <div class="purchase-details">
-                      <p><strong>ID:</strong> {{ purchase.requestId }}</p>
-                      <p><strong>Curso:</strong> {{ purchase.courseTitle }}</p>
-                      <p><strong>Fecha:</strong> {{ formatDate(purchase.selectedDate).split(' ')[0] }}</p>
-                      <p><strong>Cantidad:</strong> {{ purchase.quantity }}</p>
-                      <p class="text-muted">{{ formatDate(purchase.createdAt) }}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Details column -->
-          <div class="col-md-8">
-            <div *ngIf="!selectedPurchase" class="no-selection">
-              <p>Seleccione una solicitud de compra para ver los detalles</p>
-            </div>
-            
-            <div *ngIf="selectedPurchase" class="purchase-details-container">
-              <!-- Purchase details card -->
-              <div class="card mb-4">
-                <div class="card-header">
-                  <h3>Detalles de la Solicitud</h3>
-                </div>
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <h4>Información de la Empresa</h4>
-                      <p><strong>Nombre:</strong> {{ selectedPurchase.companyName }}</p>
-                      <p><strong>RFC:</strong> {{ selectedPurchase.rfc }}</p>
-                      <p><strong>Contacto:</strong> {{ selectedPurchase.contactName }}</p>
-                      <p><strong>Email:</strong> {{ selectedPurchase.contactEmail }}</p>
-                      <p><strong>Teléfono:</strong> {{ selectedPurchase.contactPhone }}</p>
-                    </div>
-                    <div class="col-md-6">
-                      <h4>Información del Curso</h4>
-                      <p><strong>Curso:</strong> {{ selectedPurchase.courseTitle }}</p>
-                      <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.selectedDate) }}</p>
-                      <p><strong>Cantidad:</strong> {{ selectedPurchase.quantity }}</p>
-                      <p><strong>Estado:</strong> {{ selectedPurchase.status }}</p>
-                      <p><strong>ID de Solicitud:</strong> {{ selectedPurchase.requestId }}</p>
-                      
-                      <div *ngIf="selectedPurchase.status === 'paid' || selectedPurchase.status === 'completed'" 
-                           class="alert alert-success mt-2">
-                        <i class="bi bi-check-circle me-2"></i>
-                        <strong>Asientos reservados:</strong> Se han reservado {{ selectedPurchase.quantity }} 
-                        asientos en la fecha del curso seleccionada.
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div *ngIf="selectedPurchase.additionalInfo" class="mt-3">
-                    <h4>Información Adicional</h4>
-                    <p>{{ selectedPurchase.additionalInfo }}</p>
-                  </div>
-                  
-                  <div *ngIf="selectedPurchase.adminNotes" class="mt-3">
-                    <h4>Notas del Administrador</h4>
-                    <p>{{ selectedPurchase.adminNotes }}</p>
-                  </div>
-                  
-                  <div *ngIf="selectedPurchase.paymentMethod" class="mt-3">
-                    <h4>Información de Pago</h4>
-                    <p><strong>Método:</strong> {{ selectedPurchase.paymentMethod }}</p>
-                    <p><strong>Referencia:</strong> {{ selectedPurchase.paymentReference }}</p>
-                    <p><strong>Monto:</strong> {{ selectedPurchase.paymentAmount | currency:'MXN':'symbol':'1.0-2' }}</p>
-                    <p><strong>Fecha:</strong> {{ formatDate(selectedPurchase.paymentDate ? formatDate(selectedPurchase.paymentDate) : 'N/A' ) }}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Action Cards -->
-              <div class="row">
-                <!-- Status update form -->
-                <div class="col-md-6 mb-4">
-                  <div class="card">
-                    <div class="card-header">
-                      <h3>Actualizar Estado</h3>
-                    </div>
-                    <div class="card-body">
-                      <form [formGroup]="statusForm" (ngSubmit)="updateStatus()">
-                        <div class="mb-3">
-                          <label for="status" class="form-label">Estado</label>
-                          <select formControlName="status" id="status" class="form-control">
-                            <option *ngFor="let option of statusOptions" [value]="option.value">{{ option.label }}</option>
-                          </select>
-                          
-                          <div class="alert alert-info mt-2">
-                            <p class="mb-0"><strong>Importante:</strong> Al marcar como "Pagado", los asientos se reservarán 
-                              automáticamente en el curso, reduciendo la capacidad disponible.</p>
-                          </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                          <label for="notes" class="form-label">Notas</label>
-                          <textarea formControlName="notes" id="notes" class="form-control" rows="3"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary w-100" [disabled]="statusForm.invalid">
-                          Actualizar Estado
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-                
-                <!-- Payment record form -->
-                <div class="col-md-6 mb-4">
-                  <div class="card">
-                    <div class="card-header">
-                      <h3>Registrar Pago</h3>
-                    </div>
-                    <div class="card-body">
-                      <form [formGroup]="paymentForm" (ngSubmit)="recordPayment()">
-                        <div class="mb-3">
-                          <label for="paymentMethod" class="form-label">Método de Pago</label>
-                          <select formControlName="paymentMethod" id="paymentMethod" class="form-control">
-                            <option value="">Seleccionar método</option>
-                            <option value="bank_transfer">Transferencia Bancaria</option>
-                            <option value="credit_card">Tarjeta de Crédito</option>
-                            <option value="cash">Efectivo</option>
-                            <option value="check">Cheque</option>
-                          </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                          <label for="paymentReference" class="form-label">Referencia</label>
-                          <input type="text" formControlName="paymentReference" id="paymentReference" class="form-control">
-                        </div>
-                        
-                        <div class="mb-3">
-                          <label for="paymentAmount" class="form-label">Monto</label>
-                          <div class="input-group">
-                            <span class="input-group-text">$</span>
-                            <input type="number" formControlName="paymentAmount" id="paymentAmount" class="form-control" step="0.01" min="0">
-                          </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-success w-100" 
-                                [disabled]="paymentForm.invalid || selectedPurchase?.status === 'paid' || selectedPurchase?.status === 'completed'">
-                          Registrar Pago
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `,
+  templateUrl: './company-purchase-dashboard.component.html',
   styleUrls: ['./company-purchase-dashboard.component.scss']
 })
 export class CompanyPurchaseDashboardComponent implements OnInit {
@@ -254,15 +63,25 @@ export class CompanyPurchaseDashboardComponent implements OnInit {
   
   statusForm: FormGroup;
   paymentForm: FormGroup;
+  quantityForm: FormGroup;
+  enrollmentForm: FormGroup;
+
+  // Course capacity and enrollment management
+  courseDateInfo: CourseDate | null = null;
+  enrollments: EnrollmentInfo[] = [];
+  enrollmentLoading = false;
+  enrolledCount = 0;
+  availableSlots = 0;
   
   statusOptions = [
-    { value: 'pending', label: 'Pendiente' },
-    { value: 'contacted', label: 'Contactado' },
-    { value: 'payment_pending', label: 'Pago Pendiente' },
-    { value: 'paid', label: 'Pagado' },
-    { value: 'completed', label: 'Completado' },
-    { value: 'canceled', label: 'Cancelado' }
+    { value: 'pending', label: 'Pendiente', description: 'Solicitud recibida, pendiente de revisión' },
+    { value: 'contacted', label: 'Contactado', description: 'Se ha contactado a la empresa' },
+    { value: 'payment_pending', label: 'Pago Pendiente', description: 'Esperando confirmación de pago' },
+    { value: 'paid', label: 'Pagado', description: 'Pago recibido, asientos reservados' },
+    { value: 'completed', label: 'Completado', description: 'Todas las inscripciones completadas' },
+    { value: 'canceled', label: 'Cancelado', description: 'Solicitud cancelada' }
   ];
+
 
   constructor(
     private http: HttpClient,
@@ -277,6 +96,16 @@ export class CompanyPurchaseDashboardComponent implements OnInit {
       paymentMethod: ['', Validators.required],
       paymentReference: ['', Validators.required],
       paymentAmount: [0, [Validators.required, Validators.min(0)]]
+    });
+
+    this.quantityForm = this.fb.group({
+      quantity: [1, [Validators.required, Validators.min(1)]]
+    });
+    
+    this.enrollmentForm = this.fb.group({
+      userName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      userId: ['']
     });
   }
 
@@ -310,8 +139,16 @@ export class CompanyPurchaseDashboardComponent implements OnInit {
     this.loadPurchases();
   }
 
-  selectPurchase(purchase: CompanyPurchase): void {
+  async selectPurchase(purchase: CompanyPurchase): Promise<void> {
     this.selectedPurchase = purchase;
+    
+    // Load course date information
+    await this.loadCourseDateInfo(purchase);
+    
+    // Load enrollments if purchase is paid or completed
+    if (purchase.status === 'paid' || purchase.status === 'completed') {
+      await this.loadEnrollments(purchase._id);
+    }
     
     // Fill in the forms with current values
     this.statusForm.patchValue({
@@ -322,8 +159,14 @@ export class CompanyPurchaseDashboardComponent implements OnInit {
     this.paymentForm.reset({
       paymentMethod: purchase.paymentMethod || '',
       paymentReference: purchase.paymentReference || '',
-      paymentAmount: purchase.paymentAmount || purchase.course?.price * purchase.quantity || 0
+      paymentAmount: purchase.paymentAmount || (purchase.course?.price * purchase.quantity) || 0
     });
+    
+    this.quantityForm.patchValue({
+      quantity: purchase.quantity
+    });
+    
+    this.updateEnrollmentCounts();
   }
 
   updateStatus(): void {
@@ -332,35 +175,34 @@ export class CompanyPurchaseDashboardComponent implements OnInit {
     const url = `${environment.apiUrl}/admin/company-purchases/${this.selectedPurchase._id}/status`;
     const data = this.statusForm.value;
     
-    // Display confirmation if changing to a less advanced status
-    const currentStatusIndex = this.getStatusIndex(this.selectedPurchase.status);
-    const newStatusIndex = this.getStatusIndex(data.status);
-    
-    if (newStatusIndex < currentStatusIndex) {
-      if (!confirm(`¿Está seguro de cambiar el estado de "${this.getStatusLabel(this.selectedPurchase.status)}" a "${this.getStatusLabel(data.status)}"? Esta acción puede afectar la reserva de asientos.`)) {
-        return;
-      }
-    }
-    
     // Special confirmation for paid status
     if (data.status === 'paid' && this.selectedPurchase.status !== 'paid') {
+      const availableSeats = this.courseDateInfo?.availableSeats || 0;
+      if (this.selectedPurchase.quantity > availableSeats) {
+        alert(`¡Atención! Solo quedan ${availableSeats} asientos disponibles, pero se solicitan ${this.selectedPurchase.quantity}. No se puede proceder con el pago.`);
+        return;
+      }
+      
       if (!confirm(`Al marcar como "Pagado", se reservarán ${this.selectedPurchase.quantity} asientos en el curso seleccionado. ¿Desea continuar?`)) {
         return;
       }
     }
     
-    this.http.post(url, data)
-      .subscribe({
-        next: (response: any) => {
-          this.loadPurchases();
-          // Update the selected purchase with the new data
-          this.selectedPurchase = response as CompanyPurchase;
-          alert(`Estado actualizado correctamente a "${this.getStatusLabel(data.status)}"`);
-        },
-        error: (err) => {
-          alert('Error al actualizar el estado: ' + (err.message || 'Error desconocido'));
+    this.http.post(url, data).subscribe({
+      next: (response: any) => {
+        this.loadPurchases();
+        this.selectedPurchase = response as CompanyPurchase;
+        alert(`Estado actualizado correctamente a "${this.getStatusLabel(data.status)}"`);
+        
+        // Refresh course date info to show updated capacity
+        if (data.status === 'paid') {
+          this.loadCourseDateInfo(this.selectedPurchase);
         }
-      });
+      },
+      error: (err) => {
+        alert('Error al actualizar el estado: ' + (err.error?.message || 'Error desconocido'));
+      }
+    });
   }
 
   recordPayment(): void {
@@ -399,5 +241,161 @@ export class CompanyPurchaseDashboardComponent implements OnInit {
   
   getStatusIndex(status: string): number {
     return this.statusOptions.findIndex(opt => opt.value === status);
+  }
+
+  // New methods for enhanced functionality
+  private async loadCourseDateInfo(purchase: CompanyPurchase): Promise<void> {
+    try {
+      const courseDatesUrl = `${environment.apiUrl}/course-dates/course/${purchase.course._id || purchase.course}`;
+      const courseDates = await this.http.get<any[]>(courseDatesUrl).toPromise();
+      
+      if (courseDates) {
+        const selectedDate = new Date(purchase.selectedDate);
+        const matchingDate = courseDates.find(cd => {
+          const courseDate = new Date(cd.startDate);
+          return courseDate.toDateString() === selectedDate.toDateString();
+        });
+        
+        if (matchingDate) {
+          this.courseDateInfo = {
+            _id: matchingDate._id,
+            startDate: matchingDate.startDate,
+            capacity: matchingDate.capacity,
+            enrolledCount: matchingDate.enrolledCount,
+            availableSeats: matchingDate.capacity - matchingDate.enrolledCount
+          };
+        }
+      }
+    } catch (error) {
+      console.error('Error loading course date info:', error);
+    }
+  }
+
+  private async loadEnrollments(purchaseId: string): Promise<void> {
+    this.enrollmentLoading = true;
+    try {
+      const url = `${environment.apiUrl}/admin/company-purchases/${purchaseId}/enrollments`;
+      const enrollments = await this.http.get<any[]>(url).toPromise();
+      
+      if (enrollments) {
+        this.enrollments = enrollments.map(e => ({
+          _id: e._id,
+          userName: e.user?.fullName || 'N/A',
+          email: e.user?.email || 'N/A',
+          status: e.status,
+          createdAt: e.createdAt
+        }));
+      }
+    } catch (error) {
+      console.error('Error loading enrollments:', error);
+      this.enrollments = [];
+    } finally {
+      this.enrollmentLoading = false;
+      this.updateEnrollmentCounts();
+    }
+  }
+
+  private updateEnrollmentCounts(): void {
+    if (this.selectedPurchase) {
+      this.enrolledCount = this.enrollments.length;
+      this.availableSlots = this.selectedPurchase.quantity - this.enrolledCount;
+    }
+  }
+
+  updateQuantity(): void {
+    if (!this.selectedPurchase || !this.quantityForm.valid) return;
+    
+    const newQuantity = this.quantityForm.get('quantity')?.value;
+    
+    // Check if new quantity is less than current enrollments
+    if (newQuantity < this.enrolledCount) {
+      alert(`No se puede reducir la cantidad a ${newQuantity} porque ya hay ${this.enrolledCount} inscripciones creadas.`);
+      this.quantityForm.patchValue({ quantity: this.selectedPurchase.quantity });
+      return;
+    }
+    
+    const url = `${environment.apiUrl}/admin/company-purchases/${this.selectedPurchase._id}`;
+    const data = { quantity: newQuantity };
+    
+    this.http.patch(url, data).subscribe({
+      next: (response: any) => {
+        this.selectedPurchase = response;
+        this.updateEnrollmentCounts();
+        alert('Cantidad actualizada correctamente');
+        this.loadPurchases();
+      },
+      error: (error) => {
+        alert('Error al actualizar la cantidad: ' + (error.error?.message || 'Error desconocido'));
+      }
+    });
+  }
+
+  getStatusClass(status: string): string {
+    const classes: { [key: string]: string } = {
+      'pending': 'bg-warning',
+      'contacted': 'bg-info',
+      'payment_pending': 'bg-primary',
+      'paid': 'bg-success',
+      'completed': 'bg-success',
+      'canceled': 'bg-danger'
+    };
+    return classes[status] || 'bg-secondary';
+  }
+
+  getStatusDescription(status: string): string {
+    const descriptions: { [key: string]: string } = {
+      'pending': 'La solicitud ha sido recibida y está pendiente de revisión.',
+      'contacted': 'Se ha contactado a la empresa para coordinar el pago.',
+      'payment_pending': 'La empresa está en proceso de realizar el pago.',
+      'paid': 'El pago ha sido recibido y los asientos están reservados.',
+      'completed': 'Todas las inscripciones han sido completadas.',
+      'canceled': 'La solicitud ha sido cancelada.'
+    };
+    return descriptions[status] || 'Estado desconocido';
+  }
+
+  // Modal and enrollment management methods
+  openEnrollmentModal(modal: any): void {
+    // This would open a modal for creating new enrollments
+    console.log('Opening enrollment modal', modal);
+  }
+
+  searchUsers(searchField: string): void {
+    // This would search for existing users
+    console.log('Searching users', searchField);
+  }
+
+  createEnrollment(): void {
+    if (!this.enrollmentForm.valid || !this.selectedPurchase) return;
+    
+    const enrollmentData = {
+      ...this.enrollmentForm.value,
+      companyPurchaseId: this.selectedPurchase._id
+    };
+    
+    console.log('Creating enrollment', enrollmentData);
+    // Implementation would create the enrollment via API
+  }
+
+  cancelPurchase(purchaseId: string): void {
+    if (!confirm('¿Está seguro de que desea cancelar esta solicitud?')) {
+      return;
+    }
+    
+    const reason = prompt('Ingrese el motivo de la cancelación:');
+    if (!reason) return;
+    
+    const url = `${environment.apiUrl}/admin/company-purchases/${purchaseId}/cancel`;
+    
+    this.http.post(url, { reason }).subscribe({
+      next: () => {
+        alert('Solicitud cancelada correctamente');
+        this.loadPurchases();
+        this.selectedPurchase = null;
+      },
+      error: (error) => {
+        alert('Error al cancelar la solicitud: ' + (error.error?.message || 'Error desconocido'));
+      }
+    });
   }
 }

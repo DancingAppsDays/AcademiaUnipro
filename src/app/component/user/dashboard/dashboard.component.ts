@@ -73,30 +73,30 @@ export class DashboardComponent implements OnInit {
     const userId = this.currentUser._id;
     const enrollmentsUrl = `${environment.apiUrl}/enrollments/user/${userId}`;
     
-    console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
+    //console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
     
     this.http.get<any[]>(enrollmentsUrl).subscribe({
       next: (enrollments) => {
-        console.log('Successfully fetched enrollments from API:', enrollments);
+        //console.log('Successfully fetched enrollments from API:', enrollments);
         
         if (enrollments && enrollments.length > 0) {
           this.processEnrollments(enrollments);
         } else {
-          console.log('No enrollments found, falling back to mock data');
-          this.loadMockDashboardData();
+         // console.log('No enrollments found, falling back to mock data');
+         // this.loadMockDashboardData();
         }
       },
       error: (error) => {
         console.error('Error fetching enrollments from API:', error);
-        console.log('Falling back to mock data');
-        this.loadMockDashboardData();
+       // console.log('Falling back to mock data');
+       // this.loadMockDashboardData();
       }
     });
   }
   
   private processEnrollments(enrollments: any[]): void {
     if (!enrollments || enrollments.length === 0) {
-      this.loadMockDashboardData();
+      //this.loadMockDashboardData();
       return;
     }
     
@@ -145,7 +145,7 @@ export class DashboardComponent implements OnInit {
       this.loading = false;
     } catch (error) {
       console.error('Error processing enrollments:', error);
-      this.loadMockDashboardData();
+      //this.loadMockDashboardData();
     }
   }
   
@@ -166,6 +166,8 @@ export class DashboardComponent implements OnInit {
   
   private loadMockDashboardData(): void {
     // Mock stats
+
+    /*
     this.upcomingCoursesCount = 2;
     this.completedCoursesCount = 3;
     this.certificatesCount = 2;
@@ -187,7 +189,7 @@ export class DashboardComponent implements OnInit {
       // Get 3 random courses as recommendations
       this.recommendedCourses = this.getRandomCourses(courses, 3);
       this.loading = false;
-    });
+    });*/
   }
   
   // Helper method to get random courses from a course array
