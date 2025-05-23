@@ -95,11 +95,27 @@
             </div>
             
             <div class="course-actions">
-              <a [href]="nextCourse.meetingUrl" target="_blank" class="btn btn-primary">
-                <i class="bi bi-camera-video"></i> Acceder
+              <a *ngIf="nextCourse.meetingUrl" 
+                 [href]="nextCourse.meetingUrl" 
+                 target="_blank" 
+                 class="btn btn-primary"
+                 rel="noopener noreferrer">
+                <i class="bi bi-camera-video"></i>
+                <span>Acceder</span>
               </a>
+              
+              <a *ngIf="nextCourse.whatsappGroup" 
+                 [href]="nextCourse.whatsappGroup" 
+                 target="_blank" 
+                 class="btn btn-success"
+                 rel="noopener noreferrer">
+                <i class="bi bi-whatsapp"></i>
+                <span>WhatsApp</span>
+              </a>
+              
               <a [routerLink]="['/course', nextCourse.id]" class="btn btn-outline-primary">
-                <i class="bi bi-info-circle"></i> Detalles
+                <i class="bi bi-info-circle"></i>
+                <span>Detalles</span>
               </a>
             </div>
           </div>

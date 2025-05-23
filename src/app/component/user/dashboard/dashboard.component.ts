@@ -73,30 +73,44 @@ export class DashboardComponent implements OnInit {
     const userId = this.currentUser._id;
     const enrollmentsUrl = `${environment.apiUrl}/enrollments/user/${userId}`;
     
-    //console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
+    console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
     
     this.http.get<any[]>(enrollmentsUrl).subscribe({
       next: (enrollments) => {
-        //console.log('Successfully fetched enrollments from API:', enrollments);
+        console.log('Successfully fetched enrollments from API:', enrollments);
         
         if (enrollments && enrollments.length > 0) {
           this.processEnrollments(enrollments);
         } else {
-         // console.log('No enrollments found, falling back to mock data');
-         // this.loadMockDashboardData();
+          console.log('No enrollments found for user');
+          // Handle empty enrollments gracefully
+          this.handleEmptyEnrollments();
         }
       },
       error: (error) => {
         console.error('Error fetching enrollments from API:', error);
-       // console.log('Falling back to mock data');
-       // this.loadMockDashboardData();
+        // Handle API error gracefully
+        this.handleEmptyEnrollments();
       }
     });
   }
   
+  private handleEmptyEnrollments(): void {
+    // Reset all counters to 0
+    this.upcomingCoursesCount = 0;
+    this.completedCoursesCount = 0;
+    this.certificatesCount = 0;
+    this.nextCourse = null;
+    
+    // Still load recommended courses to show something useful
+    this.loadRecommendedCourses();
+    
+    this.loading = false;
+  }
+  
   private processEnrollments(enrollments: any[]): void {
     if (!enrollments || enrollments.length === 0) {
-      //this.loadMockDashboardData();
+      this.handleEmptyEnrollments();
       return;
     }
     
@@ -145,7 +159,7 @@ export class DashboardComponent implements OnInit {
       this.loading = false;
     } catch (error) {
       console.error('Error processing enrollments:', error);
-      //this.loadMockDashboardData();
+      this.handleEmptyEnrollments();
     }
   }
   
@@ -156,46 +170,10 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading recommended courses:', error);
-        // Fall back to mock courses
-        this.courseService.getMockCourses().subscribe(courses => {
-          this.recommendedCourses = this.getRandomCourses(courses, 3);
-        });
+        // Set empty array if can't load recommended courses
+        this.recommendedCourses = [];
       }
     });
-  }
-  
-  private loadMockDashboardData(): void {
-    // Mock stats
-
-    /*
-    this.upcomingCoursesCount = 2;
-    this.completedCoursesCount = 3;
-    this.certificatesCount = 2;
-    
-    // Mock next course
-    this.nextCourse = {
-      id: '101',
-      title: 'NOM-004-STPS: Maquinaria y Equipo',
-      description: 'Curso especializado en normativas de seguridad para maquinaria industrial.',
-      date: new Date('2025-05-10T09:00:00'),
-      location: 'Virtual (Zoom)',
-      instructor: 'Roberto Vázquez',
-      duration: '8 horas',
-      meetingUrl: 'https://zoom.us/j/example'
-    };
-    
-    // Load recommended courses from mock data
-    this.courseService.getMockCourses().subscribe(courses => {
-      // Get 3 random courses as recommendations
-      this.recommendedCourses = this.getRandomCourses(courses, 3);
-      this.loading = false;
-    });*/
-  }
-  
-  // Helper method to get random courses from a course array
-  private getRandomCourses(courses: any[], count: number): any[] {
-    const shuffled = [...courses].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
   }
   
   // Helper methods for formatting

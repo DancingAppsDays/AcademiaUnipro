@@ -68,24 +68,34 @@ export class UserCoursesComponent implements OnInit {
     const userId = currentUser._id;
     const enrollmentsUrl = `${environment.apiUrl}/enrollments/user/${userId}`;
     
-    //console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
+    console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
     
     this.http.get<any[]>(enrollmentsUrl).subscribe({
       next: (enrollments) => {
-        //console.log('Successfully fetched enrollments from API:', enrollments);
+        console.log('Successfully fetched enrollments from API:', enrollments);
         if (enrollments && enrollments.length > 0) {
           this.processEnrollments(enrollments);
         } else {
-          console.log('No enrollments found, falling back to mock data');
-         // this.generateMockEnrollments();
+          console.log('No enrollments found for user');
+          this.handleEmptyEnrollments();
         }
       },
       error: (error) => {
-        //console.error('Error fetching enrollments from API:', error);
-      //  console.log('Falling back to mock enrollments');
-        //this.generateMockEnrollments();
+        console.error('Error fetching enrollments from API:', error);
+        this.handleEmptyEnrollments();
       }
     });
+  }
+  
+  private handleEmptyEnrollments(): void {
+    // Set all arrays to empty
+    this.enrolledCourses = [];
+    this.upcomingCourses = [];
+    this.pastCourses = [];
+    this.hasPostponementRisk = false;
+    this.loading = false;
+    
+    console.log('No enrollments to display - showing empty state');
   }
   
   private processEnrollments(enrollments: any[]): void {
@@ -98,7 +108,7 @@ export class UserCoursesComponent implements OnInit {
       })
       .catch(error => {
         console.error('Error processing enrollments:', error);
-        this.loading = false;
+        this.handleEmptyEnrollments();
       });
   }
   
@@ -126,7 +136,7 @@ export class UserCoursesComponent implements OnInit {
         },
         location: courseDate.location || 'Virtual',
         meetingUrl: courseDate.meetingUrl,
-        whatsappGroup: courseDate.whatsappGroup || null ,
+        whatsappGroup: courseDate.whatsappGroup || null,
         status: courseDate.status || 'scheduled',
         minimumRequired: courseDate.minimumRequired || 6
       });
@@ -182,122 +192,5 @@ export class UserCoursesComponent implements OnInit {
   
   showRescheduleOptions(enrolledCourse: EnrolledCourse): void {
     alert(`En una implementación real, aquí se mostraría un modal con opciones de reprogramación para el curso: ${enrolledCourse.course.title}`);
-  }
-  
-  private generateMockEnrollments(): void {
-    this.courseDateService.getUpcomingInstances(20).subscribe(instances => {
-      this.courseService.getMockCourses().subscribe(courses => {
-        // Create mock enrollments
-        const enrollments: EnrolledCourse[] = [];
-        
-        // Add 3 upcoming courses, including one at risk of postponement
-        const upcomingInstances = instances.filter(instance => new Date(instance.startDate) > new Date());
-        
-        // Make sure at least one instance is at risk (for demo purposes)
-        if (upcomingInstances.length >= 3) {
-          // Modify the first instance to be at risk
-          const riskInstance = { 
-            ...upcomingInstances[0],
-            enrolledCount: upcomingInstances[0].minimumRequired - 2 // Make it 2 short of minimum
-          };
-          
-          const course = courses.find(c => c._id === riskInstance.courseId);
-          if (course) {
-            const withAvailability = this.courseDateService.checkAvailability(riskInstance);
-            
-            // Calculate days until start
-            const startDate = new Date(riskInstance.startDate);
-            const now = new Date();
-            const daysUntilStart = Math.ceil((startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-            
-            // Add to enrollments
-            enrollments.push({
-              id: `mock-${riskInstance._id}`,
-              enrollmentId: `enroll-${Math.floor(Math.random() * 10000)}`,
-              course: course,
-              instance: withAvailability,
-              isPast: false,
-              isUpcoming: true,
-              isToday: false,
-              daysUntilStart: daysUntilStart
-            });
-          }
-          
-          // Add 2 more upcoming courses that are not at risk
-          for (let i = 1; i < Math.min(3, upcomingInstances.length); i++) {
-            const instance = upcomingInstances[i];
-            const course = courses.find(c => c._id === instance.courseId);
-            
-            if (course) {
-              // Make sure this one has enough enrollments
-              const confirmedInstance = {
-                ...instance,
-                enrolledCount: instance.minimumRequired + 2 // 2 more than minimum
-              };
-              
-              const withAvailability = this.courseDateService.checkAvailability(confirmedInstance);
-              
-              // Calculate days until start
-              const startDate = new Date(confirmedInstance.startDate);
-              const now = new Date();
-              const daysUntilStart = Math.ceil((startDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-              
-              // Add to enrollments
-              enrollments.push({
-                id: `mock-${confirmedInstance._id}`,
-                enrollmentId: `enroll-${Math.floor(Math.random() * 10000)}`,
-                course: course,
-                instance: withAvailability,
-                isPast: false,
-                isUpcoming: true,
-                isToday: false,
-                daysUntilStart: daysUntilStart
-              });
-            }
-          }
-        }
-        
-        // Add 2 past courses
-        for (let i = 0; i < Math.min(2, courses.length); i++) {
-          const course = courses[i];
-          
-          // Create a past instance
-          const pastDate = new Date();
-          pastDate.setMonth(pastDate.getMonth() - (i + 1)); // 1-2 months ago
-          
-          const pastInstance: CourseDate = {
-            _id: `past-${i}`,
-            courseId: course._id,
-            startDate: pastDate,
-            endDate: new Date(pastDate.getTime() + 8 * 60 * 60 * 1000), // 8 hours later
-            capacity: 15,
-            enrolledCount: 12,
-            instructor: course.instructor,
-            location: 'Virtual (Zoom)',
-            meetingUrl: 'https://zoom.us/j/past-example',
-            status: 'completed',
-            minimumRequired: 6
-          };
-          
-          const withAvailability = this.courseDateService.checkAvailability(pastInstance);
-          
-          // Add to enrollments
-          enrollments.push({
-            id: `mock-past-${i}`,
-            enrollmentId: `enroll-past-${Math.floor(Math.random() * 10000)}`,
-            course: course,
-            instance: withAvailability,
-            isPast: true,
-            isUpcoming: false,
-            isToday: false,
-            daysUntilStart: -30 * (i + 1) // Negative days since it's in the past
-          });
-        }
-        
-        this.enrolledCourses = enrollments;
-        this.splitCoursesByDate();
-        this.loading = false;
-      });
-    });
   }
 }
