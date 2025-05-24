@@ -14,11 +14,11 @@ export class CourseDateService {
   private http = inject(HttpClient);
   
   getCourseInstancesForCourse(courseId: string): Observable<CourseDate[]> {
-    console.log(`Fetching course dates for courseId: ${courseId} from ${this.apiUrl}/course/${courseId}`);
+    //console.log(`Fetching course dates for courseId: ${courseId} from ${this.apiUrl}/course/${courseId}`);
     
     // Try getting from actual API first
     return this.http.get<any[]>(`${this.apiUrl}/course/${courseId}`).pipe(
-      tap(data => console.log(`Retrieved ${data.length} course dates from API for course ${courseId}:`, data)),
+     // tap(data => console.log(`Retrieved ${data.length} course dates from API for course ${courseId}:`, data)),
       // Map the response to ensure dates are properly handled
       map(dates => this.normalizeCourseDates(dates)),
       catchError(error => {
@@ -30,11 +30,11 @@ export class CourseDateService {
   }
   
   getCourseInstanceById(instanceId: string): Observable<CourseDate | null> {
-    console.log(`Fetching course date by id: ${instanceId} from ${this.apiUrl}/${instanceId}`);
+    //console.log(`Fetching course date by id: ${instanceId} from ${this.apiUrl}/${instanceId}`);
     
     // Try getting from actual API first
     return this.http.get<any>(`${this.apiUrl}/${instanceId}`).pipe(
-      tap(data => console.log(`Retrieved course date ${instanceId} from API:`, data)),
+      //tap(data => console.log(`Retrieved course date ${instanceId} from API:`, data)),
       // Normalize the date fields
       map(date => this.normalizeCourseDate(date)),
       catchError(error => {

@@ -1,10 +1,11 @@
 // user.service.ts
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { User } from '../../core/models/user.model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,8 @@ import { User } from '../../core/models/user.model';
 export class UserService {
   private apiUrl = `${environment.apiUrl}/users`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
+
+  private router = inject(Router);
   
   constructor(private http: HttpClient) {
     // Check for stored user on init
@@ -77,6 +80,7 @@ export class UserService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('token');
     this.currentUserSubject.next(null);
+     this.router.navigate(['/home']);
   }
   
   

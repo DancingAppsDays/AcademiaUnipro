@@ -66,13 +66,14 @@ import { animate, style, transition, trigger } from '@angular/animations';
               </a>
             </li>
             <li>
-              <!-- //TODO Review logic
+              <!-- //TODO Review logic-->
             <a routerLink="/dashboard/courses" (click)="closeMenu()">
                 <i class="bi bi-mortarboard"></i>
                 <span>Mis Cursos</span>
                 <span class="badge" *ngIf="upcomingCourseCount > 0">{{ upcomingCourseCount }}</span>
               </a>
-            </li>-->
+            </li>
+           <!-- 
             <li>
               <a routerLink="/dashboard/profile" (click)="closeMenu()">
                 <i class="bi bi-person"></i>
@@ -84,7 +85,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
                 <i class="bi bi-award"></i>
                 <span>Certificados</span>
               </a>
-            </li>
+            </li>-->
           </ul>
           
           <div class="dropdown-divider"></div>

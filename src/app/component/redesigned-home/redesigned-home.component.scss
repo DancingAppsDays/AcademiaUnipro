@@ -14,7 +14,6 @@ $uniprotec-dark-gray: #333333;
   font-family: 'Montserrat', sans-serif;
   overflow-x: hidden;
 }
-
 .hero-section {
   .carousel-container {
     position: relative;
@@ -27,6 +26,9 @@ $uniprotec-dark-gray: #333333;
     
     @media (max-width: 767px) {
       height: 350px;
+      // On mobile, allow the container to adjust to image aspect ratio
+      height: auto;
+      min-height: 250px;
     }
     
     img {
@@ -34,6 +36,20 @@ $uniprotec-dark-gray: #333333;
       height: 100%;
       object-fit: cover;
       object-position: center center;
+      
+      // Mobile-specific behavior - contain the full image
+      @media (max-width: 767px) {
+        height: auto;
+        object-fit: contain;
+        object-position: center;
+        min-height: 250px;
+        max-height: 400px;
+      }
+      
+      // For very small screens, ensure the image is fully visible
+      @media (max-width: 480px) {
+        max-height: 300px;
+      }
     }
     
     .carousel-caption {
@@ -44,6 +60,15 @@ $uniprotec-dark-gray: #333333;
       z-index: 2;
       text-align: center;
       width: 80%;
+      
+      // Keep caption overlaid but adjust position for mobile
+      @media (max-width: 767px) {
+        top: 50%;
+        width: 90%;
+        padding: 1rem;
+       // background: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+      }
       
       h1 {
         font-weight: 700;
@@ -58,6 +83,11 @@ $uniprotec-dark-gray: #333333;
         
         @media (max-width: 767px) {
           font-size: 1.8rem;
+          text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        @media (max-width: 480px) {
+          font-size: 1.5rem;
         }
       }
     }

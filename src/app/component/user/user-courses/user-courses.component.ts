@@ -68,11 +68,11 @@ export class UserCoursesComponent implements OnInit {
     const userId = currentUser._id;
     const enrollmentsUrl = `${environment.apiUrl}/enrollments/user/${userId}`;
     
-    console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
+    //console.log(`Fetching enrollments for user ${userId} from ${enrollmentsUrl}`);
     
     this.http.get<any[]>(enrollmentsUrl).subscribe({
       next: (enrollments) => {
-        console.log('Successfully fetched enrollments from API:', enrollments);
+        //console.log('Successfully fetched enrollments from API:', enrollments);
         if (enrollments && enrollments.length > 0) {
           this.processEnrollments(enrollments);
         } else {

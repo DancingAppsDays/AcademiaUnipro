@@ -37,7 +37,7 @@ export class CourseService {
     //console.log(`Attempting to fetch courses in category ${category} from API`);
     
     return this.http.get<Course[]>(`${this.apiUrl}/category/${category}`).pipe(
-      tap(courses => console.log(`Fetched ${courses.length} courses in category ${category} from API`)),
+      //tap(courses => console.log(`Fetched ${courses.length} courses in category ${category} from API`)),
       catchError(error => this.handleApiError('getCoursesByCategory', error, category))
     );
   }
