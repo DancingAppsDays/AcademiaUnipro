@@ -46,27 +46,27 @@ export class StripeService {
     const endpoint = `${this.apiBaseUrl}/payments/create-payment-intent`;
   
     return this.http.post<{ clientSecret: string }>(endpoint, paymentData).pipe(
-      tap(response => {
-        console.log('Payment intent created:', response);
-      }),
+      // tap(response => {
+      //   console.log('Payment intent created:', response);
+      // }),
       catchError(error => {
         console.error('Error creating payment intent:', error);
         this.loadingSubject.next(false);
         throw error;
       }),
-      tap(() => this.loadingSubject.next(false))
+     // tap(() => this.loadingSubject.next(false))
     );
   }
 
   public validatePayment(paymentData: any): Observable<{valid: boolean; message?: string}> {
     const endpoint = `${this.apiBaseUrl}/payments/validate-payment`;
     return this.http.post<{valid: boolean; message?: string}>(endpoint, paymentData).pipe(
-      tap(response => {
-        console.log('Payment validation response:', response);
-        if (!response.valid) {
-          console.warn('Payment validation failed:', response.message);
-        }
-      }),
+      // tap(response => {
+      //   console.log('Payment validation response:', response);
+      //   if (!response.valid) {
+      //     console.warn('Payment validation failed:', response.message);
+      //   }
+      // }),
       catchError(error => {
         console.error('Error validating payment:', error);
         return of({ valid: false, message: 'Error validating payment request' });

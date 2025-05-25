@@ -100,7 +100,7 @@ export class CourseDateService {
   
   enrollInCourseInstance(instanceId: string, userId: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/${instanceId}/enroll`, { userId }).pipe(
-      tap(response => console.log('Enrollment response from API:', response)),
+      //tap(response => console.log('Enrollment response from API:', response)),
       catchError(error => {
         console.error('Error enrolling in course through API:', error);
         // For fallback during development, we'll simulate success
