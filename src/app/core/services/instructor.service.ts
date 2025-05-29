@@ -170,7 +170,8 @@ Actualmente forma parte del equipo de instructores acreditados de UNIPROTEC, don
   private courseInstructorMapping: { [courseId: string]: string } = {
     // Map specific course IDs to instructor keys
     '67fabd7aed988286dbb4d26f': 'ricardo-vazquez', //maquinarioa curso
-        '68016ba6dacd51ff0543002b': 'joram-morales', // manejo de sustancias químicas
+        '68016ba6dacd51ff0543002b': 'joram-morales', // manejo de sustnacias peligrosas
+  '67fabd7ded988286dbb4d271': 'joram-morales', // sustancias globalmente armonizado                  
 
   '68016b9bdacd51ff05430029': 'miroslava-jimenez', // bloqueo loto
  '68016bb4dacd51ff0543002d': 'jessica-balderrama', // residuos peligrosos
