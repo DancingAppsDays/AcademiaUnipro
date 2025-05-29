@@ -294,11 +294,19 @@
       </div>
       -->
 
-      <!-- Instructor Section -->
+     <!-- Instructor Section -->
       <div class="content-section" *ngIf="activeSection === 'instructor'">
         <h2>Acerca del instructor</h2>
 
-        <div class="instructor-profile">
+        <!-- Use enhanced instructor display if available -->
+        <app-enhanced-instructor-display 
+          *ngIf="enhancedInstructor"
+          [instructor]="enhancedInstructor"
+          [showPhoto]="true">
+        </app-enhanced-instructor-display>
+
+        <!-- Fallback to basic instructor display if enhanced data not available -->
+        <div class="instructor-profile" *ngIf="!enhancedInstructor && course?.instructor">
           <div class="row">
             <div class="col-md-3">
               <div class="instructor-image">
@@ -321,7 +329,6 @@
           </div>
         </div>
       </div>
-
       <!-- Dates Section with ID to allow scrolling -->
       <div class="content-section" id="dates-section" *ngIf="activeSection === 'dates'" #datesSection>
         <h2>Fechas del Curso</h2>

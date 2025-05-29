@@ -14,7 +14,9 @@ import { SafeUrlPipe } from '../../core/pipes/safe.pipe';
 import { CourseFaqComponent } from '../course-faq/course-faq.component';
 import { CourseInfoDetailsComponent } from '../course-info-details/course-info-details.component';
 import { ViewportScroller } from '@angular/common';
-import { InstructorService } from '../../core/services/instructor.service';
+
+import { InstructorService, EnhancedInstructor } from '../../core/services/instructor.service';
+import { EnhancedInstructorDisplayComponent } from '../enhaced-instructor-display/enhaced-instructor-display.component';
 
 @Component({
   selector: 'app-course-detail',
@@ -28,6 +30,7 @@ import { InstructorService } from '../../core/services/instructor.service';
     CourseDateSelectorComponent,
     CourseFaqComponent,
     CourseInfoDetailsComponent,
+    EnhancedInstructorDisplayComponent,
     
   ],
   templateUrl: './coursedetails.component.html',
@@ -80,6 +83,8 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
   hasCourseDates = false;
   loadingCourseDates = false;
   minimumStudentsRequired = 6;
+
+   enhancedInstructor: EnhancedInstructor | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -184,7 +189,7 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
   }
     this.course = course;
 
-      this.enhanceCourseWithMockInstructor(course);
+      this.loadEnhancedInstructor(course);
 
     
     // Set minimum students required from course policy or use default
@@ -404,10 +409,25 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
 
 
 
+private loadEnhancedInstructor(course: Course): void {
+  this.instructorService.getInstructorForCourse(course._id, course.category).subscribe(instructor => {
+    this.enhancedInstructor = instructor;
+    
+    // Update course's instructor for backward compatibility
+    if (instructor) {
+      course.instructor = {
+        _id: instructor._id,
+        name: instructor.name,
+        photoUrl: instructor.photoUrl,
+        bio: instructor.bio,
+        specialties: instructor.specialties
+      };
+    }
+  });
+}
 
 
-
-  
+ /* 
 private enhanceCourseWithMockInstructor(course: Course): void {
 
   console.log("about to set mock isntrutor", course)
@@ -436,7 +456,7 @@ private enhanceCourseWithMockInstructor(course: Course): void {
     });
   }
 }
-
+*/
 
 
 

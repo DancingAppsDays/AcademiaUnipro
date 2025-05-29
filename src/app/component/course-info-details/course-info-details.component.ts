@@ -83,9 +83,9 @@ export class CourseInfoDetailsComponent implements OnInit {
 
   private initializeData(): void {
     // Log to check what we're working with
-    console.log('Initializing with course:', this.course?.title);
-    console.log('Objectives provided directly:', this.objectives);
-    console.log('Audience provided directly:', this.audience);
+   // console.log('Initializing with course:', this.course?.title);
+   // console.log('Objectives provided directly:', this.objectives);
+    //console.log('Audience provided directly:', this.audience);
     
     // Set default values first
     this.setDefaultValues();
@@ -150,7 +150,7 @@ export class CourseInfoDetailsComponent implements OnInit {
   private tryExtractFromDescription(): void {
     // Enhanced implementation to handle various formats in the course description
     const description = this.course.description;
-    console.log('Full description:', description);
+   // console.log('Full description:', description);
     
     // Look for Objetivos/Objectives section with various emojis and formats
     const objectivesRegex = /(🎯\s*Objetivos|Objetivos de Aprendizaje|Al finalizar este curso)[^]*?(?=👥|¿A quién va dirigido|\n\n|$)/i;
