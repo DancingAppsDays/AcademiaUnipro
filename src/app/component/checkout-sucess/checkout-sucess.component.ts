@@ -209,10 +209,11 @@ export class CheckoutSuccessComponent implements OnInit {
 
     let details = encodeURIComponent(`Curso de capacitación: ${this.course.title}`);
     
+    //TODO: fix database location of coursedates
     // Add location if available from course instance
-    let location = '';
+    let location = 'Zoom meeting';
     if (this.courseInstance?.location) {
-      location = `&location=${encodeURIComponent(this.courseInstance.location)}`;
+      //location = `&location=${encodeURIComponent(this.courseInstance.location)}`;
     }
     
     // Add meeting URL if available

@@ -59,27 +59,69 @@ Ha sido coordinador de seguridad en el proyecto Paint Shop de General Motors Mé
         'Auditor e implementador de AMEF'
       ],
       categories: ['Normativas Clave', 'Seguridad Especializada'],
-      rawText: `**Ing. Ricardo Geciel Vázquez Medina**
-**Especialista en Seguridad Industrial y Aplicación de Normas STPS ***Instructor Certificado por CONOCER EC0217 | Líder en formación para entornos de alto riesgo*
+      rawText: `**Ing. Ricardo Geciel Vázquez Medina**...`
+    },
 
-**🧩 Perfil Profesional**
-El Ing. Ricardo Geciel es un instructor con más de 10 años de experiencia en seguridad industrial, higiene ocupacional y normativas STPS. Certificado bajo el estándar **EC0217 de CONOCER**, actualmente forma parte del equipo de instructores acreditados de **UNIPROTEC**, capacitando a líderes, técnicos y operadores en empresas de clase mundial.
+    'miroslava-jimenez': {
+      _id: 'instr-miroslava-1',
+      name: 'Miroslava Jiménez Martínez',
+      title: 'Instructora Certificada en Seguridad e Higiene Industrial',
+      subtitle: 'Coordinadora de Seguridad e Higiene | Especialista en Gestión Ambiental y Mejora Continua',
+      photoUrl: 'assets/images/instructors/miroslava-jimenez.jpg',
+      bio: `Miroslava Jiménez es una profesional con sólida formación en Ingeniería Ambiental y una trayectoria destacada en Seguridad, Higiene y Sustentabilidad Industrial. Cuenta con certificación oficial EC0217 del CONOCER como instructora profesional, avalando su capacidad para impartir capacitación de forma efectiva y estructurada.
 
-Ha sido coordinador de seguridad en el proyecto Paint Shop de **General Motors México**, liderando estrategias de prevención de riesgos, formación de líderes de seguridad, auditorías e implementación de AMEF. Su estilo de enseñanza se basa en experiencias reales de campo, metodologías gamificadas y un enfoque directo y práctico.
+Ha liderado procesos de mejora continua, seguridad y gestión ambiental en empresas como Red Hialina, ENCORP, Hitchiner y ERMO, especializándose en el diseño y aplicación de programas de seguridad laboral, manejo de residuos, ergonomía y cumplimiento normativo.`,
+      specialties: ['Seguridad e Higiene Industrial', 'Gestión Ambiental', 'Mejora Continua', 'Ergonomía', 'Manejo de Residuos'],
+      professionalProfile: `Miroslava Jiménez es una profesional con sólida formación en Ingeniería Ambiental y una trayectoria destacada en Seguridad, Higiene y Sustentabilidad Industrial. Ha liderado procesos de mejora continua, seguridad y gestión ambiental en empresas como Red Hialina, ENCORP, Hitchiner y ERMO.`,
+      certifications: [
+        'Ingeniería Ambiental - Universidad Autónoma de San Luis Potosí',
+        'Certificación EC0217.01 - Estándar de Competencia CONOCER',
+        'Diplomado en Seguridad e Higiene Industrial (2018)',
+        'Diplomado Lean Manufacturing (2018-2019)',
+        'Curso Ley Federal de Responsabilidad Ambiental (2017)',
+        'Curso NMX-AA-171-SCFI-2014: Desempeño Ambiental en Hospitalidad',
+        'Formación en Evaluación de Impacto Ambiental',
+        'Formación en Riesgo Industrial, Química Verde y Sistemas de Gestión de Calidad'
+      ],
+      experience: [
+        'Coordinadora de Seguridad e Higiene en Red Hialina',
+        'Especialista en gestión ambiental en ENCORP',
+        'Líder de mejora continua en Hitchiner',
+        'Coordinadora de seguridad en ERMO'
+      ],
+      categories: ['Seguridad Especializada', 'Protección y Prevención']
+    },
 
-**📚 Formación y Certificaciones Relevantes**
-* **Ingeniero Industrial**
-* **Técnico en Seguridad e Higiene Industrial – UPAV Plantel Silao**
-* **Certificación EC0217 – Impartición de cursos presenciales grupales (CONOCER)**
-* **Certificación EC0391 – Verificación de condiciones de Seguridad e Higiene (2024)**
-* **Diplomado OSHA – Safety Solutions, Arizona, EE.UU. (2017)**
-* **Diplomado en Seguridad e Higiene Industrial y Salud Ocupacional – UNAM (120 hrs.)**
-* **Diplomado ISO 9001:2015, 14001:2015, 45001:2018 – CAPINSER (2024)**
-* **Curso en Metodologías Gamificadas para la Enseñanza – Grupo E2 (2020)**
-* **Curso de Equipos Móviles (montacargas, grúas, polipastos, etc.) – ILACI (2022)**
-* **Diplomado Líder de Seguridad Industrial – Group M+W / Proyecto BDF NIVEA (2021)**
-* **Occupational Health & Safety Specialist – AIFYC Texas, 100 hrs. (2024)**
-* **Diplomado Nivel 3 – Seguridad, Salud, Medio Ambiente y Calidad (2024)**`
+    'jessica-balderrama': {
+      _id: 'instr-jessica-1',
+      name: 'Ing. Jessica Arizbeth Balderrama Durán',
+      title: 'Especialista en Seguridad, Salud y Medio Ambiente en la Industria Automotriz y de Construcción',
+      subtitle: 'Instructora Certificada CONOCER EC0217 | Líder en coordinación de seguridad con más de 10 años de experiencia en campo',
+      photoUrl: 'assets/images/instructors/jessica-balderrama.jpg',
+      bio: `La Ing. Jessica Balderrama cuenta con una sólida trayectoria profesional en el sector industrial, automotriz y de construcción, con especialización en seguridad, salud ocupacional y medio ambiente (SSMA). A lo largo de más de una década ha liderado y supervisado proyectos de alto impacto para empresas como BMW, Toyota, L'Oréal y Nissan, coordinando equipos multidisciplinarios y aplicando estrictamente las NOM-STPS.
+
+Actualmente forma parte del equipo de instructores acreditados de UNIPROTEC, donde imparte capacitaciones prácticas y actualizadas, integrando su experiencia operativa en múltiples plantas con un enfoque humano, técnico y normativo.`,
+      specialties: ['Seguridad Industrial', 'Salud Ocupacional', 'Medio Ambiente', 'Industria Automotriz', 'Gestión SSMA'],
+      professionalProfile: `La Ing. Jessica Balderrama cuenta con una sólida trayectoria profesional en el sector industrial, automotriz y de construcción, con especialización en seguridad, salud ocupacional y medio ambiente (SSMA). Ha liderado proyectos para BMW, Toyota, L'Oréal y Nissan.`,
+      certifications: [
+        'Ingeniería (área no especificada)',
+        'Certificación CONOCER EC0217 – Impartición de cursos de formación presencial grupal',
+        'Gestión de riesgos y trabajos con permisos especiales',
+        'Seguridad ambiental y control de residuos',
+        'Coordinación de brigadas y supervisión normativa',
+        'Evaluación de condiciones de trabajo en obra y planta'
+      ],
+      experience: [
+        'Coordinadora SSMA en Electrificaciones Integrales SELEC (Qro.)',
+        'Coordinadora de Seguridad y Medio Ambiente en CONSTRUPLAN (Qro. y SLP)',
+        'Coordinadora SSMA en FRANCISCO MARTÍNEZ SILVA / L\'Oréal SLP',
+        'Supervisora en BMW Plant 30.10 (SLP) - PODERCON, PRODYNAMICS, BIDISA, PRO S.O.S.',
+        'Supervisora de seguridad en TOYOTA TMMGT (Gto.)',
+        'Coordinadora de seguridad en Centro de Distribución Industrial / Nissan Aguascalientes',
+        'Gestión de permisos en Nuvoil / Veracruz',
+        'Consultora y capacitadora industrial en CSIyC / Veracruz'
+      ],
+      categories: ['Seguridad Especializada', 'Normativas Clave']
     },
     
     'joram-morales': {
@@ -128,17 +170,30 @@ Actualmente forma parte del equipo de instructores acreditados de UNIPROTEC, don
   private courseInstructorMapping: { [courseId: string]: string } = {
     // Map specific course IDs to instructor keys
     '67fabd7aed988286dbb4d26f': 'ricardo-vazquez', //maquinarioa curso
-    'brigadas-curso': 'joram-morales',
-    '68016ba6dacd51ff0543002b': 'joram-morales', // manejo de sustancias químicas
+        '68016ba6dacd51ff0543002b': 'joram-morales', // manejo de sustancias químicas
+
+  '68016b9bdacd51ff05430029': 'miroslava-jimenez', // bloqueo loto
+ '68016bb4dacd51ff0543002d': 'jessica-balderrama', // residuos peligrosos
+ '67fabd76ed988286dbb4d26d': 'ricardo-vazquez', // corte y soldadura nom027
+ '68016b3bdacd51ff05430027': 'jessica-balderrama', // instalaciones electricas
+ '68016bc2dacd51ff0543002f': 'ricardo-vazquez', // espacios confinados nom033
+ '68016bccdacd51ff05430031': 'jessica-balderrama', // ruido nom011
+ '68016bdadacd51ff05430033': 'jessica-balderrama', // proteccion personal nom017
+ '68016be4dacd51ff05430035': 'miroslava-jimenez', // comision seguridad nom019 
+ '68016becdacd51ff05430037': 'miroslava-jimenez', // iluminacion nom025
+ '68016bf5dacd51ff05430039': 'miroslava-jimenez', // señalizacion nom026
+ '681ad82a71d574b4001eeeb6': 'joram-morales', // riesgo psicosocial nom035
+ '68016bfcdacd51ff0543003b': 'joram-morales', // formacion instructores
+ '68016c07dacd51ff0543003d': 'joram-morales', // formacion supervisores
     // Add more mappings as needed
   };
 
   // Category-based fallback mapping
   private categoryInstructorMapping: { [category: string]: string } = {
     'Normativas Clave': 'ricardo-vazquez',
-    'Seguridad Especializada': 'joram-morales', 
-    'Protección y Prevención': 'joram-morales',
-    'Desarrollo Profesional': 'default'
+    'Seguridad Especializada': 'jessica-balderrama', 
+    'Protección y Prevención': 'miroslava-jimenez',
+    'Desarrollo Profesional': 'joram-morales',
   };
 
   constructor() { }
