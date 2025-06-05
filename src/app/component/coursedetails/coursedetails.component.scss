@@ -12,10 +12,10 @@ $uniprotec-dark-gray: #333333;
 
 .course-detail-container {
   font-family: 'Montserrat', sans-serif;
-  
+
   .course-header {
     padding: 2rem 0;
-    
+
     .course-category-badge {
       display: inline-block;
       background-color: $uniprotec-yellow;
@@ -27,100 +27,101 @@ $uniprotec-dark-gray: #333333;
       text-transform: uppercase;
       font-size: 0.9rem;
     }
-    
+
     .course-title {
       font-weight: 700;
       font-size: 2.5rem;
       margin-bottom: 0.5rem;
       color: $uniprotec-dark-blue;
     }
-    
+
     .course-subtitle {
       font-size: 1.2rem;
       color: $uniprotec-dark-gray;
       margin-bottom: 1.5rem;
     }
-    
+
     .course-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 1.5rem;
       margin-bottom: 1rem;
-      
+
       .meta-item {
         display: flex;
         align-items: center;
-        
+
         i {
           color: $uniprotec-blue;
           margin-right: 0.5rem;
           font-size: 1.2rem;
         }
-        
+
         span {
           color: $uniprotec-dark-gray;
         }
       }
     }
   }
-  
+
   .course-price-card {
     background-color: $uniprotec-white;
     border-radius: 0.5rem;
     padding: 1.5rem;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    
+
     .price-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 1.5rem;
-      
+
       .price-label {
         font-size: 1rem;
         color: $uniprotec-dark-gray;
       }
-      
+
       .price-value {
         font-size: 1.8rem;
         font-weight: 700;
         color: $uniprotec-blue;
       }
     }
-    
+
     .date-selection {
       background-color: $uniprotec-gray;
       padding: 1rem;
       border-radius: 0.5rem;
       margin-bottom: 1rem;
-      
-      .selected-date, .no-date-selected {
+
+      .selected-date,
+      .no-date-selected {
         display: flex;
         align-items: center;
-        
+
         i {
           color: $uniprotec-blue;
           margin-right: 0.5rem;
           font-size: 1.2rem;
         }
-        
+
         span {
           color: $uniprotec-dark-gray;
         }
       }
     }
-    
+
     .course-features {
       .feature-item {
         display: flex;
         align-items: center;
         margin-bottom: 0.8rem;
-        
+
         i {
           color: $uniprotec-blue;
           margin-right: 0.5rem;
         }
-        
+
         span {
           color: $uniprotec-dark-gray;
           font-size: 0.9rem;
@@ -128,11 +129,11 @@ $uniprotec-dark-gray: #333333;
       }
     }
   }
-  
+
   .course-nav {
     .nav-tabs {
       border-bottom: 2px solid $uniprotec-gray;
-      
+
       .nav-link {
         color: $uniprotec-dark-gray;
         font-weight: 500;
@@ -140,11 +141,11 @@ $uniprotec-dark-gray: #333333;
         padding: 1rem 1.5rem;
         margin-right: 1rem;
         cursor: pointer;
-        
+
         &.active {
           color: $uniprotec-blue;
           position: relative;
-          
+
           &:after {
             content: '';
             position: absolute;
@@ -155,77 +156,77 @@ $uniprotec-dark-gray: #333333;
             background-color: $uniprotec-blue;
           }
         }
-        
+
         &:hover:not(.active) {
           color: $uniprotec-light-blue;
         }
       }
     }
   }
-  
+
   .content-section {
     padding: 2rem 0;
-    
+
     h2 {
       font-weight: 700;
       font-size: 1.8rem;
       margin-bottom: 1.5rem;
       color: $uniprotec-dark-blue;
     }
-    
+
     h3 {
       font-weight: 700;
       font-size: 1.3rem;
       margin-bottom: 1rem;
       color: $uniprotec-dark-blue;
     }
-    
+
     .description {
       p {
         color: $uniprotec-dark-gray;
         line-height: 1.7;
       }
     }
-    
+
     ul {
       li {
         margin-bottom: 0.5rem;
         color: $uniprotec-dark-gray;
       }
     }
-    
+
     .accordion {
       .accordion-item {
         margin-bottom: 1rem;
         border: 1px solid $uniprotec-gray;
         border-radius: 0.5rem;
         overflow: hidden;
-        
+
         .accordion-header {
           .accordion-button {
             background-color: $uniprotec-white;
             font-weight: 500;
             color: $uniprotec-dark-blue;
-            
+
             &:not(.collapsed) {
               background-color: $uniprotec-light-blue;
               color: $uniprotec-white;
             }
-            
+
             &:focus {
               box-shadow: none;
             }
           }
         }
-        
+
         .accordion-body {
           padding: 1.5rem;
-          
+
           .module-topics {
             padding-left: 1.5rem;
             margin-bottom: 1rem;
           }
-          
+
           .module-duration {
             font-style: italic;
             color: $uniprotec-dark-gray;
@@ -233,15 +234,15 @@ $uniprotec-dark-gray: #333333;
         }
       }
     }
-    
+
     .instructor-profile {
       background-color: $uniprotec-gray;
       border-radius: 0.5rem;
       padding: 2rem;
-      
+
       .instructor-image {
         text-align: center;
-        
+
         img {
           width: 180px;
           height: 180px;
@@ -250,7 +251,7 @@ $uniprotec-dark-gray: #333333;
           box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
       }
-      
+
       .instructor-details {
         .instructor-name {
           font-weight: 700;
@@ -258,13 +259,13 @@ $uniprotec-dark-gray: #333333;
           margin-bottom: 1rem;
           color: $uniprotec-dark-blue;
         }
-        
+
         .instructor-specialties {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
           margin-bottom: 1rem;
-          
+
           .specialty-badge {
             background-color: $uniprotec-blue;
             color: $uniprotec-white;
@@ -273,7 +274,7 @@ $uniprotec-dark-gray: #333333;
             font-size: 0.8rem;
           }
         }
-        
+
         .instructor-bio {
           p {
             color: $uniprotec-dark-gray;
@@ -282,85 +283,85 @@ $uniprotec-dark-gray: #333333;
         }
       }
     }
-    
+
     .reviews-summary {
       display: flex;
       justify-content: center;
       margin-bottom: 2rem;
-      
+
       .overall-rating {
         text-align: center;
-        
+
         .rating-value {
           font-size: 3rem;
           font-weight: 700;
           color: $uniprotec-dark-blue;
           line-height: 1;
         }
-        
+
         .stars {
           margin: 0.5rem 0;
-          
+
           i {
             color: $uniprotec-yellow;
             font-size: 1.5rem;
           }
         }
-        
+
         .total-reviews {
           color: $uniprotec-dark-gray;
           font-size: 0.9rem;
         }
       }
     }
-    
+
     .review-list {
       .review-item {
         background-color: $uniprotec-gray;
         border-radius: 0.5rem;
         padding: 1.5rem;
         margin-bottom: 1rem;
-        
+
         .reviewer-info {
           display: flex;
           align-items: center;
           margin-bottom: 1rem;
-          
+
           .reviewer-avatar {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             overflow: hidden;
             margin-right: 1rem;
-            
+
             img {
               width: 100%;
               height: 100%;
               object-fit: cover;
             }
           }
-          
+
           .reviewer-details {
             flex-grow: 1;
-            
+
             .reviewer-name {
               font-weight: 500;
               color: $uniprotec-dark-blue;
             }
-            
+
             .review-date {
               font-size: 0.8rem;
               color: $uniprotec-dark-gray;
             }
           }
-          
+
           .review-rating {
             i {
               color: $uniprotec-yellow;
             }
           }
         }
-        
+
         .review-content {
           p {
             color: $uniprotec-dark-gray;
@@ -371,7 +372,7 @@ $uniprotec-dark-gray: #333333;
       }
     }
   }
-  
+
   .related-courses {
     h2 {
       font-weight: 700;
@@ -379,7 +380,7 @@ $uniprotec-dark-gray: #333333;
       margin-bottom: 1.5rem;
       color: $uniprotec-dark-blue;
     }
-    
+
     .course-card {
       border-radius: 10px;
       overflow: hidden;
@@ -387,28 +388,28 @@ $uniprotec-dark-gray: #333333;
       transition: all 0.3s ease;
       cursor: pointer;
       background-color: white;
-      
+
       &:hover {
         transform: translateY(-10px);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        
+
         .card-img-container img {
           transform: scale(1.1);
         }
       }
-      
+
       .card-img-container {
         position: relative;
         height: 180px;
         overflow: hidden;
-        
+
         img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           transition: transform 0.6s ease;
         }
-        
+
         .card-badge {
           position: absolute;
           top: 10px;
@@ -421,10 +422,10 @@ $uniprotec-dark-gray: #333333;
           font-weight: 500;
         }
       }
-      
+
       .card-body {
         padding: 1.2rem;
-        
+
         .card-title {
           font-weight: 700;
           font-size: 1.2rem;
@@ -436,7 +437,7 @@ $uniprotec-dark-gray: #333333;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-        
+
         .card-subtitle {
           color: $uniprotec-dark-gray;
           font-size: 0.9rem;
@@ -447,12 +448,12 @@ $uniprotec-dark-gray: #333333;
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
-        
+
         .card-price {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          
+
           .price-value {
             font-weight: 700;
             font-size: 1.3rem;
@@ -474,7 +475,7 @@ $uniprotec-dark-gray: #333333;
             background-color: $uniprotec-light-blue;
             color: $uniprotec-white;
           }
-          
+
           &.selected {
             background-color: $uniprotec-blue;
             color: $uniprotec-white;
@@ -484,30 +485,30 @@ $uniprotec-dark-gray: #333333;
       }
     }
   }
-  
+
   .calendar-legend {
     display: flex;
     justify-content: space-around;
-    
+
     .legend-item {
       display: flex;
       align-items: center;
-      
+
       .legend-color {
         display: inline-block;
         width: 16px;
         height: 16px;
         border-radius: 4px;
         margin-right: 0.5rem;
-        
+
         &.available {
           background-color: $uniprotec-light-blue;
         }
-        
+
         &.selected {
           background-color: $uniprotec-blue;
         }
-        
+
         &.unavailable {
           background-color: #e9ecef;
         }
@@ -527,7 +528,7 @@ $uniprotec-dark-gray: #333333;
 .dates-info {
   .contact-options {
     margin-top: 2rem;
-    
+
     h3 {
       font-weight: 700;
       color: #0066b3;
@@ -535,7 +536,7 @@ $uniprotec-dark-gray: #333333;
       margin-bottom: 1rem;
       text-align: center;
     }
-    
+
     .contact-option {
       text-align: center;
       background-color: white;
@@ -544,24 +545,24 @@ $uniprotec-dark-gray: #333333;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       height: 100%;
       transition: transform 0.3s ease;
-      
+
       &:hover {
         transform: translateY(-5px);
       }
-      
+
       i {
         font-size: 2rem;
         color: #0066b3;
         margin-bottom: 1rem;
       }
-      
+
       h4 {
         font-weight: 700;
         font-size: 1.1rem;
         margin-bottom: 0.5rem;
         color: #0066b3;
       }
-      
+
       p {
         margin-bottom: 0;
         color: #333333;
@@ -576,45 +577,46 @@ $uniprotec-dark-gray: #333333;
     .selected-date {
       display: flex;
       align-items: flex-start;
-      
+
       i {
         color: #0066b3;
         margin-right: 0.5rem;
         font-size: 1.2rem;
         margin-top: 0.2rem;
       }
-      
+
       .date-details {
         display: flex;
         flex-direction: column;
-        
+
         .date-label {
           font-size: 0.8rem;
           color: #666;
         }
-        
+
         .date-value {
           font-weight: 500;
           color: #0066b3;
           margin-bottom: 0.3rem;
         }
-        
-        .instructor-name, .seats-info {
+
+        .instructor-name,
+        .seats-info {
           font-size: 0.85rem;
           display: flex;
           align-items: center;
           margin-top: 0.3rem;
-          
+
           i {
             font-size: 0.9rem;
             margin-right: 0.3rem;
             margin-top: 0;
           }
         }
-        
+
         .seats-info {
           color: #28a745;
-          
+
           &.low-seats {
             color: #dc3545;
           }
@@ -634,7 +636,7 @@ $uniprotec-dark-gray: #333333;
   border-radius: 20px;
   font-size: 0.85rem;
   margin-left: 0.5rem;
-  
+
   i {
     margin-right: 0.3rem;
   }
@@ -658,7 +660,7 @@ $uniprotec-dark-gray: #333333;
         font-size: 2rem;
       }
     }
-    
+
     .course-price-card {
       margin-top: 2rem;
     }
@@ -671,13 +673,13 @@ $uniprotec-dark-gray: #333333;
       .course-title {
         font-size: 1.8rem;
       }
-      
+
       .course-meta {
         flex-direction: column;
         gap: 0.8rem;
       }
     }
-    
+
     .content-section {
       .instructor-profile {
         .instructor-image {
@@ -719,6 +721,7 @@ $uniprotec-dark-gray: #333333;
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -729,6 +732,7 @@ $uniprotec-dark-gray: #333333;
     transform: translateX(30px);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -740,6 +744,7 @@ $uniprotec-dark-gray: #333333;
     transform: translateY(30px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -771,13 +776,13 @@ $uniprotec-dark-gray: #333333;
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
-  
+
   i {
     color: #0066b3;
     margin-right: 0.5rem;
     font-size: 1.1rem;
   }
-  
+
   .selected-label {
     color: #666;
     font-size: 0.8rem;
@@ -790,24 +795,25 @@ $uniprotec-dark-gray: #333333;
     color: #0066b3;
     margin-bottom: 0.3rem;
   }
-  
-  .date-instructor, .date-seats {
+
+  .date-instructor,
+  .date-seats {
     font-size: 0.85rem;
     color: #333;
     display: flex;
     align-items: center;
     margin-top: 0.3rem;
-    
+
     i {
       color: #0066b3;
       margin-right: 0.3rem;
       font-size: 0.9rem;
     }
   }
-  
+
   .date-seats.seats-warning {
     color: #dc3545;
-    
+
     i {
       color: #dc3545;
     }
@@ -821,13 +827,13 @@ $uniprotec-dark-gray: #333333;
   padding: 0.75rem;
   border-radius: 8px;
   border-left: 4px solid #dc3545;
-  
+
   i {
     color: #dc3545;
     margin-right: 0.5rem;
     font-size: 1.1rem;
   }
-  
+
   span {
     color: #dc3545;
     font-size: 0.9rem;
@@ -852,16 +858,16 @@ $uniprotec-dark-gray: #333333;
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
   z-index: 100;
-  
+
   &.show-alert {
     opacity: 1;
     transform: translateY(0);
   }
-  
+
   .alert-content {
     display: flex;
     align-items: center;
-    
+
     i {
       margin-right: 0.5rem;
       font-size: 1.2rem;
@@ -879,10 +885,300 @@ $uniprotec-dark-gray: #333333;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
 }
 
+
+
+
+// Add these styles to coursedetails.component.scss
+
+// Curriculum-specific styles
+.content-section {
+  // Existing styles...
+
+  // Curriculum objective
+  .curriculum-objective {
+    background-color: lighten($uniprotec-gray, 2%);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid $uniprotec-blue;
+
+    h3 {
+      color: $uniprotec-blue;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: $uniprotec-dark-gray;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+  }
+
+  // Curriculum modules
+  .curriculum-modules {
+    h3 {
+      color: $uniprotec-blue;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+  }
+
+  // Enhanced accordion styles
+  .accordion {
+    .accordion-item {
+      margin-bottom: 1rem;
+      border: 1px solid lighten($uniprotec-gray, 1%);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+      .accordion-header {
+        .accordion-button {
+          background-color: $uniprotec-white;
+          font-weight: 600;
+          color: $uniprotec-dark-blue;
+          padding: 1rem 1.5rem;
+          border: none;
+          font-size: 1rem;
+
+          &:not(.collapsed) {
+            background-color: $uniprotec-blue;
+            color: $uniprotec-white;
+            box-shadow: none;
+          }
+
+          &:focus {
+            box-shadow: none;
+            border: none;
+          }
+
+          &::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+          }
+
+          &.collapsed::after {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23004c86'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+          }
+        }
+      }
+
+      .accordion-body {
+        padding: 1.5rem;
+        background-color: $uniprotec-white;
+
+        .module-topics {
+          padding-left: 0;
+          margin-bottom: 1.5rem;
+          list-style: none;
+
+          li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: $uniprotec-dark-gray;
+            line-height: 1.5;
+
+            &::before {
+              content: "•";
+              color: $uniprotec-blue;
+              font-weight: bold;
+              position: absolute;
+              left: 0;
+            }
+
+            &:hover {
+              color: $uniprotec-blue;
+              transition: color 0.2s ease;
+            }
+          }
+        }
+
+        .module-duration {
+          font-style: italic;
+          color: $uniprotec-blue;
+          font-weight: 500;
+          font-size: 0.9rem;
+
+          i {
+            color: $uniprotec-yellow;
+          }
+        }
+      }
+    }
+  }
+
+  // Practical program styles
+  .practical-program {
+    h3 {
+      color: $uniprotec-blue;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .practical-list {
+      list-style: none;
+      padding-left: 0;
+
+      li {
+        background-color: lighten($uniprotec-yellow, 45%);
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        border-left: 4px solid $uniprotec-yellow;
+        position: relative;
+        padding-left: 2rem;
+
+        &::before {
+          content: "🧪";
+          position: absolute;
+          left: 0.5rem;
+          top: 0.8rem;
+        }
+      }
+    }
+  }
+
+  // Methodology styles
+  .methodology {
+    background-color: lighten($uniprotec-light-blue, 45%);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid $uniprotec-light-blue;
+
+    h3 {
+      color: $uniprotec-light-blue;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    p {
+      color: $uniprotec-dark-gray;
+      line-height: 1.6;
+      margin-bottom: 0;
+    }
+  }
+
+  // Evaluation styles
+  .evaluation {
+    h3 {
+      color: $uniprotec-blue;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .evaluation-list {
+      list-style: none;
+      padding-left: 0;
+
+      li {
+        background-color: lighten($uniprotec-gray, 3%);
+        padding: 0.8rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 6px;
+        border-left: 4px solid $uniprotec-blue;
+        position: relative;
+        padding-left: 2rem;
+
+        &::before {
+          content: "📝";
+          position: absolute;
+          left: 0.5rem;
+          top: 0.8rem;
+        }
+      }
+    }
+  }
+
+  // Includes/What's included styles
+  .includes {
+    background-color: lighten($uniprotec-yellow, 48%);
+    border-radius: 8px;
+    padding: 1.5rem;
+    border-left: 4px solid $uniprotec-yellow;
+
+    h3 {
+      color: darken($uniprotec-yellow, 20%);
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .includes-list {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 0;
+
+      li {
+        padding: 0.4rem 0;
+        padding-left: 1.5rem;
+        position: relative;
+        color: $uniprotec-dark-gray;
+        line-height: 1.5;
+
+        &::before {
+          content: "✓";
+          color: darken($uniprotec-yellow, 20%);
+          font-weight: bold;
+          position: absolute;
+          left: 0;
+        }
+      }
+    }
+  }
+}
+
+// Responsive adjustments for curriculum
+@media (max-width: 767.98px) {
+  .content-section {
+
+    .curriculum-objective,
+    .methodology,
+    .includes {
+      padding: 1rem;
+    }
+
+    .accordion {
+      .accordion-item {
+        .accordion-header {
+          .accordion-button {
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+          }
+        }
+
+        .accordion-body {
+          padding: 1rem;
+        }
+      }
+    }
+
+    .practical-program .practical-list li,
+    .evaluation .evaluation-list li {
+      padding: 0.6rem 0.8rem;
+      padding-left: 1.8rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
 // /* Add a subtle indicator to show scrolling to dates is possible */
 // .course-nav .nav-link[class.active="true"] {
 //   position: relative;
-  
+
 //   &:after {
 //     content: '';
 //     position: absolute;
@@ -908,11 +1204,11 @@ $uniprotec-dark-gray: #333333;
   .course-title {
     font-size: 1.8rem;
   }
-  
+
   .course-price-card {
     margin-top: 1.5rem;
   }
-  
+
   .course-nav .nav-link {
     padding: 0.6rem 0.8rem;
     font-size: 0.9rem;

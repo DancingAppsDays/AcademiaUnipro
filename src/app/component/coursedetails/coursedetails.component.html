@@ -140,12 +140,10 @@
 
 
     <!-- Course Video Preview -->
-    <div class="course-preview mt-5" @slideInUp  *ngIf="course.previewVideoUrl && course.previewVideoUrl !== ''">
+    <div class="course-preview mt-5" @slideInUp *ngIf="course.previewVideoUrl && course.previewVideoUrl !== ''">
       <div class="ratio ratio-16x9">
-        <iframe [src]="course.previewVideoUrl | safeUrl" 
-          title="Curso Preview" 
-          frameborder="0" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        <iframe [src]="course.previewVideoUrl | safeUrl" title="Curso Preview" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen>
         </iframe>
       </div>
@@ -159,14 +157,12 @@
             Descripción
           </a>
         </li>
-        <!-- Commented out Temario tab as placeholder -->
-        <!--
         <li class="nav-item">
           <a class="nav-link" [class.active]="activeSection === 'curriculum'" (click)="changeSection('curriculum')">
             Temario
           </a>
         </li>
-        -->
+
         <li class="nav-item">
           <a class="nav-link" [class.active]="activeSection === 'instructor'" (click)="changeSection('instructor')">
             Instructor
@@ -205,6 +201,87 @@
         <!-- Show course info details only in Overview tab -->
         <app-course-info-details [course]="course"></app-course-info-details>
       </div>
+
+
+
+      <div class="content-section" *ngIf="activeSection === 'curriculum' && courseCurriculum">
+        <h2>Temario del curso</h2>
+
+
+        <div class="curriculum-objective mb-4" *ngIf="courseCurriculum.objective">
+          <h3>🎯 Objetivo General</h3>
+          <p>{{ courseCurriculum.objective }}</p>
+        </div>
+
+
+        <div class="curriculum-modules mb-4" *ngIf="courseCurriculum.modules && courseCurriculum.modules.length > 0">
+          <h3>🧠 Contenido Temático</h3>
+
+          <div class="accordion" id="courseModules">
+            <div class="accordion-item" *ngFor="let module of courseCurriculum.modules; let i = index">
+              <h2 class="accordion-header" [id]="'heading' + i">
+                <button class="accordion-button" [class.collapsed]="i !== 0" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="i === 0 ? 'true' : 'false'"
+                  [attr.aria-controls]="'collapse' + i">
+                  {{ module.title }}
+                </button>
+              </h2>
+              <div [id]="'collapse' + i" class="accordion-collapse collapse" [class.show]="i === 0"
+                data-bs-parent="#courseModules" [attr.aria-labelledby]="'heading' + i">
+                <div class="accordion-body">
+                  <ul class="module-topics">
+                    <li *ngFor="let topic of module.topics">{{ topic }}</li>
+                  </ul>
+                  <div class="module-duration" *ngIf="module.duration">
+                    <i class="bi bi-clock me-1"></i>
+                    Duración: {{ module.duration }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="practical-program mb-4"
+          *ngIf="courseCurriculum.practicalProgram && courseCurriculum.practicalProgram.length > 0">
+          <h3>🧪 Programa Práctico</h3>
+          <ul class="practical-list">
+            <li *ngFor="let item of courseCurriculum.practicalProgram">{{ item }}</li>
+          </ul>
+        </div>
+
+        <div class="methodology mb-4" *ngIf="courseCurriculum.methodology">
+          <h3>📋 Metodología</h3>
+          <p>{{ courseCurriculum.methodology }}</p>
+        </div>
+
+
+        <div class="evaluation mb-4" *ngIf="courseCurriculum.evaluation && courseCurriculum.evaluation.length > 0">
+          <h3>🧾 Evaluación</h3>
+          <ul class="evaluation-list">
+            <li *ngFor="let item of courseCurriculum.evaluation">{{ item }}</li>
+          </ul>
+        </div>
+
+
+        <div class="includes mb-4" *ngIf="courseCurriculum.includes && courseCurriculum.includes.length > 0">
+          <h3>✔️ Incluye</h3>
+          <ul class="includes-list">
+            <li *ngFor="let item of courseCurriculum.includes">{{ item }}</li>
+          </ul>
+        </div>
+
+
+        <div class="technical-requirements mb-4"
+          *ngIf="courseCurriculum.technicalRequirements && courseCurriculum.technicalRequirements.length > 0">
+          <h3>🏗️ Requisitos Técnicos para los Participantes</h3>
+          <ul class="requirements-list">
+            <li *ngFor="let requirement of courseCurriculum.technicalRequirements">{{ requirement }}</li>
+          </ul>
+        </div>
+      </div>
+
+
 
       <!-- Curriculum Section - Commented out as placeholder -->
       <!--
@@ -294,14 +371,12 @@
       </div>
       -->
 
-     <!-- Instructor Section -->
+      <!-- Instructor Section -->
       <div class="content-section" *ngIf="activeSection === 'instructor'">
         <h2>Acerca del instructor</h2>
 
         <!-- Use enhanced instructor display if available -->
-        <app-enhanced-instructor-display 
-          *ngIf="enhancedInstructor"
-          [instructor]="enhancedInstructor"
+        <app-enhanced-instructor-display *ngIf="enhancedInstructor" [instructor]="enhancedInstructor"
           [showPhoto]="true">
         </app-enhanced-instructor-display>
 
