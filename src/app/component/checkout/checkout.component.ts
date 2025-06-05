@@ -15,9 +15,9 @@ import { StripeService } from '../../core/services/stripe.service';
   selector: 'app-checkout',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    RouterModule, 
+    CommonModule,
+    ReactiveFormsModule,
+    RouterModule,
     StripePaymentComponent
   ],
   templateUrl: './checkout.component.html',
@@ -93,14 +93,15 @@ export class CheckoutComponent implements OnInit {
   private courseService = inject(CourseService);
   private userService = inject(UserService);
   private stripeService = inject(StripeService);
- 
+
   constructor() {
     this.userForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
       fullName: ['', Validators.required],
-      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      countryCode: [52, [Validators.required, Validators.min(1)]],
+      phone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
       jobRole: [''],
       companyName: ['']
     }, {
@@ -112,7 +113,8 @@ export class CheckoutComponent implements OnInit {
       rfc: ['', [Validators.required, Validators.pattern(/^[A-Z&Ñ]{3,4}\d{6}[A-Z\d]{3}$/)]],
       contactName: ['', Validators.required],
       contactEmail: ['', [Validators.required, Validators.email]],
-      contactPhone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      countryCode: [52, [Validators.required, Validators.min(1)]],
+      contactPhone: ['', [Validators.required, Validators.pattern(/^[0-9]{7,15}$/)]],
       quantity: [1, [Validators.required, Validators.min(1)]],
       additionalInfo: ['']
     });
@@ -126,7 +128,7 @@ export class CheckoutComponent implements OnInit {
     this.validationInProgress = false;
     this.errorMessage = '';
     this.showErrorAlert = false;
-    
+
     //this.currentUser = this.userService.getCurrentUserSync();
     // Check for user login status
     this.userService.getCurrentUser().subscribe(user => {
@@ -143,11 +145,11 @@ export class CheckoutComponent implements OnInit {
         this.userForm.get('password')?.disable();
         this.userForm.get('confirmPassword')?.disable();
       } else {
-        
+
         // For demo purposes only - in production, this would redirect to login
         this.isExistingUser = false;
-        
-         
+
+
         // Redirect to login if not logged in
         this.router.navigate(['/login'], {
           queryParams: {
@@ -262,10 +264,10 @@ export class CheckoutComponent implements OnInit {
           fullName: user.fullName,
           phone: user.phone
         });
-        
+
         // Add userId to the form for later use
         this.userForm.addControl('userId', this.fb.control(user._id));
-        
+
         // Disable password fields for logged-in users
         this.userForm.get('password')?.disable();
         this.userForm.get('confirmPassword')?.disable();
@@ -287,9 +289,9 @@ export class CheckoutComponent implements OnInit {
     if (this.selectedDate) {
       queryParams.date = this.selectedDate.toISOString();
     }
-    
+
     console.log(`Redirecting to login with redirect=${redirectUrl} and params:`, queryParams);
-    
+
     this.router.navigate(['/login'], {
       queryParams: {
         redirect: redirectUrl,
@@ -314,7 +316,7 @@ export class CheckoutComponent implements OnInit {
       this.isPaymentValid = true;
       this.showErrorAlert = false;
       this.validationInProgress = false;
-      
+
       // Ensure company form is properly validated
       this.companyForm.get('companyName')?.updateValueAndValidity();
       this.companyForm.get('rfc')?.updateValueAndValidity();
@@ -326,7 +328,7 @@ export class CheckoutComponent implements OnInit {
     } else {
       // Revalidate for individual purchases
       this.validatePaymentEligibility();
-      
+
       // Ensure user form is properly validated
       if (!this.isExistingUser) {
         this.userForm.get('email')?.updateValueAndValidity();
@@ -348,8 +350,8 @@ export class CheckoutComponent implements OnInit {
       return this.course.price * quantity;
     }
   }
-  
-  
+
+
   processPayment() {
     console.log('About to processpayment...');
     if (!this.selectedDate) {
@@ -361,28 +363,28 @@ export class CheckoutComponent implements OnInit {
       this.userForm.markAllAsTouched();
       return;
     }
-    
+
     this.processingPayment = true;
 
     if (this.purchaseType == 'company') {
       // Skip ALL validation for company
       this.processCompanyRequest();
     } else {
-    //if (this.purchaseType === 'individual')
-       
+      //if (this.purchaseType === 'individual')
+
       const courseDateId = this.getCourseDateIdForSelectedDate();
       if (!courseDateId) {
         this.handlePaymentError('Invalid course date selected');
         return;
       }
-      
+
       // Only validate for individual payments
       this.validatenotpreviousenrollment();
-     
+
       this.processIndividualPayment();
-    } 
+    }
   }
-  
+
   private validatePaymentEligibility(): void {
     // Skip validation for company purchase type
     if (this.purchaseType == 'company') {
@@ -390,18 +392,18 @@ export class CheckoutComponent implements OnInit {
       this.validationInProgress = false;
       return;
     }
-    
+
     if (!this.selectedDate || !this.course) {
       this.validationInProgress = false;
       this.showDateAlert = true;
       return;
     }
-    
+
     // Get current user ID from your UserService
     const userId = this.userService.getCurrentUserSync()?._id || '';
-    
+
     this.validationInProgress = true;
-    
+
     this.stripeService.validatePayment({
       courseId: this.course._id,
       selectedDate: this.selectedDate?.toISOString(),
@@ -410,13 +412,13 @@ export class CheckoutComponent implements OnInit {
     }).subscribe({
       next: (response) => {
         this.validationInProgress = false;
-        
+
         // For company purchases, always valid
         if (this.purchaseType == 'company') {
           this.isPaymentValid = true;
           return;
         }
-        
+
         // For individual purchases, use validation result
         if (response.valid) {
           this.isPaymentValid = true;
@@ -429,13 +431,13 @@ export class CheckoutComponent implements OnInit {
       },
       error: (error) => {
         this.validationInProgress = false;
-        
+
         // For company purchases, always valid even on error
         if (this.purchaseType == 'company') {
           this.isPaymentValid = true;
           return;
         }
-        
+
         // For individual, show error
         this.isPaymentValid = false;
         this.errorMessage = 'No se pudo validar la disponibilidad del curso';
@@ -452,9 +454,9 @@ export class CheckoutComponent implements OnInit {
       this.processCompanyRequest();
       return;
     }
-    
+
     console.log('Validating user purchase eligibility...');
-    this.http.post<{valid: boolean; message?: string}>(`${environment.apiUrl}/payments/validate-payment`, {
+    this.http.post<{ valid: boolean; message?: string }>(`${environment.apiUrl}/payments/validate-payment`, {
       courseId: this.course?._id,
       selectedDate: this.selectedDate?.toISOString(),
       userId: this.currentUserId
@@ -487,11 +489,12 @@ export class CheckoutComponent implements OnInit {
       price: this.course?.price || 0,
       quantity: 1,
       customerEmail: this.userForm.get('email')?.value || '',
+      customerPhone: this.userForm.get('phone')?.value,
       selectedDate: this.selectedDate?.toISOString(),
       successUrl: `${window.location.origin}/checkout/success`,
       cancelUrl: `${window.location.origin}/courses/${this.course?._id}`
     };
-    
+
     this.stripeService.redirectToCheckout(checkoutData).subscribe({
       next: (result) => {
         if (result.success) {
@@ -507,10 +510,10 @@ export class CheckoutComponent implements OnInit {
       }
     });
   }
-  
+
   handlePaymentSuccess(result: { paymentId: string }) {
     console.log('Payment successful', result);
-    
+
     // Navigate to success page
     this.router.navigate(['/checkout/success'], {
       queryParams: {
@@ -528,22 +531,22 @@ export class CheckoutComponent implements OnInit {
     }
 
     const selectedDateStr = this.selectedDate.toISOString().split('T')[0];
-    
+
     const matchingInstance = this.course.courseInstances.find(instance => {
       const instanceDate = new Date(instance.startDate);
       return instanceDate.toISOString().split('T')[0] === selectedDateStr;
     });
-    
+
     return matchingInstance?._id || null;
   }
 
   handlePaymentError(error: string) {
     this.processingPayment = false;
-    
+
     // Display error message to user
     this.errorMessage = error;
     this.showErrorAlert = true;
-    
+
     // Scroll to error message
     setTimeout(() => {
       const errorElement = document.getElementById('payment-error');
@@ -553,7 +556,7 @@ export class CheckoutComponent implements OnInit {
     }, 100);
   }
 
-   processCompanyRequest() {
+  processCompanyRequest() {
     if (!this.selectedDate) {
       this.showDateAlert = true;
       return;
@@ -563,7 +566,7 @@ export class CheckoutComponent implements OnInit {
       this.companyForm.markAllAsTouched();
       return;
     }
-    
+
     this.processingPayment = true;
 
     const requestData = {
@@ -571,35 +574,35 @@ export class CheckoutComponent implements OnInit {
       rfc: this.companyForm.get('rfc')?.value,
       contactName: this.companyForm.get('contactName')?.value,
       contactEmail: this.companyForm.get('contactEmail')?.value,
-      contactPhone: this.companyForm.get('contactPhone')?.value,
+      contactPhone: `${this.companyForm.get('countryCode')?.value}${this.companyForm.get('contactPhone')?.value}`,
       quantity: this.companyForm.get('quantity')?.value || 1,
       additionalInfo: this.companyForm.get('additionalInfo')?.value,
       courseId: this.course?._id,
       courseTitle: this.course?.title,
       selectedDate: this.selectedDate?.toISOString()
     };
-    
+
     this.http.post(`${environment.apiUrl}/company-purchase`, requestData)
-    .subscribe({
-      next: (response) => {
-        this.router.navigate(['/checkout/company-success'], {
-          queryParams: {
-            companyName: this.companyForm.get('companyName')?.value,
-            contactEmail: this.companyForm.get('contactEmail')?.value,
-            courseId: this.course?._id,
-            date: this.selectedDate?.toISOString(),
-            quantity: this.companyForm.get('quantity')?.value,
-            requestId: 'COMP-' + Math.floor(Math.random() * 10000)
-          }
-        });
-        this.processingPayment = false;
-      },
-      error: (error) => {
-        console.error('Error submitting company request', error);
-        this.processingPayment = false;
-        // Show error message
-      }
-    });
+      .subscribe({
+        next: (response) => {
+          this.router.navigate(['/checkout/company-success'], {
+            queryParams: {
+              companyName: this.companyForm.get('companyName')?.value,
+              contactEmail: this.companyForm.get('contactEmail')?.value,
+              courseId: this.course?._id,
+              date: this.selectedDate?.toISOString(),
+              quantity: this.companyForm.get('quantity')?.value,
+              requestId: 'COMP-' + Math.floor(Math.random() * 10000)
+            }
+          });
+          this.processingPayment = false;
+        },
+        error: (error) => {
+          console.error('Error submitting company request', error);
+          this.processingPayment = false;
+          // Show error message
+        }
+      });
   }
 
   // Method to return to course details
