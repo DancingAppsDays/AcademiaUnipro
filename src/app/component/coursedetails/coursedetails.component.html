@@ -217,17 +217,19 @@
         <div class="curriculum-modules mb-4" *ngIf="courseCurriculum.modules && courseCurriculum.modules.length > 0">
           <h3>🧠 Contenido Temático</h3>
 
+          <!-- Modified accordion to show all items open by default -->
           <div class="accordion" id="courseModules">
             <div class="accordion-item" *ngFor="let module of courseCurriculum.modules; let i = index">
               <h2 class="accordion-header" [id]="'heading' + i">
-                <button class="accordion-button" [class.collapsed]="i !== 0" type="button" data-bs-toggle="collapse"
-                  [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="i === 0 ? 'true' : 'false'"
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="'true'"
                   [attr.aria-controls]="'collapse' + i">
                   {{ module.title }}
                 </button>
               </h2>
-              <div [id]="'collapse' + i" class="accordion-collapse collapse" [class.show]="i === 0"
-                data-bs-parent="#courseModules" [attr.aria-labelledby]="'heading' + i">
+              <!-- Remove collapsed class and always show content -->
+              <div [id]="'collapse' + i" class="accordion-collapse collapse show" data-bs-parent="#courseModules"
+                [attr.aria-labelledby]="'heading' + i">
                 <div class="accordion-body">
                   <ul class="module-topics">
                     <li *ngFor="let topic of module.topics">{{ topic }}</li>
