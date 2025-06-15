@@ -1,3 +1,4 @@
+// src/app/component/upcoming-courses/upcoming-courses.component.scss - Updated with pricing styles
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
 
 // Uniprotec Theme Colors
@@ -8,6 +9,8 @@ $uniprotec-dark-blue: #0455b0;
 $uniprotec-white: #ffffff;
 $uniprotec-gray: #f5f5f5;
 $uniprotec-dark-gray: #333333;
+$uniprotec-red: #e74c3c;
+$uniprotec-green: #27ae60;
 
 .upcoming-courses-section {
   padding: 2rem 0;
@@ -17,30 +20,31 @@ $uniprotec-dark-gray: #333333;
 .section-header {
   text-align: center;
   margin-bottom: 2rem;
-  
+
   h2 {
     font-weight: 700;
     color: $uniprotec-blue;
     margin-bottom: 0.5rem;
   }
-  
+
   .section-subtitle {
     font-weight: 700;
     color: $uniprotec-blue;
   }
 }
 
-.loading-container, .no-courses {
+.loading-container,
+.no-courses {
   text-align: center;
   padding: 2rem;
-  
+
   i {
     font-size: 3rem;
     color: #999;
     margin-bottom: 1rem;
     display: block;
   }
-  
+
   p {
     color: #666;
     margin-bottom: 0;
@@ -53,7 +57,7 @@ $uniprotec-dark-gray: #333333;
 }
 
 .col-course {
-  padding-bottom: 20px; /* Add spacing for cards */
+  padding-bottom: 20px;
 }
 
 // Override Bootstrap carousel controls
@@ -66,7 +70,7 @@ $uniprotec-dark-gray: #333333;
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  
+
   &:hover {
     background: rgba(0, 0, 0, 0.2);
   }
@@ -98,12 +102,55 @@ $uniprotec-dark-gray: #333333;
   height: 100%;
   display: flex;
   flex-direction: column;
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
   }
-  
+
+  // Promotional card styling
+  &.promotional-card {
+    border: 2px solid $uniprotec-yellow;
+    box-shadow: 0 5px 20px rgba(255, 164, 0, 0.2);
+
+    &:hover {
+      box-shadow: 0 15px 35px rgba(255, 164, 0, 0.3);
+    }
+  }
+
+  // Promotional Badge
+  .promotional-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 3;
+    background: linear-gradient(45deg, $uniprotec-yellow, #ffba00);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(255, 164, 0, 0.4);
+    animation: pulse 2s infinite;
+  }
+
+  // Discount Badge
+  .discount-badge {
+    position: absolute;
+    top: 10px;
+    left: 80px; // Position after date badge
+    z-index: 3;
+    background: linear-gradient(45deg, $uniprotec-red, #c0392b);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.4);
+  }
+
   .course-date-badge {
     position: absolute;
     top: 15px;
@@ -119,32 +166,32 @@ $uniprotec-dark-gray: #333333;
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    
+
     .date-month {
       font-size: 0.75rem;
       font-weight: 600;
       text-transform: uppercase;
       line-height: 1;
     }
-    
+
     .date-day {
       font-size: 1.6rem;
       font-weight: 700;
       line-height: 1.2;
     }
   }
-  
+
   .card-img-container {
     height: 160px;
     position: relative;
-    
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.6s ease;
     }
-    
+
     .category-badge {
       position: absolute;
       bottom: 10px;
@@ -158,13 +205,13 @@ $uniprotec-dark-gray: #333333;
       z-index: 1;
     }
   }
-  
+
   .card-content {
     padding: 1.2rem;
     flex: 1;
     display: flex;
     flex-direction: column;
-    
+
     .course-title {
       font-weight: 700;
       color: $uniprotec-blue;
@@ -177,7 +224,7 @@ $uniprotec-dark-gray: #333333;
       overflow: hidden;
       min-height: 4rem;
     }
-    
+
     .course-subtitle {
       color: #666;
       font-size: 0.85rem;
@@ -188,17 +235,37 @@ $uniprotec-dark-gray: #333333;
       overflow: hidden;
       min-height: 2.5rem;
     }
-    
+
+    // Promotional Text
+    .promotional-text {
+      background: linear-gradient(90deg, rgba(255, 164, 0, 0.1), rgba(255, 186, 0, 0.1));
+      border-left: 3px solid $uniprotec-yellow;
+      padding: 0.5rem 0.8rem;
+      margin-bottom: 0.8rem;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.8rem;
+      color: darken($uniprotec-yellow, 20%);
+
+      i {
+        margin-right: 0.5rem;
+        color: $uniprotec-yellow;
+      }
+
+      span {
+        font-weight: 600;
+      }
+    }
+
     .course-info {
       margin-bottom: 1rem;
-      
+
       .info-item {
         display: flex;
         align-items: center;
         margin-bottom: 0.3rem;
         font-size: 0.85rem;
         color: #666;
-        
+
         i {
           color: $uniprotec-blue;
           width: 18px;
@@ -206,34 +273,80 @@ $uniprotec-dark-gray: #333333;
         }
       }
     }
-    
+
     .card-footer {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-top: auto; /* Push to bottom of card */
-      
-      .price {
-        font-weight: 700;
-        color: $uniprotec-blue;
-        font-size: 1.1rem;
-        padding: 0.3rem;
+      align-items: flex-end;
+      margin-top: auto;
+      gap: 1rem;
+
+      .price-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        .original-price {
+          font-size: 0.8rem;
+          color: #999;
+          text-decoration: line-through;
+          margin-bottom: 0.2rem;
+        }
+
+        .final-price {
+          font-weight: 700;
+          color: $uniprotec-blue;
+          font-size: 1.1rem;
+
+          &.discounted-price {
+            color: $uniprotec-red;
+            font-size: 1.2rem;
+          }
+        }
+
+        .savings-amount {
+          font-size: 0.75rem;
+          color: $uniprotec-green;
+          font-weight: 600;
+          background: rgba(39, 174, 96, 0.1);
+          padding: 0.2rem 0.5rem;
+          border-radius: 10px;
+          margin-top: 0.3rem;
+        }
       }
-      
+
       .actions {
         display: flex;
+        flex-direction: column;
         gap: 0.5rem;
-        
+
         .btn {
-          padding: 0.45rem 0.4rem;
+          padding: 0.45rem 0.8rem;
           font-size: 0.75rem;
           border-radius: 4px;
           display: flex;
           align-items: center;
           justify-content: center;
+          white-space: nowrap;
+          min-width: 80px;
         }
       }
     }
+  }
+}
+
+// Pulse animation for promotional badges
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
   }
 }
 
@@ -245,10 +358,11 @@ $uniprotec-dark-gray: #333333;
 }
 
 @media (max-width: 1199.98px) {
+
   // Large tablet adjustments
   .upcoming-course-card .card-content .actions {
     flex-direction: column;
-    
+
     .btn {
       width: 100%;
     }
@@ -256,31 +370,157 @@ $uniprotec-dark-gray: #333333;
 }
 
 @media (max-width: 991.98px) {
+
   // Medium tablet adjustments
   .upcoming-course-card .card-content .course-title {
     min-height: 3.6rem;
   }
+
+  .upcoming-course-card .card-content .card-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+
+    .price-container {
+      align-items: center;
+      text-align: center;
+    }
+
+    .actions {
+      flex-direction: row;
+      justify-content: space-between;
+
+      .btn {
+        flex: 1;
+        min-width: unset;
+      }
+    }
+  }
 }
 
 @media (max-width: 767.98px) {
+
   // Mobile adjustments
   ::ng-deep .carousel-control-prev {
     left: -10px;
   }
-  
+
   ::ng-deep .carousel-control-next {
     right: -10px;
   }
-  
+
   .carousel-container {
     padding: 0 15px;
   }
-  
-  .upcoming-course-card .card-content .course-title {
-    min-height: 0;
+
+  .upcoming-course-card {
+    .card-content {
+      .course-title {
+        min-height: 0;
+      }
+
+      .course-subtitle {
+        min-height: 0;
+      }
+
+      .promotional-text {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.6rem;
+      }
+
+      .card-footer {
+        .price-container {
+          .final-price {
+            font-size: 1rem;
+
+            &.discounted-price {
+              font-size: 1.1rem;
+            }
+          }
+
+          .savings-amount {
+            font-size: 0.7rem;
+          }
+        }
+
+        .actions {
+          .btn {
+            font-size: 0.7rem;
+            padding: 0.4rem 0.6rem;
+          }
+        }
+      }
+    }
+
+    // Adjust badge positions for mobile
+    .promotional-badge {
+      top: 8px;
+      right: 8px;
+      font-size: 0.65rem;
+      padding: 0.25rem 0.6rem;
+    }
+
+    .discount-badge {
+      top: 8px;
+      left: 70px;
+      font-size: 0.6rem;
+      padding: 0.25rem 0.5rem;
+    }
+
+    .course-date-badge {
+      width: 50px;
+      height: 50px;
+
+      .date-month {
+        font-size: 0.7rem;
+      }
+
+      .date-day {
+        font-size: 1.4rem;
+      }
+    }
   }
-  
-  .upcoming-course-card .card-content .course-subtitle {
-    min-height: 0;
+}
+
+// Special styling for promotional cards
+.promotional-card {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, $uniprotec-yellow, #ffba00, $uniprotec-yellow);
+    z-index: 1;
+  }
+}
+
+// Enhanced hover effects for promotional cards
+.promotional-card:hover {
+  .promotional-badge {
+    animation-duration: 1s;
+  }
+
+  .card-img-container img {
+    transform: scale(1.05);
+  }
+}
+
+// Additional styling for discount indicators
+.discount-badge {
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid $uniprotec-red;
   }
 }

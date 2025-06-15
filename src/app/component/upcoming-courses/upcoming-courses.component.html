@@ -3,28 +3,24 @@
     <h2>{{ title }}</h2>
     <p class="section-subtitle">{{ subtitle }}</p>
   </div>
-  
+
   <div *ngIf="loading" class="loading-container">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Cargando...</span>
     </div>
     <p>Cargando próximos cursos...</p>
   </div>
-  
+
   <div *ngIf="!loading && upcomingCourses.length === 0" class="no-courses">
     <i class="bi bi-calendar-x"></i>
     <p>No hay cursos programados para próximas fechas.</p>
   </div>
-  
+
   <!-- Desktop Carousel (4 items per slide) -->
   <div *ngIf="!loading && upcomingCourses.length > 0 && !useGrid" class="desktop-carousel d-none d-xl-block">
-    <ngb-carousel 
-      [interval]="15000" 
-      [pauseOnHover]="true" 
-      [showNavigationArrows]="desktopGroupedCourses.length > 1"
-      [showNavigationIndicators]="false"
-      [wrap]="true">
-      
+    <ngb-carousel [interval]="15000" [pauseOnHover]="true" [showNavigationArrows]="desktopGroupedCourses.length > 1"
+      [showNavigationIndicators]="false" [wrap]="true">
+
       <ng-template ngbSlide *ngFor="let group of desktopGroupedCourses">
         <div class="carousel-container">
           <div class="row gx-3">
@@ -34,16 +30,24 @@
                   <div class="date-month">{{ formatMonth(course.date) }}</div>
                   <div class="date-day">{{ formatDay(course.date) }}</div>
                 </div>
-                
+
                 <div class="card-img-container">
                   <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
                   <div class="category-badge">{{ course.category }}</div>
                 </div>
-                
+                <div *ngIf="course.isPromotional && course.promotionalBadge" class="promotional-badge">
+                  {{ course.promotionalBadge }}
+                </div>
+
                 <div class="card-content">
                   <h3 class="course-title">{{ course.title }}</h3>
                   <p class="course-subtitle">{{ course.subtitle }}</p>
-                  
+
+                  <div *ngIf="course.isPromotional && course.promotionalText" class="promotional-text">
+                    <i class="bi bi-megaphone"></i>
+                    {{ course.promotionalText }}
+                  </div>
+
                   <div class="course-info">
                     <div class="info-item">
                       <i class="bi bi-clock"></i>
@@ -54,12 +58,13 @@
                       <span>Capacitador: {{ course.instructor.name }}</span>
                     </div>-->
                   </div>
-                  
+
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
                       <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
-                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
                   </div>
                 </div>
@@ -70,16 +75,12 @@
       </ng-template>
     </ngb-carousel>
   </div>
-  
+
   <!-- Large Tablet Carousel (3 items per slide) -->
   <div *ngIf="!loading && upcomingCourses.length > 0 && !useGrid" class="tablet-carousel d-none d-lg-block d-xl-none">
-    <ngb-carousel 
-      [interval]="15000" 
-      [pauseOnHover]="true" 
-      [showNavigationArrows]="largeTabletGroupedCourses.length > 1"
-      [showNavigationIndicators]="false"
-      [wrap]="true">
-      
+    <ngb-carousel [interval]="15000" [pauseOnHover]="true" [showNavigationArrows]="largeTabletGroupedCourses.length > 1"
+      [showNavigationIndicators]="false" [wrap]="true">
+
       <ng-template ngbSlide *ngFor="let group of largeTabletGroupedCourses">
         <div class="carousel-container">
           <div class="row gx-3">
@@ -89,16 +90,27 @@
                   <div class="date-month">{{ formatMonth(course.date) }}</div>
                   <div class="date-day">{{ formatDay(course.date) }}</div>
                 </div>
-                
+
                 <div class="card-img-container">
                   <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
                   <div class="category-badge">{{ course.category }}</div>
                 </div>
-                
+
+                <div *ngIf="course.isPromotional && course.promotionalBadge" class="promotional-badge">
+                  {{ course.promotionalBadge }}
+                </div>
+
+
+
                 <div class="card-content">
                   <h3 class="course-title">{{ course.title }}</h3>
                   <p class="course-subtitle">{{ course.subtitle }}</p>
-                  
+
+                  <div *ngIf="course.isPromotional && course.promotionalText" class="promotional-text">
+                    <i class="bi bi-megaphone"></i>
+                    {{ course.promotionalText }}
+                  </div>
+
                   <div class="course-info">
                     <div class="info-item">
                       <i class="bi bi-clock"></i>
@@ -109,12 +121,13 @@
                       <span>Capacitador: {{ course.instructor.name }}</span>
                     </div>
                   </div>
-                  
+
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
                       <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
-                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
                   </div>
                 </div>
@@ -125,16 +138,13 @@
       </ng-template>
     </ngb-carousel>
   </div>
-  
+
   <!-- Medium Tablet Carousel (2 items per slide) -->
-  <div *ngIf="!loading && upcomingCourses.length > 0 && !useGrid" class="medium-tablet-carousel d-none d-md-block d-lg-none">
-    <ngb-carousel 
-      [interval]="15000" 
-      [pauseOnHover]="true" 
-      [showNavigationArrows]="mediumTabletGroupedCourses.length > 1"
-      [showNavigationIndicators]="false"
-      [wrap]="true">
-      
+  <div *ngIf="!loading && upcomingCourses.length > 0 && !useGrid"
+    class="medium-tablet-carousel d-none d-md-block d-lg-none">
+    <ngb-carousel [interval]="15000" [pauseOnHover]="true"
+      [showNavigationArrows]="mediumTabletGroupedCourses.length > 1" [showNavigationIndicators]="false" [wrap]="true">
+
       <ng-template ngbSlide *ngFor="let group of mediumTabletGroupedCourses">
         <div class="carousel-container">
           <div class="row gx-3">
@@ -144,16 +154,25 @@
                   <div class="date-month">{{ formatMonth(course.date) }}</div>
                   <div class="date-day">{{ formatDay(course.date) }}</div>
                 </div>
-                
+
                 <div class="card-img-container">
                   <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
                   <div class="category-badge">{{ course.category }}</div>
                 </div>
-                
+
+                <div *ngIf="course.isPromotional && course.promotionalBadge" class="promotional-badge">
+                  {{ course.promotionalBadge }}
+                </div>
+
                 <div class="card-content">
                   <h3 class="course-title">{{ course.title }}</h3>
                   <p class="course-subtitle">{{ course.subtitle }}</p>
-                  
+
+                  <div *ngIf="course.isPromotional && course.promotionalText" class="promotional-text">
+                    <i class="bi bi-megaphone"></i>
+                    {{ course.promotionalText }}
+                  </div>
+
                   <div class="course-info">
                     <div class="info-item">
                       <i class="bi bi-clock"></i>
@@ -164,12 +183,13 @@
                       <span>Capacitador: {{ course.instructor.name }}</span>
                     </div>
                   </div>
-                  
+
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
                       <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
-                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
                   </div>
                 </div>
@@ -180,16 +200,12 @@
       </ng-template>
     </ngb-carousel>
   </div>
-  
+
   <!-- Mobile Carousel (1 item per slide) -->
   <div *ngIf="!loading && upcomingCourses.length > 0 && !useGrid" class="mobile-carousel d-block d-md-none">
-    <ngb-carousel 
-      [interval]="15000" 
-      [pauseOnHover]="true" 
-      [showNavigationArrows]="upcomingCourses.length > 1"
-      [showNavigationIndicators]="false"
-      [wrap]="true">
-      
+    <ngb-carousel [interval]="15000" [pauseOnHover]="true" [showNavigationArrows]="upcomingCourses.length > 1"
+      [showNavigationIndicators]="false" [wrap]="true">
+
       <ng-template ngbSlide *ngFor="let course of upcomingCourses">
         <div class="carousel-container">
           <div class="row gx-3">
@@ -199,16 +215,25 @@
                   <div class="date-month">{{ formatMonth(course.date) }}</div>
                   <div class="date-day">{{ formatDay(course.date) }}</div>
                 </div>
-                
+
                 <div class="card-img-container">
                   <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
                   <div class="category-badge">{{ course.category }}</div>
                 </div>
-                
+
+                <div *ngIf="course.isPromotional && course.promotionalBadge" class="promotional-badge">
+                  {{ course.promotionalBadge }}
+                </div>
+
                 <div class="card-content">
                   <h3 class="course-title">{{ course.title }}</h3>
                   <p class="course-subtitle">{{ course.subtitle }}</p>
-                  
+
+                  <div *ngIf="course.isPromotional && course.promotionalText" class="promotional-text">
+                    <i class="bi bi-megaphone"></i>
+                    {{ course.promotionalText }}
+                  </div>
+
                   <div class="course-info">
                     <div class="info-item">
                       <i class="bi bi-clock"></i>
@@ -220,12 +245,13 @@
                       <span>Capacitador: {{ course.instructor.name }}</span>
                     </div>-->
                   </div>
-                  
+
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
                       <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
-                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+                      <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
                   </div>
                 </div>
@@ -236,7 +262,7 @@
       </ng-template>
     </ngb-carousel>
   </div>
-  
+
   <!-- Grid View (original) -->
   <div *ngIf="!loading && upcomingCourses.length > 0 && useGrid" class="upcoming-courses-grid" @staggerFade>
     <div *ngFor="let course of upcomingCourses" class="upcoming-course-card" @fadeIn>
@@ -244,16 +270,16 @@
         <div class="date-month">{{ formatMonth(course.date) }}</div>
         <div class="date-day">{{ formatDay(course.date) }}</div>
       </div>
-      
+
       <div class="card-img-container">
         <img [src]="course.imageUrl || 'assets/images/courses/default.jpg'" [alt]="course.title">
         <div class="category-badge">{{ course.category }}</div>
       </div>
-      
+
       <div class="card-content">
         <h3 class="course-title">{{ course.title }}</h3>
         <p class="course-subtitle">{{ course.subtitle }}</p>
-        
+
         <div class="course-info">
           <div class="info-item">
             <i class="bi bi-clock"></i>
@@ -264,12 +290,13 @@
             <span>Capacitador: {{ course.instructor.name }}</span>
           </div>
         </div>
-        
+
         <div class="card-footer">
           <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
           <div class="actions">
             <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
-            <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}" class="btn btn-outline-primary btn-sm">Inscribirse</a>
+            <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+              class="btn btn-outline-primary btn-sm">Inscribirse</a>
           </div>
         </div>
       </div>
