@@ -24,7 +24,7 @@
         <div class="carousel-container">
           <img [src]="slide.imageUrl" [alt]="slide.title">
           <div class="carousel-caption">
-           <!-- <h1>{{ slide.title }}</h1>-->
+            <!-- <h1>{{ slide.title }}</h1>-->
           </div>
         </div>
       </ng-template>
@@ -33,11 +33,12 @@
 
   <section class="message-header">
     <div class="container">
-    <h3 class="text-center mt-4">"Aprende desde cualquier lugar con cursos diseñados para ajustarse a tu ritmo y necesidades. Únete a la nueva era de la capacitación en vivo."
-    </h3>
+      <h3 class="text-center mt-4">"Aprende desde cualquier lugar con cursos diseñados para ajustarse a tu ritmo y
+        necesidades. Únete a la nueva era de la capacitación en vivo."
+      </h3>
     </div>
   </section>
-  
+
 
   <section class="stats-section">
     <div class="container">
@@ -89,11 +90,7 @@
   </section>-->
   <section class="upcoming-courses-section" id="upcoming">
     <div class="container">
-      <app-upcoming-courses 
-        [limit]="32"
-        [useGrid]="false"
-        [coursesPerSlide]="4"
-        title="Próximos Cursos"
+      <app-upcoming-courses [limit]="32" [useGrid]="false" [coursesPerSlide]="4" title="Próximos Cursos"
         subtitle="Nuevos cursos en vivo cada martes — ¡No te los pierdas!">
       </app-upcoming-courses>
     </div>
@@ -102,79 +99,72 @@
 
   <section class="featured-courses-section" *ngIf="!loading && featuredCourses.length > 0" id="featured">
     <div class="container">
-      <app-course-carousel
-        [courses]="featuredCourses"
-        subtitle="Cursos Destacados"
+      <app-course-carousel [courses]="featuredCourses" subtitle="Cursos Destacados"
         (dateSelected)="onDateSelected($event)">
       </app-course-carousel>
     </div>
   </section>
 
   <section class="category-courses-section" *ngIf="!loading" id="categories">
-    <div *ngFor="let category of categories; let even = even" 
-          class="category-section">
+    <div *ngFor="let category of categories; let even = even" class="category-section">
       <div class="container">
-        <app-course-carousel
-          [courses]="categoryCourses[category] || []"
-          [subtitle]="'Cursos de ' + category"
-          [category]="category"
-          (dateSelected)="onDateSelected($event)">
+        <app-course-carousel [courses]="categoryCourses[category] || []" [subtitle]="'Cursos de ' + category"
+          [category]="category" (dateSelected)="onDateSelected($event)">
         </app-course-carousel>
       </div>
     </div>
   </section>
 
   <section class="benefits-section" id="benefits">
-  <div class="container">
-    <div class="section-header text-center">
-      <div class="section-badge">BENEFICIOS</div>
-      <h2>¿Por qué elegirnos?</h2>
-      <p>Formación de calidad con ventajas competitivas</p>
-    </div>
+    <div class="container">
+      <div class="section-header text-center">
+        <div class="section-badge">BENEFICIOS</div>
+        <h2>¿Por qué elegirnos?</h2>
+        <p>Formación de calidad con ventajas competitivas</p>
+      </div>
 
-    <div class="row">
-      <div class="col-md-4 mb-3">
+      <div class="row">
+        <!-- <div class="col-md-4 mb-3">
         <div class="benefit-card">
           <div class="benefit-icon">
-            <!-- Imagen personalizada para certificación -->
+         
             <img src="assets/images/ACADEMIAi-icon-cert.png" alt="Certificación Reconocida">
           </div>
           <h3>Certificación Reconocida</h3>
           <p>Nuestros cursos están avalados por organizaciones internacionales y cumplen con los estándares más
             exigentes.</p>
         </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <!-- Imagen personalizada para instructores -->
-            <img src="assets/images/ACADEMIAi-icon-instruct.png" alt="Instructores Expertos">
+      </div>-->
+        <div class="col-md-6 mb-3">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <!-- Imagen personalizada para instructores -->
+              <img src="assets/images/ACADEMIAi-icon-instruct.png" alt="Instructores Expertos">
+            </div>
+            <h3>Instructores Expertos</h3>
+            <p>Aprenda de profesionales con amplia experiencia en el sector industrial</p>
           </div>
-          <h3>Instructores Expertos</h3>
-          <p>Aprenda de profesionales con amplia experiencia en el sector industrial y certificaciones
-            internacionales.</p>
         </div>
-      </div>
-      <div class="col-md-4 mb-3">
-        <div class="benefit-card">
-          <div class="benefit-icon">
-            <!-- Imagen personalizada para formato flexible -->
-            <img src="assets/images/ACADEMIAi-icon-formato.png" alt="Formato Flexible">
+        <div class="col-md-6 mb-3">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <!-- Imagen personalizada para formato flexible -->
+              <img src="assets/images/ACADEMIAi-icon-formato.png" alt="Formato Flexible">
+            </div>
+            <h3>Formato Flexible</h3>
+            <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
           </div>
-          <h3>Formato Flexible</h3>
-          <p>Acceda a capacitación de alta calidad en formato presencial o remoto según sus necesidades.</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="cta-section">
-  <div class="container text-center">
-    <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
-    <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
-   <!-- <button class="btn btn-primary mt-3" (click)="navigateToAllCourses()">
+  <section class="cta-section">
+    <div class="container text-center">
+      <h2>¿Listo para mejorar sus habilidades profesionales?</h2>
+      <p class="lead">Únase a más de 15,000 profesionales que han transformado su carrera con nosotros</p>
+      <!-- <button class="btn btn-primary mt-3" (click)="navigateToAllCourses()">
       Explorar Cursos Disponibles
     </button>-->
-  </div>
-</section>
+    </div>
+  </section>
