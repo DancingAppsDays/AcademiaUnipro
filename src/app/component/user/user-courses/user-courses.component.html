@@ -4,7 +4,7 @@
     <h1>Mis Cursos</h1>
     <p class="subtitle">Gestiona tus inscripciones y accede a tus cursos</p>
   </div>
-  
+
   <!-- Loading state -->
   <div *ngIf="loading" class="loading-container">
     <div class="spinner-border text-primary" role="status">
@@ -12,7 +12,7 @@
     </div>
     <p>Cargando tus cursos...</p>
   </div>
-  
+
   <!-- No courses state -->
   <div *ngIf="!loading && enrolledCourses.length === 0" class="no-courses-container">
     <div class="empty-state">
@@ -22,7 +22,7 @@
       <button class="btn btn-primary" routerLink="/">Ver catálogo de cursos</button>
     </div>
   </div>
-  
+
   <!-- Alert section for courses at risk of postponement -->
   <div *ngIf="hasPostponementRisk" class="alert-section">
     <div class="alert alert-warning">
@@ -31,36 +31,38 @@
       </div>
       <div class="alert-content">
         <h3>Aviso Importante</h3>
-        <p>Uno o más de tus cursos próximos están en riesgo de ser aplazados por no cumplir con el mínimo de participantes requerido.</p>
+        <p>Uno o más de tus cursos próximos están en riesgo de ser aplazados por no cumplir con el mínimo de
+          participantes requerido.</p>
         <p>Por favor, revisa los detalles a continuación y considera las opciones disponibles.</p>
       </div>
     </div>
   </div>
-  
+
   <!-- Upcoming courses -->
   <div *ngIf="!loading && upcomingCourses.length > 0" class="courses-section">
     <h2>Próximos Cursos</h2>
-    
+
     <div class="courses-grid">
-      <div *ngFor="let enrolled of upcomingCourses" class="course-card" 
-           [class.at-risk]="enrolled.instance.isAtRiskOfPostponement"
-           [class.confirmed]="enrolled.instance.isConfirmed">
-        
+      <div *ngFor="let enrolled of upcomingCourses" class="course-card"
+        [class.at-risk]="enrolled.instance.isAtRiskOfPostponement" [class.confirmed]="enrolled.instance.isConfirmed">
+
         <div class="card-status" *ngIf="enrolled.instance.isAtRiskOfPostponement || enrolled.instance.isConfirmed">
-          <span class="status-badge" [class.warning]="enrolled.instance.isAtRiskOfPostponement" [class.success]="enrolled.instance.isConfirmed">
-            <i class="bi" [ngClass]="enrolled.instance.isAtRiskOfPostponement ? 'bi-exclamation-triangle' : 'bi-check-circle'"></i>
+          <span class="status-badge" [class.warning]="enrolled.instance.isAtRiskOfPostponement"
+            [class.success]="enrolled.instance.isConfirmed">
+            <i class="bi"
+              [ngClass]="enrolled.instance.isAtRiskOfPostponement ? 'bi-exclamation-triangle' : 'bi-check-circle'"></i>
             {{ enrolled.instance.isAtRiskOfPostponement ? 'Riesgo de aplazamiento' : 'Confirmado' }}
           </span>
         </div>
-        
+
         <div class="card-header">
           <img [src]="enrolled.course.imageUrl || 'assets/images/course-placeholder.jpg'" [alt]="enrolled.course.title">
           <div class="course-category">{{ enrolled.course.category }}</div>
         </div>
-        
+
         <div class="card-body">
           <h3 class="course-title">{{ enrolled.course.title }}</h3>
-          
+
           <div class="course-info">
             <div class="info-item">
               <i class="bi bi-calendar"></i>
@@ -68,7 +70,8 @@
             </div>
             <div class="info-item">
               <i class="bi bi-clock"></i>
-              <span>{{ enrolled.instance.startDate | date:'shortTime' }} - {{ enrolled.instance.endDate | date:'shortTime' }}</span>
+              <span>{{ enrolled.instance.startDate | date:'shortTime' }} - {{ enrolled.instance.endDate |
+                date:'shortTime' }}</span>
             </div>
             <div class="info-item">
               <i class="bi bi-person-badge"></i>
@@ -79,43 +82,37 @@
               <span>Zoom meeting</span>
             </div>
           </div>
-          
+
           <div class="enrollment-stats" *ngIf="enrolled.instance.isAtRiskOfPostponement">
             <div class="progress">
-              <div class="progress-bar" 
-                   [style.width.%]="(enrolled.instance.enrolledCount / enrolled.instance.minimumRequired) * 100">
+              <div class="progress-bar"
+                [style.width.%]="(enrolled.instance.enrolledCount / enrolled.instance.minimumRequired) * 100">
                 {{ enrolled.instance.enrolledCount }}/{{ enrolled.instance.minimumRequired }}
               </div>
             </div>
             <div class="stats-label">
-              Faltan {{ enrolled.instance.minimumRequired - enrolled.instance.enrolledCount }} participantes para confirmar
+              Faltan {{ enrolled.instance.minimumRequired - enrolled.instance.enrolledCount }} participantes para
+              confirmar
             </div>
           </div>
-          
+
           <div class="card-actions">
-            <a *ngIf="enrolled.instance.meetingUrl" 
-               [href]="enrolled.instance.meetingUrl" 
-               target="_blank" 
-               class="btn btn-primary"
-               rel="noopener noreferrer">
+            <a *ngIf="enrolled.instance.meetingUrl" [href]="enrolled.instance.meetingUrl" target="_blank"
+              class="btn btn-primary" rel="noopener noreferrer">
               <i class="bi bi-camera-video"></i> Acceder al curso
             </a>
-            
-            <a *ngIf="enrolled.instance.whatsappGroup" 
-               [href]="enrolled.instance.whatsappGroup" 
-               target="_blank" 
-               class="btn btn-success btn-sm"
-               rel="noopener noreferrer">
+
+            <a *ngIf="enrolled.instance.whatsappGroup" [href]="enrolled.instance.whatsappGroup" target="_blank"
+              class="btn btn-success btn-sm" rel="noopener noreferrer">
               <i class="bi bi-whatsapp"></i> WhatsApp
             </a>
-            
+
             <button *ngIf="enrolled.instance.isAtRiskOfPostponement" class="btn btn-outline-warning btn-sm"
-                    (click)="showRescheduleOptions(enrolled)">
+              (click)="showRescheduleOptions(enrolled)">
               <i class="bi bi-calendar-check"></i> Ver opciones
             </button>
-            
-            <button class="btn btn-outline-primary btn-sm"
-                    [routerLink]="['/course', enrolled.course._id]">
+
+            <button class="btn btn-outline-primary btn-sm" [routerLink]="['/course', enrolled.course._id]">
               <i class="bi bi-info-circle"></i> Ver detalles
             </button>
           </div>
@@ -123,17 +120,17 @@
       </div>
     </div>
   </div>
-  
+
   <!-- Past courses -->
   <div *ngIf="!loading && pastCourses.length > 0" class="courses-section past-courses">
-    <h2>Historial de Cursos</h2>
-    
+    <h2>Historial de Cursos pasados</h2>
+
     <div class="courses-list">
       <div *ngFor="let enrolled of pastCourses" class="course-item">
         <div class="course-logo">
           <img [src]="enrolled.course.imageUrl || 'assets/images/course-placeholder.jpg'" [alt]="enrolled.course.title">
         </div>
-        
+
         <div class="course-details">
           <h3>{{ enrolled.course.title }}</h3>
           <div class="detail-row">
@@ -141,10 +138,10 @@
             <span><i class="bi bi-person-badge"></i> {{ enrolled.instance.instructor.name }}</span>
           </div>
         </div>
-        
+
         <div class="course-actions">
           <button class="btn btn-sm btn-outline-primary">
-            <i class="bi bi-file-earmark-pdf"></i> Certificado
+            <i class="bi bi-file-earmark-pdf"></i> Diplomas
           </button>
           <button class="btn btn-sm btn-outline-secondary">
             <i class="bi bi-cloud-download"></i> Materiales

@@ -1,7 +1,8 @@
 // src/app/component/course/course-faq/course-faq.component.ts
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-course-faq',
@@ -25,7 +26,24 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
             class="faq-answer" 
             [@expandCollapse]="item.isOpen ? 'expanded' : 'collapsed'"
           >
-            <div class="answer-content" [innerHTML]="item.answer"></div>
+            <div class="answer-content">
+              <!-- Special handling for the certificate validity question -->
+              <div *ngIf="item.question.includes('validez tienen las constancias'); else normalAnswer">
+                <p></p>
+                <ul>
+                  <li>Como institución debidamente registrada, las constancias que expedimos respaldan el conocimiento adquirido al culminar el curso</li>
+                  <li>El diploma acredita tu formación y sustenta tu capacitación aportando un valor curricular para postular a puestos que valoran la formación especializada.</li>
+                  <li>La constancia DC-3 cuenta con validez ante la STPS y representa un respaldo legal para tu centro de trabajo ante auditorías oficiales.</li>
+                </ul>
+                <a routerLink="/dc3-info"   (click)="navigateToDc3($event)" style="color:#0066b3; text-decoration:underline;">consulta condiciones aquí</a>
+                <p></p>
+              </div>
+              
+              <!-- Normal innerHTML for other questions -->
+              <ng-template #normalAnswer>
+                <div [innerHTML]="item.answer"></div>
+              </ng-template>
+            </div>
           </div>
         </div>
       </div>
@@ -129,6 +147,8 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 export class CourseFaqComponent {
   @Input() courseType: string = 'general';
 
+  private router = inject(Router);
+
   faqItems = [
     {
       question: '¿Necesito conocimientos previos para tomar este curso?',
@@ -148,13 +168,13 @@ export class CourseFaqComponent {
     //   isOpen: false
     // },
     {
-      question: '¿El curso tiene validez oficial?',
-      answer: `<p>Sí, todos nuestros cursos cuentan con validez oficial. Específicamente:</p>
+      question: '¿Qué validez tienen las constancias que recibiré al finalizar el curso?',
+      answer: ` <p>
+      </p>
       <ul>
-        <li>Nuestros cursos cumplen con los requisitos de la Secretaría del Trabajo y Previsión Social (STPS)</li>
-        <li>Son reconocidos por las autoridades regulatorias del sector industrial mexicano</li>
-        <li>Están avalados por instructores certificados con registro ante la STPS (Formato DC-3)</li>
-        <li>Son válidos para auditorías y verificaciones oficiales en su empresa</li>
+        <li>Como institucion debidamente registrada, las constancia que expedimos respaldan el conocimiento adquirido al culminar el curso</li>
+        <li>El diploma acredita tu formacion y sustenta tu capacitacion aportando un valor curricular para postular a puestos que valoran la formacion especializada. </li>
+         <li>La constancia DC-3 (<a href="#/dc3-info" target="_blank" style="color:#0066b3; text-decoration:underline;">consulta condiciones aquí</a>) cuenta con validez ante la STPS y representa un respaldo legal para tu centro de trabajo ante auditorías oficiales.</li>
       </ul>
       <p>
       </p>`,
@@ -199,6 +219,17 @@ export class CourseFaqComponent {
 
   toggleFaq(index: number): void {
     this.faqItems[index].isOpen = !this.faqItems[index].isOpen;
+  }
+
+  navigateToDc3(event: Event): void {
+    // event.stopPropagation();
+    // event.preventDefault();
+    //this.router.navigate(['/dc3-info']); 
+    // window.open('/#/dc3-info', '_blank'); // For hash routing
+
+    event.preventDefault();
+
+    this.router.navigate(['/dc3-info'], { state: { from: this.router.url } });
   }
 
   ngOnInit(): void {

@@ -16,6 +16,7 @@ import { UserCoursesComponent } from './component/user/user-courses/user-courses
 import { AuthGuard } from './core/guards/auth.guard';
 import { ForgotPasswordComponent } from './component/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './component/reset-password/reset-password.component';
+import { Dc3InfoComponent } from './component/dc3-info/dc3-info.component';
 
 export const routes: Routes = [
 
@@ -90,7 +91,7 @@ export const routes: Routes = [
     title: 'Proceso de Compra Rápido',
     data: { animation: 'QuickCheckoutPage' }
   },
-  
+
   // User Dashboard Routes
   {
     path: 'dashboard',
@@ -136,7 +137,15 @@ export const routes: Routes = [
     title: 'Restablecer Contraseña',
     data: { animation: 'ResetPasswordPage' }
   },
-  
+
+
+
+  {
+    path: 'dc3-info',
+    component: Dc3InfoComponent,
+    title: 'Información DC-3 - Academia Uniprotec'
+  },
+
   // Other routes
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

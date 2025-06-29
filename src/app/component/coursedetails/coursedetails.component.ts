@@ -440,6 +440,11 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
     });
   }
 
+  navigateToDc3(event: Event): void {
+    event.preventDefault();
+    this.router.navigate(['/dc3-info'], { state: { from: this.router.url } });
+  }
+
 
   /* 
  private enhanceCourseWithMockInstructor(course: Course): void {

@@ -38,10 +38,16 @@
               <i class="bi bi-clock"></i>
               <span>{{ course.duration }}</span>
             </div>
-            <!--<div class="meta-item">
+            <div class="meta-item">
               <i class="bi bi-award"></i>
-              <span>Certificación {{ course.isoStandards.join(', ') }}</span>
-            </div>-->
+              <span>Diploma oficial</span>
+              <span>
+                Constancia de Habilidades DC3 STPS
+                <a href="" (click)="navigateToDc3($event)" style="color:#0066b3; text-decoration:underline;">
+                  (consulta condiciones aquí)
+                </a>
+              </span>
+            </div>
             <div class="meta-item">
               <i class="bi bi-people"></i>
               <span>Cupo limitado</span>
