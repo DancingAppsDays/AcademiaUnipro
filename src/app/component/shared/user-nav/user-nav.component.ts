@@ -187,6 +187,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
               <span class="badge" *ngIf="upcomingCourseCount > 0">{{ upcomingCourseCount }}</span>
             </a>
           </li>
+          <!--
           <li>
             <a routerLink="/dashboard/profile" (click)="closeMobileMenu()">
               <i class="bi bi-person"></i>
@@ -198,7 +199,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
               <i class="bi bi-award"></i>
               <span>Certificados</span>
             </a>
-          </li>
+          </li>-->
         </ul>
         
         <div *ngIf="currentUser" class="dropdown-divider"></div>
@@ -625,7 +626,7 @@ export class UserNavComponent implements OnInit {
   isMenuOpen = false;
   isMobileMenuOpen = false;
   upcomingCourseCount = 0;
-  
+
   private userService = inject(UserService);
   private elementRef = inject(ElementRef);
   private router = inject(Router);
@@ -636,22 +637,22 @@ export class UserNavComponent implements OnInit {
       //console.log('UserNavComponent received user:', user);
 
       this.currentUser = user;
-      
+
       //TODO In a real app, you'd also fetch the user's upcoming course count
       if (user) {
         this.upcomingCourseCount = 2; // Mock count
       }
     });
-    
+
     // Listen for clicks outside to close the menu
     document.addEventListener('click', this.onDocumentClick.bind(this));
   }
-  
+
   // Clean up the document click listener when component is destroyed
   ngOnDestroy(): void {
     document.removeEventListener('click', this.onDocumentClick.bind(this));
   }
-  
+
   toggleMenu(event: Event): void {
     event.stopPropagation();
     this.isMenuOpen = !this.isMenuOpen;
@@ -660,7 +661,7 @@ export class UserNavComponent implements OnInit {
       this.isMobileMenuOpen = false;
     }
   }
-  
+
   toggleMobileMenu(event: Event): void {
     event.stopPropagation();
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
@@ -669,20 +670,20 @@ export class UserNavComponent implements OnInit {
       this.isMenuOpen = false;
     }
   }
-  
+
   closeMenu(): void {
     this.isMenuOpen = false;
   }
-  
+
   closeMobileMenu(): void {
     this.isMobileMenuOpen = false;
   }
-  
+
   logout(): void {
     this.userService.logout();
     this.closeMenu();
   }
-  
+
   logoutMobile(): void {
     this.userService.logout();
     this.closeMobileMenu();
@@ -692,20 +693,20 @@ export class UserNavComponent implements OnInit {
     this.closeMenu();
     this.router.navigate(['/register']);
   }
-  
+
   getUserInitials(): string {
     if (!this.currentUser || !this.currentUser.fullName) {
       return '?';
     }
-    
+
     const nameParts = this.currentUser.fullName.split(' ');
     if (nameParts.length >= 2) {
       return `${nameParts[0][0]}${nameParts[1][0]}`.toUpperCase();
     }
-    
+
     return nameParts[0][0].toUpperCase();
   }
-  
+
   private onDocumentClick(event: MouseEvent): void {
     // Close the menu if the click is outside the component
     if (!this.elementRef.nativeElement.contains(event.target)) {
@@ -715,35 +716,35 @@ export class UserNavComponent implements OnInit {
   }
 
   scrollToFooter(event: Event): void {
-  event.preventDefault();
-  event.stopPropagation();
-  
-  // Close the dropdown menu
-  this.closeMenu();
-  
-  // Get the footer element
-  const footer = document.querySelector('.main-footer');
-  
-  if (footer) {
-    // Scroll to the footer with smooth behavior
-    footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-}
+    event.preventDefault();
+    event.stopPropagation();
 
-// Method to scroll to footer from mobile menu
-scrollToFooterMobile(event: Event): void {
-  event.preventDefault();
-  event.stopPropagation();
-  
-  // Close the mobile menu
-  this.closeMobileMenu();
-  
-  // Get the footer element
-  const footer = document.querySelector('.main-footer');
-  
-  if (footer) {
-    // Scroll to the footer with smooth behavior
-    footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Close the dropdown menu
+    this.closeMenu();
+
+    // Get the footer element
+    const footer = document.querySelector('.main-footer');
+
+    if (footer) {
+      // Scroll to the footer with smooth behavior
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   }
-}
+
+  // Method to scroll to footer from mobile menu
+  scrollToFooterMobile(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // Close the mobile menu
+    this.closeMobileMenu();
+
+    // Get the footer element
+    const footer = document.querySelector('.main-footer');
+
+    if (footer) {
+      // Scroll to the footer with smooth behavior
+      footer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
 }
