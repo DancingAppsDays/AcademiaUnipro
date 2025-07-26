@@ -275,6 +275,9 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
           this.selectedCourseInstance = instance;
           this.selectedDate = new Date(instance.startDate);
           this.hasCourseDates = true;
+
+          // Update instructor for the loaded instance
+          this.updateInstructorForSelectedDate();
         }
         this.loadingCourseDates = false;
       },
@@ -302,6 +305,9 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
   onCourseInstanceSelected(instance: CourseDate): void {
     this.selectedCourseInstance = instance;
     this.selectedDate = new Date(instance.startDate);
+
+    // Update instructor based on selected course date
+    this.updateInstructorForSelectedDate();
 
     // Update URL with selected instance ID (without navigation)
     this.router.navigate([], {
@@ -439,6 +445,45 @@ export class CourseDetailComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
+  private updateInstructorForSelectedDate(): void {
+    if (this.selectedCourseInstance && this.course) {
+      console.log('Updating instructor for selected course date:', this.selectedCourseInstance._id);
+
+      // Use the enhanced method with courseDateId parameter
+      this.instructorService.getInstructorForCourseDate(
+        this.course._id,
+        this.course.category,
+        this.selectedCourseInstance._id
+      ).subscribe(instructor => {
+        // Only update if we get a different instructor
+        if (!this.enhancedInstructor || this.enhancedInstructor._id !== instructor._id) {
+          console.log('Switching instructor from', this.enhancedInstructor?.name, 'to', instructor.name);
+          this.enhancedInstructor = instructor;
+
+          // Update course's instructor for backward compatibility
+          if (instructor && this.course) {
+            this.course.instructor = {
+              _id: instructor._id,
+              name: instructor.name,
+              photoUrl: instructor.photoUrl,
+              bio: instructor.bio,
+              specialties: instructor.specialties
+            };
+          }
+        }
+      });
+    }
+  }
+
+
+
+
+
+
+
+
+
 
   navigateToDc3(event: Event): void {
     event.preventDefault();
