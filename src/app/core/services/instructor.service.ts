@@ -324,6 +324,57 @@ Actualmente colabora como instructora certificada en UNIPROTEC y dirige su propi
     // Example overrides - add specific courseDate IDs here when needed
     // 'coursedate-xyz-123': 'jessica-balderrama',
     // 'coursedate-abc-456': 'ricardo-vazquez',
+
+    // LOTO course - Victor España (Aug 12, 2025)
+    '6811a986e995046fb02db62f': 'victor-espana',
+
+    // Maquinaria course - Hector Marin (Aug 12, 2025)
+    '68278724372ac764dac549ff': 'hector-marin',
+
+    // Sistema Globalmente Armonizado - Jessica Balderrama (Aug 19, 2025)
+    '6811ab25e995046fb02db633': 'jessica-balderrama',
+
+    // Factores Psicosociales NOM-035 - Hector Marin (Aug 19, 2025)
+    '681ad87f71d574b4001eeeb9': 'hector-marin',
+
+    // Manejo Sustancias Químicas - Juan Abrego (Aug 26, 2025)
+    '681addd871d574b4001eeec1': 'jose-abrego',
+
+    // Formación de Instructores - Julieta Mares (Aug 26, 2025)
+    '681add8371d574b4001eeebd': 'luz-mares',
+
+    // Soldadura y Corte - Joram Morales (Sep 2, 2025)
+    '681ade8b71d574b4001eeec5': 'joram-morales',
+
+    // EPP - Hector Marin (Sep 9, 2025)
+    '681ae0aa71d574b4001eeec9': 'hector-marin',
+
+    // Sistema Globalmente Armonizado (2nd instance) - Juan Abrego (Sep 16, 2025)
+    '681ae11571d574b4001eeecd': 'jose-abrego',
+
+    // Formación de Supervisores - Julieta Mares (Sep 23, 2025)
+    '681ae15971d574b4001eeed1': 'luz-mares',
+
+    // Instalaciones Eléctricas - Hector Marin (Sep 30, 2025)
+    '682789c8372ac764dac54a07': 'hector-marin',
+
+    // Comisión de Seguridad - Jessica Balderrama (Oct 7, 2025)
+    '68278a41372ac764dac54a0b': 'jessica-balderrama',
+
+    // Manejo de Residuos Peligrosos - Hector Marin (Oct 14, 2025)
+    '68278a72372ac764dac54a0f': 'hector-marin',
+
+    // Condiciones de Ruido - Joram Morales (Oct 14, 2025)
+    '68278ac7372ac764dac54a13': 'joram-morales',
+
+    // Señalización - Hector Marin (Oct 21, 2025)
+    '68278b44372ac764dac54a1b': 'hector-marin',
+
+    // Manejo Sustancias Químicas (2nd instance) - Juan Abrego (Oct 21, 2025)
+    '6837f1e8cda3bdef185f221d': 'jose-abrego',
+
+    // LOTO (2nd instance) - Jessica Balderrama (Oct 28, 2025)
+    '68278b85372ac764dac54a1f': 'jessica-balderrama'
   };
 
   constructor() { }
