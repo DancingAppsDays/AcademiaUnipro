@@ -62,7 +62,8 @@
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
-                      <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
+                      <a [routerLink]="['/course', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-primary btn-sm">Ver Detalles</a>
                       <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
                         class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
@@ -125,7 +126,8 @@
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
-                      <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
+                      <a [routerLink]="['/course', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-primary btn-sm">Ver Detalles</a>
                       <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
                         class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
@@ -187,7 +189,8 @@
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
-                      <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
+                      <a [routerLink]="['/course', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-primary btn-sm">Ver Detalles</a>
                       <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
                         class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
@@ -249,7 +252,8 @@
                   <div class="card-footer">
                     <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
                     <div class="actions">
-                      <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
+                      <a [routerLink]="['/course', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+                        class="btn btn-primary btn-sm">Ver Detalles</a>
                       <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
                         class="btn btn-outline-primary btn-sm">Inscribirse</a>
                     </div>
@@ -294,7 +298,8 @@
         <div class="card-footer">
           <div class="price">{{ course.price | currency:'MXN':'symbol':'1.0-0' }}</div>
           <div class="actions">
-            <a [routerLink]="['/course', course.courseId]" class="btn btn-primary btn-sm">Ver Detalles</a>
+            <a [routerLink]="['/course', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
+              class="btn btn-primary btn-sm">Ver Detalles</a>
             <a [routerLink]="['/checkout', course.courseId]" [queryParams]="{date: course.date.toISOString()}"
               class="btn btn-outline-primary btn-sm">Inscribirse</a>
           </div>
